@@ -20,6 +20,20 @@
     hinterlegen. Wird der Auftrag erflgreich ausgeführt, erhält es die gestellte Sicherheitssumme zurück, 
     als auch die gestellte Bezahlung. Sind sich die Vertragspartner uneinig, so bleiben Bezahlung und 
     Sicherheit auf dem Contract, bis sich beide Parteie einigen. 
+
+
+    Projektidee 2: Etherfunding
+
+    Etherfunding ist eine Crowdfunding Plattform, bei der Mitglieder Projekte unterstützen können.
+    Dabei können die Unterstüzer Geld an einen Smart Contract senden, und im Gegenzug ein Produkt
+    erhalten, falls das unterstützte Projekt erfolgreich Umgesetzt wird. Eine Abgerenzung zu 
+    anderen Crowdplatformen könnte sein, dass Unterstützer Kontrolle darüber bekommen, wofür
+    das Geld im Smart Contract ausgegeben wird. Ein Exit Scam könnte auf diese Weise verhindert
+    werden. Die Überlegung wäre hier, dass die Projektgründer Ausgaben begründen und im 
+    Nachhinein Belege vorlgegen müssen, bevor die Projektunterztützer weiteres Geld aus dem 
+    Vertrag freigeben. Dies würde das Projekt transparenter machen und Vertrauen würde von
+    Projektgründen auf die Blockchain verlagert.
+
     
     
 ## 1.2 Ziele
