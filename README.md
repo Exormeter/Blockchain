@@ -4,7 +4,7 @@
 * Link zum Source Code Repository
  
 
-# 1 Einf¸hrung
+# 1 Einführung
 
 ## 1.1 Beschreibung
     - Projektname
