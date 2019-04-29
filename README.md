@@ -34,6 +34,13 @@
     Vertrag freigeben. Dies würde das Projekt transparenter machen und Vertrauen würde von
     Projektgründen auf die Blockchain verlagert.
 
+    Projektidee 3: CampusCoin
+    
+    Der CampusCoin ist eine Blockchain-Plattform, welche eine globale Leistungsakkreditierung für absolvierte Studiumsmodule bewerkstelligen soll. Mithilfe des CampusCoin ist es Lehrenden möglich den Studenten, entsprechend der abgelegten Prüfung, eine gewisse Menge an Coins zu senden. Die Coins spiegeln entsprechend die aktuell genutzten Credit Points wieder,  sind nur durch zertifizierte Lehrende/Universitäten ausstellbar und können nicht unter Studierenden ausgetauscht werden. Durch die Blockchain ist es anderen Entitäten möglich die Leistungen der Studierenden zu verifizieren und ermöglicht somit den internationalen Transfer und Vergleich zwischen Universitäten.
+
+    Projektidee 4: EtherCopy
+	
+    EtherRights ist eine Plattform, auf der Lizenz- und Nutzungsrechte für diverse Medien erworben werden können. Urheber können die Rechte an ihren Werken in Form eines SmartContracts zum Verkauf anbieten. Beim Auslösen des SmartContracts erhält der Käufer einen Token, welcher einmalig ist und sowohl dem Nutzer als auch dem Produkt zugeordnet werden kann. Möchte ein Nutzer das erworbene Werk nun beispielsweise auf seiner Webseite nutzen, so kann er seinen Token als Meta-Eigenschaft an das Bild/Video/etc. hängen, wodurch öffentlich nachvollziehbar angezeigt werden kann, dass die Rechte für die Datei erworben wurden. EtherRights könnte somit weiterhin eine Grundlage bieten, um für kommende Upload-Filter eine Datenbank mit geschützten Inhalten und gleichzeitig eine „Lookup-Table“ mit erworbenen Rechten bereitzustellen. 
     
     
 ## 1.2 Ziele
