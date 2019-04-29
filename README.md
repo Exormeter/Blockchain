@@ -10,8 +10,9 @@
     
     Projektidee 1: Etherchain
     
-    Etherchain ist eine Platform, auf der die gesammte Supply Chain eines Unternehmens abgebildet werden kann. Die Idee ist, 
-    das Unternehmen Angebote für beispielsweise Transportaufträge, Materialaufträge oder Verarbeitungsaufträge als 
+    Etherchain ist eine Platform, auf der die gesammte Supply Chain eines Unternehmens abgebildet werden kann. 
+    Die Idee ist,  das Unternehmen Angebote für beispielsweise Transportaufträge, Materialaufträge 
+    oder Verarbeitungsaufträge als 
     Smart-Contract auf der Blockchain einstellen können. Die Bezahlung wird im beim Anlegen des Contracts auf diesem 
     hinterlegt. Ein anderer Unternehmen soll dann die Möglichkeit haben, die Angebote auf der Blockchain anzusehen und 
     gegebenenfalls einen der Aufträge anzunehmen. Bei Annahme muss er den Auftragswert als Sicherheit hinterlegen. Wird der 
