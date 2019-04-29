@@ -8,9 +8,18 @@
 
 ## 1.1 Beschreibung
     
-    # vnsjdov dksjcv kw
-    - Darstellung der Produktvision in Prosa (5-10 S‰tze)
-
+    Projektidee 1: Etherchain
+    
+    Etherchain ist eine Platform, auf der die gesammte Supply Chain eines Unternehmens abgebildet werden kann. Die Idee ist, 
+    das Unternehmen Angebote für beispielsweise Transportaufträge, Materialaufträge oder Verarbeitungsaufträge als 
+    Smart-Contract auf der Blockchain einstellen können. Die Bezahlung wird im beim Anlegen des Contracts auf diesem 
+    hinterlegt. Ein anderer Unternehmen soll dann die Möglichkeit haben, die Angebote auf der Blockchain anzusehen und 
+    gegebenenfalls einen der Aufträge anzunehmen. Bei Annahme muss er den Auftragswert als Sicherheit hinterlegen. Wird der 
+    Auftrag erflgreich ausgeführt, erhält er die gestellte Sicherheitssumme zurück, als auf die gestellte Bezahlung.
+    Sind sich die Vertragspartner uneinig, so bleibt Bezahlung und Sicherheit auf dem Contract, bis sich beide Parteien
+    einigen. 
+    
+    
 ## 1.2 Ziele
     - Anwendungsbereiche, Motivation, Umfang, Alleinstellungsmerkmale, Marktanforderungen
     - Informationen zu Zielbenutzergruppen und deren Merkmale (Bildung, Erfahrung, Sachkenntnis)
