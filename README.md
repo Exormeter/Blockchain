@@ -122,7 +122,7 @@
 
 ## 2.2 Funktionale Anforderungen
 
-    ![Usecase Diagramm für die Etherfund Website](https://github.com/Exormeter/Blockchain/blob/master/Diagramme/Use_Case_Etherfund.png?raw=true)
+    ![Usecase Diagramm für die Etherfund Website](Diagramme/Use_Case_Etherfund.png "UseCase")
     - Use-Case Diagramme
     - Strukturierung der Diagramme in funktionale Gruppen
 
