@@ -183,8 +183,16 @@ Pr¸fbarkeit |X|-|-|-|
 
 # 3 Technische Beschreibung
 
-## 3.1 System¸bersicht
-    - Systemarchitekturdiagramm ("Box-And-Arrow" Diagramm)
+## 3.1 Systemübersicht
+![Systemdiagramm](Diagramme/Systemdiagramm)
+    Grobe Systemarchtitektur, prinzipell gibt es nur 2 Schichten, da die Blockchain im die Aufgabe des
+    Backendserver und der Datenbank übernehmen kann. Daher gibt es im System nur ein Server, auf welchem
+    das Frontend als Webseite läuft und ein Backend in Form der Ethereum Blockchain, welches innerhalb
+    der Smart Contracts Daten verwaltet und Aufgaben des Backendservers übernimmt. Innerhalb der Blockchain
+    wird es zwei Verträge geben. Der Primary SC hälte alle Projekt SC in einer Datenstruktur und kann dem
+    Nutzer auskunft geben, welche Projekte grade aktive sind. Dieser Primary Contract ist eine Art Factory
+    für Smart Contract, welche die Projekte der Projektgründer darstellen. Es gibt als immer mindestens eine
+    Primary Contract und 0 bis N Project Contracts für die Projektgründer. 
     - Kommunikationsprotokolle, Datenformate
 
 ## 3.2 Softwarearchitektur
