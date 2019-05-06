@@ -161,7 +161,7 @@ Prüfbarkeit |X|-|-|-|
 ## 2.5 Anforderungen im Detail
 
 | **Name** | **Als** | **möchte ich** | **so dass** | **Akzeptanz** | Priorität
-| | :------ | :----- | :------ | :-------- | :-------- |
+| :------ | :------ | :----- | :------ | :-------- | :-------- |
 | | Projektgründer | ein Projekt erstellen können | ich Unterstützung erhalten kann | Projekt ist erstellt und unterstützbar | Muss |
 | | Projektgründer | ein Projektziel festlegen | der Pool bei Erfolg ausgegeben oder bei Misserfolg zurückgegeben wird | Projektziel ist einsehbar | Muss |
 | | Projektgründer | Backing-Option anlegen können | Investoren sehen, was sie für ihr Geld erhalten | Backing-Optionen sind bei Backing auswählbar durch SC| Muss |
