@@ -184,7 +184,7 @@ Pr¸fbarkeit |X|-|-|-|
 # 3 Technische Beschreibung
 
 ## 3.1 Systemübersicht
-![Systemdiagramm](Diagramme/Systemdiagramm)
+![Systemdiagramm](Diagramme/Systemdiagramm.png)
     Grobe Systemarchtitektur, prinzipell gibt es nur 2 Schichten, da die Blockchain im die Aufgabe des
     Backendserver und der Datenbank übernehmen kann. Daher gibt es im System nur ein Server, auf welchem
     das Frontend als Webseite läuft und ein Backend in Form der Ethereum Blockchain, welches innerhalb
