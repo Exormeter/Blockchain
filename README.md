@@ -59,9 +59,49 @@
     
     
 ## 1.2 Ziele
-    - Anwendungsbereiche, Motivation, Umfang, Alleinstellungsmerkmale, Marktanforderungen
-    - Informationen zu Zielbenutzergruppen und deren Merkmale (Bildung, Erfahrung, Sachkenntnis)
-    - Abgrenzung (Was ist das Softwaresystem _nicht_)
+
+    Was ist Etherfundings Ziel?
+
+    Das Ziel von Etherfundung soll eine Plattfrom sein, auf der Nutzer Projekte vorstellen können 
+    und Geld in Form von Ether von anderen Nutzern der Platform einsammeln können. Dabei werden 
+    diese "anderen" Nutzer der Platfrom zu Stakeholdern des Projektes. Da das Projket über einen
+    Smart Contract auf der Blockchain abgebildet werden soll, soll allen Stakeholdern das 
+    Recht eingeräumt werden, über die Ausgaben im Projekt mitzubestimmen. Der Projektgründer
+    kann über eine Funktion im Smart Contract eine Anfrage an alle Stakeholder stellen, in welcher
+    Aufgelistet ist wieivel Geld für einen bestimmten Meilenstein im Projekt benötigt wird und
+    für welchen Zweck. Die Stakeholder können dann über eine andere Funktion im SC abstimmen, ob
+    der Zweck diese Ausgabe rechtfertigt oder nicht. Es müssen mindesten 50% aller Stakeholder eine
+    Ausgabe genemigen, bevor der Smart Contract diese Summe auszahlt. Da die Stakeholder selber
+    Ether in das Projekt investiert haben, gibt es hier einen starken Insentive, für Ausgaben
+    abzustimmen. Gleichzeitig wird das Risiko gesengt, dass der Projektgründe mit dem gesammten
+    Ether verschwindet, da er in diesem Fall einen Antrag für das gesammte Ether auf dem Contract 
+    stellen müsste, welchem die Stakeholder vermutlich nicht zustimmen würden.
+
+    An wen richtet sich Etherfunding?
+
+    Für das Etherfunding Projekt gibt es zwei unterschiedliche Parteien, wie in den Zielen bereits
+    ersichtlich: Den Projekktgründer und die Projektstakeholder. Der Projektgründer ist eine
+    Person, die breite Erfahrungen mit Blockchain-Technolgie gemacht hat und bereits weiß,
+    was Crowdsourcing ist und welche Erfahrungen und Risiken diese Form der Investmentsuche
+    birgt. Unter Umständen hat diese Person breits ein Projekt auf Kickstarter erfolgreich
+    durchgeführt und sucht nun nach Wegen, die Stakeholder mehr in das Projekt einzubeziehen.
+
+    Die Stakeholder sind ebenfalls Personen, welche bereits Erfahrung mit der 
+    Blockchain-Technologie gemacht haben. Auch können es Personen sein, die sich in das Thema
+    eingelesen haben und Etherfunding als parktischen Einstig in die Technologie sehen. 
+    Stakeholder sind generll Personen, die ein überdurchschnittliches Technikverständnis haben,
+    breits Crowdfunding Platformen wie Indigogo oder Kickstarter genutzt haben und sich eine
+    bessere Kontrolle über das Projekt wünschen. Das traditionelle Modell von einmal
+    Zahlen und hofffen das alles gut geht ist diesen Personen zu wenig.  
+
+    Was ist Etherfunding nicht?
+
+    Etherfunding kann nicht garantieren, dass die Versprechen des Projektes eingehalten werden.
+    Am Ende des Projektes sollte ein Gut geschaffen werden, welche an die Investoren geliefert
+    wird. Da am Ende des Projektes das Geld aus dem Contract ausgegeben ist, besitzt der Contract 
+    keinen monitarische Bindung mehr, dass die Güter auch an die Stakeholder rausgehen. Der
+    Contract kann lediglich sicherstellen, dass die Gelder für den richtigen Zweck ausgegeben werden.
+    
 
 # 2 Anforderungen
 
