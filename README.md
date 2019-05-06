@@ -121,35 +121,36 @@
 ## 2.3 Nicht-funktionale Anforderungen 
 
 ### 2.3.1 Rahmenbedingungen
-    - Normen, Standards, Protokolle, Hardware, externe Vorgaben
+	- Nutzt die Ethereum Blockchain
+	- Entsprechend auch die Kryptowährung Ether, um Projekte zu backen
 
 ### 2.3.2 Betriebsbedingungen
-    - Vorgaben des Kunden (z.B. Web Browser / Betriebssystem Versionen, Programmiersprache)
+	- Für Nutzer: 
+		- Moderner Webbrowser (Chrome Version ab 67.0/Firefox ab 61.0)
+	- Node-Betreiber(?)
 
-### 2.3.3 Qualit‰tsmerkmale
-    - Externe Qualit‰tsanforderungen (z.B. Performance, Sicherheit, Zuverl‰ssigkeit, Benutzerfreundlichkeit)
-
-Qualit‰tsmerkmal | sehr gut | gut | normal | nicht relevant
+### 2.3.3 Qualitätsmerkmale
+Qualitätsmerkmal | sehr gut | gut | normal | nicht relevant
 ---|---|---|---|---
-**Zuverl‰ssigkeit** | | | | |
+**Zuverlässigkeit** | | | | |
 Fehlertoleranz |X|-|-|-|
 Wiederherstellbarkeit |X|-|-|-|
-Ordnungsm‰ﬂigkeit |X|-|-|-|
+Ordnungsmäßigkeit |X|-|-|-|
 Richtigkeit |X|-|-|-|
-Konformit‰t |-|X|-|-|
+Konformität |-|X|-|-|
 **Benutzerfreundlichkeit** | | | | |
-Installierbarkeit |-|-|X|-|
-Verst‰ndlichkeit |X|-|-|-|
-Erlernbarkeit |-|X|-|-|
+Installierbarkeit |-|X|-|-|
+Verständlichkeit |-|X|-|-|
+Erlernbarkeit |-|-|X|-|
 Bedienbarkeit |-|X|-|-|
 **Performance** | | | | |
-Zeitverhalten |-|-|X|-|
+Zeitverhalten |-|-|-|X|
 Effizienz|-|-|-|X|
 **Sicherheit** | | | | |
 Analysierbarkeit |X|-|-|-|
-Modifizierbarkeit |-|-|-|X|
-Stabilit‰t |X|-|-|-|
-Pr¸fbarkeit |X|-|-|-|
+Modifizierbarkeit |X|-|-|-|
+Stabilität |-|-|X|-|
+Prüfbarkeit |X|-|-|-|
 
 ## 2.4 Graphische Benutzerschnittstelle
     - GUI-Mockups passend zu User Stories
