@@ -101,7 +101,7 @@
     wird. Da am Ende des Projektes das Geld aus dem Contract ausgegeben ist, besitzt der Contract 
     keinen monitarische Bindung mehr, dass die Güter auch an die Stakeholder rausgehen. Der
     Contract kann lediglich sicherstellen, dass die Gelder für den richtigen Zweck ausgegeben werden.
-    
+
 
 # 2 Anforderungen
 
@@ -121,6 +121,8 @@
 | Product-Owner  | Paul Ottmer  |  po@ottmer.de | Per E-Mail und tel. tags¸ber, Verf¸gbarkeit 100%, N¸rnberg  | Koordinator f¸r die Inputs der Stakeholder  | ROI des Systems sicherstellen  | Entscheider - als Koordinator der Stakeholderanforderungen  |
 
 ## 2.2 Funktionale Anforderungen
+
+    ![Usecase Diagramm für die Etherfund Website](Diagramme/Use_Case_Etherfund.png)
     - Use-Case Diagramme
     - Strukturierung der Diagramme in funktionale Gruppen
 
