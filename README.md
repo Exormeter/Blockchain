@@ -182,7 +182,7 @@ Prüfbarkeit |X|-|-|-|
     Backendserver und der Datenbank übernehmen kann. Daher gibt es im System nur ein Server, auf welchem
     das Frontend als Webseite läuft und ein Backend in Form der Ethereum Blockchain, welches innerhalb
     der Smart Contracts Daten verwaltet und Aufgaben des Backendservers übernimmt. Innerhalb der Blockchain
-    wird es zwei Verträge geben. Der Primary SC hälte alle Projekt SC in einer Datenstruktur und kann dem
+    wird es zwei Verträge geben. Der Primary SC hält alle Projekt SC in einer Datenstruktur und kann dem
     Nutzer auskunft geben, welche Projekte grade aktive sind. Dieser Primary Contract ist eine Art Factory
     für Smart Contract, welche die Projekte der Projektgründer darstellen. Es gibt als immer mindestens eine
     Primary Contract und 0 bis N Project Contracts für die Projektgründer. 
@@ -196,6 +196,8 @@ Prüfbarkeit |X|-|-|-|
     - Auflistung der nach auﬂen sichtbaren Schnittstelle der Softwarebausteine
 
 ## 3.4 Datenmodell 
+![Datenmodell](Diagramme/Datenmodell.png)
+
     - Konzeptionelles Analyseklassendiagramm (logische Darstellung der Konzepte der Anwendungsdom‰ne)
     - Modellierung des physikalischen Datenmodells 
       - RDBMS: ER-Diagramm bzw. Dokumentenorientiert: JSON-Schema
