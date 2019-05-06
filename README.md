@@ -122,7 +122,7 @@
 
 ## 2.2 Funktionale Anforderungen
 
-    ![Usecase](./Diagramme/Use_Case_Etherfund.jpg)
+    ![Usecase](Diagramme/Use_Case_Etherfund.png "Use-Case EtherFund")
     - Use-Case Diagramme
     - Strukturierung der Diagramme in funktionale Gruppen
 
