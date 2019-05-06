@@ -109,16 +109,8 @@
 
 | Funktion | Name | Kontakt | Verf¸gbarkeit | Wissen  | Interesse & Ziele  | Relevanz  |
 |---|---|---|---|---|---|---|
-|  |   |   |   |   |   |   |
-
-
-### Beispiel
-
-| Funktion | Name | Kontakt | Verf¸gbarkeit | Wissen  | Interesse & Ziele  | Relevanz  |
-|---|---|---|---|---|---|---|
-| Leiter der Bibliothek  |  Herr Bauer | Tel. 409000  | Von 9-19 Uhr telefonisch erreichbar, Mitarbeit zu 30% mˆglich, N¸rnberg  | Kennt das Altsystem aus der Anwendersicht, soll mit dem System arbeiten  | Vereinfachung der Ausleihprozesse  | Fachlicher Entscheider  |
-| Administrator  | Herr Heiner  | Heiner@gmx.net  | Per E-Mail, immer erreichbar, Verf¸gbarkeit 50%, N¸rnberg  | Vertraut mit vergleichbarer Verwaltungssoftware   |  Stabiles System, geringer Wartungsaufwand | Informationslieferant bzgl. Wartungsanforderungen  |
-| Product-Owner  | Paul Ottmer  |  po@ottmer.de | Per E-Mail und tel. tags¸ber, Verf¸gbarkeit 100%, N¸rnberg  | Koordinator f¸r die Inputs der Stakeholder  | ROI des Systems sicherstellen  | Entscheider - als Koordinator der Stakeholderanforderungen  |
+| Projektgründer  |  Herr Bauer | Tel. 409000  | Von 9-19 Uhr telefonisch erreichbar, Mitarbeit zu 100% mˆglich, Berlin  | Hat schon Erfahrung mit Projektstarts bei Kickstarter und GoFundMe. Kennt alle Spezifikationen des anzubietenden Produkts   | Finanzierung der Produktion seines Produktes  | Projektleiter, Finanzieller und Fachlicher Entscheider  |
+| Projektinvestor  | Herr Heiner  | Heiner@gmx.net  | Per E-Mail, sporadisch erreichbar, geringe Verfügbarkeit, Nürnberg  | Hat einmal ein Projekt bei Kickstart gebackt. Hat sich einige Projekte bei GoFundMe angeschaut|  Simpler Backingprozess, Sicherheit der verantwortungsbewussten Nutzung seines Investments | Investor und Kunde  |
 
 ## 2.2 Funktionale Anforderungen
 
