@@ -121,35 +121,36 @@
 ## 2.3 Nicht-funktionale Anforderungen 
 
 ### 2.3.1 Rahmenbedingungen
-    - Normen, Standards, Protokolle, Hardware, externe Vorgaben
+	- Nutzt die Ethereum Blockchain
+	- Entsprechend auch die Kryptowährung Ether, um Projekte zu backen
 
 ### 2.3.2 Betriebsbedingungen
-    - Vorgaben des Kunden (z.B. Web Browser / Betriebssystem Versionen, Programmiersprache)
+	- Für Nutzer: 
+		- Moderner Webbrowser (Chrome Version ab 67.0/Firefox ab 61.0)
+	- Node-Betreiber(?)
 
-### 2.3.3 Qualit‰tsmerkmale
-    - Externe Qualit‰tsanforderungen (z.B. Performance, Sicherheit, Zuverl‰ssigkeit, Benutzerfreundlichkeit)
-
-Qualit‰tsmerkmal | sehr gut | gut | normal | nicht relevant
+### 2.3.3 Qualitätsmerkmale
+Qualitätsmerkmal | sehr gut | gut | normal | nicht relevant
 ---|---|---|---|---
-**Zuverl‰ssigkeit** | | | | |
+**Zuverlässigkeit** | | | | |
 Fehlertoleranz |X|-|-|-|
 Wiederherstellbarkeit |X|-|-|-|
-Ordnungsm‰ﬂigkeit |X|-|-|-|
+Ordnungsmäßigkeit |X|-|-|-|
 Richtigkeit |X|-|-|-|
-Konformit‰t |-|X|-|-|
+Konformität |-|X|-|-|
 **Benutzerfreundlichkeit** | | | | |
-Installierbarkeit |-|-|X|-|
-Verst‰ndlichkeit |X|-|-|-|
-Erlernbarkeit |-|X|-|-|
+Installierbarkeit |-|X|-|-|
+Verständlichkeit |-|X|-|-|
+Erlernbarkeit |-|-|X|-|
 Bedienbarkeit |-|X|-|-|
 **Performance** | | | | |
-Zeitverhalten |-|-|X|-|
+Zeitverhalten |-|-|-|X|
 Effizienz|-|-|-|X|
 **Sicherheit** | | | | |
 Analysierbarkeit |X|-|-|-|
-Modifizierbarkeit |-|-|-|X|
-Stabilit‰t |X|-|-|-|
-Pr¸fbarkeit |X|-|-|-|
+Modifizierbarkeit |X|-|-|-|
+Stabilität |-|-|X|-|
+Prüfbarkeit |X|-|-|-|
 
 ## 2.4 Graphische Benutzerschnittstelle
     - GUI-Mockups passend zu User Stories
@@ -158,27 +159,18 @@ Pr¸fbarkeit |X|-|-|-|
     - Modellierung der Navigation zwischen den Screens der GUI-Mockups als Zustandsdiagramm
 
 ## 2.5 Anforderungen im Detail
-    - User Stories mit Akzeptanzkritierien 
-    - Optional: Name (oder ID) und Priorit‰t ("Must", "Should", "Could", "Won't")
-    - Strukturierung der User Stories in funktionale Gruppen
 
-### Schablone f¸r User Stories
+| **Name** | **Als** | **möchte ich** | **so dass** | **Akzeptanz** | Priorität
+| :------ | :------ | :----- | :------ | :-------- | :-------- |
+| | Projektgründer | ein Projekt erstellen können | ich Unterstützung erhalten kann | Projekt ist erstellt und unterstützbar | Muss |
+| | Projektgründer | ein Projektziel festlegen | der Pool bei Erfolg ausgegeben oder bei Misserfolg zurückgegeben wird | Projektziel ist einsehbar | Muss |
+| | Projektgründer | Backing-Option anlegen können | Investoren sehen, was sie für ihr Geld erhalten | Backing-Optionen sind bei Backing auswählbar durch SC| Muss |
+| | Projektgründer | einen Antrag für Ausgaben stellen können | Ether aus dem Pool erhalten kann | Antrag ist erstellt und muss von Backern akzeptiert oder abgelehnt werden | Soll |
+| | Projektinvestor | eine Projektübersicht einsehen können | ich interessante Projekte entdecken kann | Projekte werden angezeigt | Muss |
+| | Projektinvestor | eine Backing-Option wählen können | ich ein Projekt unterstützen kann | Ether in SC eingezahlt | Muss |
+| | Projektinvestor | an Ausgabeabstimmungen teilnehmen können | Anträge abgelehnt oder angenommen werden | Stimme abgegeben | Soll |
+| | Projektinvestor | mich über meine Etheradresse und meinen Key authentifizieren können | eingeloggt bin  | Authentifizierter Benutzer | Muss |
 
-| **Als** | **mˆchte ich** | **so dass** | **Akzeptanz** |
-| :------ | :----- | :------ | :-------- |
-| Wer | Was | Warum | Wann akzeptiert |
-
-### Beispiel 1
-
-| **Als** | **mˆchte ich** | **so dass** | **Akzeptanz** |
-| :------ | :----- | :------ | :-------- |
-| Benutzer | bei Fehleingabe die Lˆsung angezeigt bekommen | ich lernen kann | Lˆsung wird angezeigt |
-
-### Beispiel 2
-
-| **Name**| **In meiner Rolle als**...|   ...**mˆchte ich**...   | ..., **so dass**... | **Erf¸llt, wenn**... | **Priorit‰t**   |
-|:-----|:----------:|:-------------------|:-------------|:---------|:----------------|
-| Lernen  |Benutzer| bei Fehleingabe die Lˆsung angezeigt bekommen|ich lernen kann| Lˆsung wird angezeigt | Muss |
 
 
 # 3 Technische Beschreibung
