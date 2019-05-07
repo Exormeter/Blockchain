@@ -160,17 +160,22 @@ Prüfbarkeit |X|-|-|-|
 
 ### 2.4.1 Projektübersicht
 ![Mockup1](mockups/MockÜbersicht-Page-1.png "User-Story 5")
+User Story 5
 ### 2.4.2 Projektdetails
 ![Mockup2](mockups/MockÜbersicht-Page-2.png "User-Story 6")
+User Story 6
 ### 2.4.3 Antragvoting
 ![Mockup3](mockups/MockÜbersicht-Page-3.png "User-Story 7")
+User Story 7
 ### 2.4.4 Login
 ![Mockup4](mockups/MockÜbersicht-Page-4.png "User-Story 8")
+User Story 8
 ### 2.4.5 Projekterstellung
 ![Mockup5](mockups/MockÜbersicht-Page-5.png "User-Story 1/2/3")
+User Story 1/2/3
 ### 2.4.6 Investment-Antragerstellung
 ![Mockup6](mockups/MockÜbersicht-Page-6.png "User-Story 4")
-
+User Story 4
 ## 2.5 Anforderungen im Detail
 
 | **ID** | **Als** | **möchte ich** | **so dass** | **Akzeptanz** | Priorität
