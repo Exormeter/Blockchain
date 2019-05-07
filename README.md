@@ -189,7 +189,7 @@ Prüfbarkeit |X|-|-|-|
     - Kommunikationsprotokolle, Datenformate
 
 ## 3.2 Softwarearchitektur
-    - Darstellung von Softwarebausteinen (Module, Schichten, Komponenten)
+![Softwarearchitektur](Diagramme/Softwarearchitektur.png)
 
 ## 3.3 Schnittstellen
     - Schnittstellenbeschreibung
