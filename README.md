@@ -158,18 +158,31 @@ Prüfbarkeit |X|-|-|-|
     - Unter den Screens darstellen (bzw. verlinken), welche User Stories mit dem Screen abgehandelt werden
     - Modellierung der Navigation zwischen den Screens der GUI-Mockups als Zustandsdiagramm
 
+### 2.4.1 Projektübersicht
+![Mockup1](mockups/MockÜbersicht-Page-1.png "User-Story 5")
+### 2.4.2 Projektdetails
+![Mockup2](mockups/MockÜbersicht-Page-2.png "User-Story 6")
+### 2.4.3 Antragvoting
+![Mockup3](mockups/MockÜbersicht-Page-3.png "User-Story 7")
+### 2.4.4 Login
+![Mockup4](mockups/MockÜbersicht-Page-4.png "User-Story 8")
+### 2.4.5 Projekterstellung
+![Mockup5](mockups/MockÜbersicht-Page-5.png "User-Story 1/2/3")
+### 2.4.6 Investment-Antragerstellung
+![Mockup6](mockups/MockÜbersicht-Page-6.png "User-Story 4")
+
 ## 2.5 Anforderungen im Detail
 
-| **Name** | **Als** | **möchte ich** | **so dass** | **Akzeptanz** | Priorität
+| **ID** | **Als** | **möchte ich** | **so dass** | **Akzeptanz** | Priorität
 | :------ | :------ | :----- | :------ | :-------- | :-------- |
-| | Projektgründer | ein Projekt erstellen können | ich Unterstützung erhalten kann | Projekt ist erstellt und unterstützbar | Muss |
-| | Projektgründer | ein Projektziel festlegen | der Pool bei Erfolg ausgegeben oder bei Misserfolg zurückgegeben wird | Projektziel ist einsehbar | Muss |
-| | Projektgründer | Backing-Option anlegen können | Investoren sehen, was sie für ihr Geld erhalten | Backing-Optionen sind bei Backing auswählbar durch SC| Muss |
-| | Projektgründer | einen Antrag für Ausgaben stellen können | Ether aus dem Pool erhalten kann | Antrag ist erstellt und muss von Backern akzeptiert oder abgelehnt werden | Soll |
-| | Projektinvestor | eine Projektübersicht einsehen können | ich interessante Projekte entdecken kann | Projekte werden angezeigt | Muss |
-| | Projektinvestor | eine Backing-Option wählen können | ich ein Projekt unterstützen kann | Ether in SC eingezahlt | Muss |
-| | Projektinvestor | an Ausgabeabstimmungen teilnehmen können | Anträge abgelehnt oder angenommen werden | Stimme abgegeben | Soll |
-| | Projektinvestor | mich über meine Etheradresse und meinen Key authentifizieren können | eingeloggt bin  | Authentifizierter Benutzer | Muss |
+| 1 | Projektgründer | ein Projekt erstellen können | ich Unterstützung erhalten kann | Projekt ist erstellt und unterstützbar | Muss |
+| 2 | Projektgründer | ein Projektziel festlegen | der Pool bei Erfolg ausgegeben oder bei Misserfolg zurückgegeben wird | Projektziel ist einsehbar | Muss |
+| 3 | Projektgründer | Backing-Option anlegen können | Investoren sehen, was sie für ihr Geld erhalten | Backing-Optionen sind bei Backing auswählbar durch SC| Muss |
+| 4 | Projektgründer | einen Antrag für Ausgaben stellen können | Ether aus dem Pool erhalten kann | Antrag ist erstellt und muss von Backern akzeptiert oder abgelehnt werden | Soll |
+| 5 | Projektinvestor | eine Projektübersicht einsehen können | ich interessante Projekte entdecken kann | Projekte werden angezeigt | Muss |
+| 6 | Projektinvestor | eine Backing-Option wählen können | ich ein Projekt unterstützen kann | Ether in SC eingezahlt | Muss |
+| 7 | Projektinvestor | an Ausgabeabstimmungen teilnehmen können | Anträge abgelehnt oder angenommen werden | Stimme abgegeben | Soll |
+| 8 | Projektinvestor | mich über meine Etheradresse und meinen Key authentifizieren können | eingeloggt bin  | Authentifizierter Benutzer | Muss |
 
 
 
