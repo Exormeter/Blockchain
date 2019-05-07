@@ -196,11 +196,8 @@ Prüfbarkeit |X|-|-|-|
     - Auflistung der nach auﬂen sichtbaren Schnittstelle der Softwarebausteine
 
 ## 3.4 Datenmodell 
-![Datenmodell](Diagramme/Datenmodell.png)
 
-    - Konzeptionelles Analyseklassendiagramm (logische Darstellung der Konzepte der Anwendungsdom‰ne)
-    - Modellierung des physikalischen Datenmodells 
-      - RDBMS: ER-Diagramm bzw. Dokumentenorientiert: JSON-Schema
+![Datenmodell](Diagramme/Datenmodell.png)
 
 ## 3.5 Abläufe
 
@@ -222,7 +219,8 @@ UseCase 5: Ein Investor kann für die Geldentnahme abstimmen
     - Aktivit‰tsdiagramm f¸r den Ablauf s‰mtlicher Use Cases
 
 ## 3.6 Entwurf
-    - Detaillierte UML-Diagramme f¸r relevante Softwarebausteine
+
+![Klassenmodell](Diagramme/Klassenmodell.png)
 
 # 4 Projektorganisation
 
