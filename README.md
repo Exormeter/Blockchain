@@ -202,15 +202,21 @@ Prüfbarkeit |X|-|-|-|
     - Modellierung des physikalischen Datenmodells 
       - RDBMS: ER-Diagramm bzw. Dokumentenorientiert: JSON-Schema
 
-## 3.5 Abl‰ufe
+## 3.5 Abläufe
+
+UseCase 1: Anlegen eines Projektes
 ![UC_CreateProject](Diagramme/UC_CreateProject.png)
 
+UseCase 2: Erstellung eines Requests für das Abziehen von Geldern aus dem Contract
 ![UC_CreateReuqest](Diagramme/UC_CreateReuqest.png)
 
+UseCase 3: Investoren investieren in ein bestehendes Projekt
 ![UC_InvestInProject](Diagramme/UC_InvestInProject.png)
 
+UseCase 4: Alle exsistierenden Projekte werden angezeigt
 ![UC_ShowAllProjects](Diagramme/UC_ShowAllProjects.png)
 
+UseCase 5: Ein Investor kann für die Geldentnahme abstimmen
 ![UC_VoteForRequest](Diagramme/UC_VoteForRequest.png)
 
     - Aktivit‰tsdiagramm f¸r den Ablauf s‰mtlicher Use Cases
