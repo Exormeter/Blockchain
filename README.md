@@ -203,7 +203,16 @@ Prüfbarkeit |X|-|-|-|
       - RDBMS: ER-Diagramm bzw. Dokumentenorientiert: JSON-Schema
 
 ## 3.5 Abl‰ufe
-    - Aktivit‰tsdiagramme f¸r relevante Use Cases
+![UC_CreateProject](Diagramme/UC_CreateProject.png)
+
+![UC_CreateReuqest](Diagramme/UC_CreateReuqest.png)
+
+![UC_InvestInProject](Diagramme/UC_InvestInProject.png)
+
+![UC_ShowAllProjects](Diagramme/UC_ShowAllProjects.png)
+
+![UC_VoteForRequest](Diagramme/UC_VoteForRequest.png)
+
     - Aktivit‰tsdiagramm f¸r den Ablauf s‰mtlicher Use Cases
 
 ## 3.6 Entwurf
