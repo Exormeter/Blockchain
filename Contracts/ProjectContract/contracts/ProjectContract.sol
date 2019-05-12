@@ -7,10 +7,12 @@ contract ProjectContract is Ownable{
 
     string projectTitle;
     string projectDescription;
-    BackingOption[] backingOptions;
     int backerOptionsID = 1;
-    address[] investors;
     Request currentRequest;
+    BackingOption[] backingOptions;
+    address[] investorAddresses;
+    mapping(address => Investor) Investors;
+
 
     struct BackingOption{
         string optionTitle;
@@ -25,6 +27,22 @@ contract ProjectContract is Ownable{
         string requestDescription;
         uint256 valideUntil;
         uint amount;
+        int numberAcceptedVotes;
+        int numberRejectedVotes;
+        bool wasPayed;
+    }
+
+    struct Investor{
+        address investorAddress;
+        int choosenBackingOptionID;
+        Vote currentVote;
+        int investorExists; //is needed because a mapping contains all possible keys
+    }
+
+    enum Vote{
+        Accepted,
+        Rejected,
+        NoVoteGiven
     }
 
     constructor(address _owner, string memory _projectTitle, string memory _projectDescription) public
@@ -52,6 +70,10 @@ contract ProjectContract is Ownable{
             backingOptions[index].optionAmountEther, backingOptions[index].optionAvailability);
     }
 
+    function getBackingOptionsCount()public view returns (uint){
+        return backingOptions.length;
+    }
+
     function addInvestor(int backingOptionID) public payable returns (bool)
     {
         uint  optionIndex;
@@ -77,9 +99,9 @@ contract ProjectContract is Ownable{
             return false;
         }
 
-        investors.push(msg.sender);
+        Investors[msg.sender] = Investor(msg.sender, backingOptionID, Vote.NoVoteGiven, 1);
         backingOptions[optionIndex].optionAvailability--;
-        
+        //payin
     }
 
     function addRequest(string memory _requestTitle, string memory _requestDescription,
@@ -90,9 +112,48 @@ contract ProjectContract is Ownable{
         {
             return false;
         }
-        currentRequest = Request(_requestTitle, _requestDescription, _valideUntil, _amount);
+        requestPayout();
+        currentRequest = Request(_requestTitle, _requestDescription, _valideUntil, _amount, 0, 0, false);
         return true;
     }
 
-     
+    function voteForCurrentRequest(bool isAccepted) public
+    {
+
+        //Addresse ist kein Investor
+        if(Investors[msg.sender].investorExists == 0){
+            return;
+        }
+
+        //Addresse hat bereits abgestimmt
+        if(Investors[msg.sender].currentVote != Vote.NoVoteGiven){
+            return;
+        }
+        if(isAccepted){
+            Investors[msg.sender].currentVote = Vote.Accepted;
+        }
+        else{
+            Investors[msg.sender].currentVote = Vote.Rejected;
+        }
+    }
+
+    function getCurrentVotes() public view returns (int256, int256, uint256){
+        return (currentRequest.numberAcceptedVotes, currentRequest.numberRejectedVotes, investorAddresses.length);
+    }
+
+    function requestPayout() public payable onlyOwner returns (bool)
+    {
+        //Mehrheit ist nicht erreicht
+        if(!((currentRequest.numberAcceptedVotes / 2) > int256 (investorAddresses.length))){
+            return false;
+        }
+        //Der Request wurde bereits ausgezahlt
+        if(currentRequest.wasPayed){
+            return false;
+        }
+        //payout
+        currentRequest.wasPayed = true;
+        return true;
+    }
+  
 }
