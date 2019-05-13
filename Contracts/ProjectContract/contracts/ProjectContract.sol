@@ -63,7 +63,7 @@ contract ProjectContract is Ownable{
 
     function getBackingOption(uint index) public view returns(string memory, string memory, uint, int)
     {
-        if(index > backingOptions.length){
+        if(index >= backingOptions.length){
             return ("", "", 0, 0);
         }
         return (backingOptions[index].optionTitle, backingOptions[index].optionDescription,
@@ -84,36 +84,36 @@ contract ProjectContract is Ownable{
             }
         }
 
-        //BackingOption mit übergebener ID wurde nicht gefunden
-        if(backingOptions[optionIndex].id == 0){
-            return false;
-        }
+        require(backingOptions[optionIndex].id != 0, "BackingOption was not found");
 
-        //Der gesendete Ether Amount entspricht nicht der gewählten BackingOption
-        if(msg.value != backingOptions[optionIndex].optionAmountEther){
-            return false;
-        }
+        require(msg.value == backingOptions[optionIndex].optionAmountEther, "Send Ether amount is not equal to backing price");
 
-        //Die Option ist nicht mehr verfügbar
-        if(backingOptions[optionIndex].optionAvailability <= 0){
-            return false;
-        }
+        require(backingOptions[optionIndex].optionAvailability > 0, "Choosen Option is no longer available");
+
+        require(Investors[msg.sender].investorExists == 0, "Investor has already invested");
 
         Investors[msg.sender] = Investor(msg.sender, backingOptionID, Vote.NoVoteGiven, 1);
         backingOptions[optionIndex].optionAvailability--;
-        //payin
+        return true;
+    }
+
+    function getInvestorCount() public view returns (uint)
+    {
+        return investorAddresses.length;
     }
 
     function addRequest(string memory _requestTitle, string memory _requestDescription,
     uint256 _valideUntil, uint _amount) public onlyOwner returns (bool)
     {
-        //TDDO: Check if currentRequest is not null
-        if(currentRequest.valideUntil < block.timestamp)
+        if(currentRequest.valideUntil != 0 && currentRequest.valideUntil < block.timestamp)
         {
             return false;
         }
         requestPayout();
         currentRequest = Request(_requestTitle, _requestDescription, _valideUntil, _amount, 0, 0, false);
+        for(uint i = 0; i<investorAddresses.length; i++){
+            Investors[investorAddresses[i]].currentVote = Vote.NoVoteGiven;
+        }
         return true;
     }
 
@@ -137,11 +137,26 @@ contract ProjectContract is Ownable{
         }
     }
 
-    function getCurrentVotes() public view returns (int256, int256, uint256){
-        return (currentRequest.numberAcceptedVotes, currentRequest.numberRejectedVotes, investorAddresses.length);
+    function getCurrentRequest() public view returns (string memory requestTitle,
+            string memory requestDescription,
+            uint256 valideUntil,
+            uint amount,
+            int numberAcceptedVotes,
+            int numberRejectedVotes,
+            bool wasPayed
+        )
+    {
+        return (currentRequest.requestTitle,
+            currentRequest.requestDescription,
+            currentRequest.valideUntil,
+            currentRequest.amount,
+            currentRequest.numberAcceptedVotes,
+            currentRequest.numberRejectedVotes,
+            currentRequest.wasPayed
+        );
     }
 
-    function requestPayout() public payable onlyOwner returns (bool)
+    function requestPayout() public onlyOwner returns (bool)
     {
         //Mehrheit ist nicht erreicht
         if(!((currentRequest.numberAcceptedVotes / 2) > int256 (investorAddresses.length))){
@@ -151,9 +166,8 @@ contract ProjectContract is Ownable{
         if(currentRequest.wasPayed){
             return false;
         }
-        //payout
+        msg.sender.transfer(currentRequest.amount);
         currentRequest.wasPayed = true;
         return true;
     }
-  
 }
