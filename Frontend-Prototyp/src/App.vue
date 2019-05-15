@@ -15,7 +15,7 @@
             </p>
           </v-flex>
           <v-flex xs12 sm6>
-          <v-btn slot="activator" color="primary" dark>Projekt starten</v-btn>
+			<v-btn slot="activator" color="primary" dark  @click.stop="startProjectDialog = true">Projekt starten</v-btn>
           </v-flex>
         </v-layout>
 
@@ -222,8 +222,8 @@
 
 <script>
 // We import our the scripts for the smart contract instantiation, and web3
-import crowdfundInstance from '../contracts/crowdfundInstance';
-import crowdfundProject from '../contracts/crowdfundProjectInstance';
+import crowdfundInstance from '../contracts/crowdFundInstanceNew';
+import crowdfundProject from '../contracts/crowdFundProjectInstanceNew';
 import web3 from '../contracts/web3';
 
 export default {
@@ -250,7 +250,13 @@ export default {
   },
   methods: {
     getProjects() {
-      crowdfundInstance.methods.returnAllProjects().call().then((projects) => {
+      crowdfundInstance.methods.getProjectCount().call().then((projectCount) => {
+		console.log(projectCount);
+	  });
+	  crowdfundInstance.methods.getProject(0).call().then((project) => {
+		console.log(project);
+	  });
+	  /*crowdfundInstance.methods.returnAllProjects().call().then((projects) => {
         projects.forEach((projectAddress) => {
           const projectInst = crowdfundProject(projectAddress);
           projectInst.methods.getDetails().call().then((projectData) => {
@@ -260,9 +266,18 @@ export default {
             this.projectData.push(projectInfo);
           });
         });
-      });
+      });*/
     },
     startProject() {
+		crowdfundInstance.methods.addNewProject(
+			"TestProjekt",
+			"TestBeschreibung"
+		).send({
+			from: this.account
+		  }).then((isCreated) => {
+			console.log(isCreated)
+		});
+		
       /*this.newProject.isLoading = true;
       crowdfundInstance.methods.startProject(
         this.newProject.title,
