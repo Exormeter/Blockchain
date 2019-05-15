@@ -2,6 +2,7 @@ pragma solidity ^0.5.0;
 
 import "./Ownable.sol";
 import "../../Libs/DateLib.sol";
+import "../../ProjectHubContract/contracts/ProjectHubContract.sol";
 
 contract ProjectContract is Ownable{
 
@@ -9,6 +10,7 @@ contract ProjectContract is Ownable{
     string projectDescription;
     int backerOptionsID = 1;
     Request currentRequest;
+    ProjectHubContract projectHub;
     BackingOption[] backingOptions;
     address[] investorAddresses;
     mapping(address => Investor) Investors;
@@ -45,11 +47,12 @@ contract ProjectContract is Ownable{
         NoVoteGiven
     }
 
-    constructor(address _owner, string memory _projectTitle, string memory _projectDescription) public
+    constructor(address _owner, string memory _projectTitle, string memory _projectDescription, ProjectHubContract _projectHub) public
     {
         owner = _owner;
         projectTitle = _projectTitle;
         projectDescription = _projectDescription;
+        projectHub = _projectHub;
     }
 
     function addBackingOption(string memory _optionTitle, string memory _optionDescription,
@@ -93,6 +96,7 @@ contract ProjectContract is Ownable{
         require(Investors[msg.sender].investorExists == 0, "Investor has already invested");
 
         Investors[msg.sender] = Investor(msg.sender, backingOptionID, Vote.NoVoteGiven, 1);
+        projectHub.addProjectToInvestor(msg.sender, address(this), owner, projectTitle, projectDescription);
         backingOptions[optionIndex].optionAvailability--;
         return true;
     }
