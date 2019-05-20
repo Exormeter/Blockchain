@@ -1,6 +1,7 @@
 pragma solidity ^0.5;
+pragma experimental ABIEncoderV2;
 
-import "../../ProjectContract/contracts/ProjectContract.sol";
+import "./ProjectContract.sol";
 
 
 contract ProjectHubContract{
@@ -31,14 +32,15 @@ contract ProjectHubContract{
         return projects.length;
     }
 
-    function getProject(uint projectIndex) public view returns (address, address, string memory, string memory)
+    function getProject(uint projectIndex) public view returns (Project[] memory)
     {
         require(projectIndex < projects.length, "Index is out of bounds");
 
-        return (projects[projectIndex].owner,
-                projects[projectIndex].projectAdress,
-                projects[projectIndex].projectName,
-                projects[projectIndex].projectDescription);
+        // return (projects[projectIndex].owner,
+        //         projects[projectIndex].projectAdress,
+        //         projects[projectIndex].projectName,
+        //         projects[projectIndex].projectDescription);
+        return projects;
     }
     
     function getProjectCountForFounder() public view returns (uint)
@@ -77,4 +79,6 @@ contract ProjectHubContract{
         projectsBackedByInvestor[investor].push(Project(_owner, _projectAddress, _projectName, _projectDescription));
     }
 }
+
+
 
