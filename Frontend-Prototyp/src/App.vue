@@ -15,7 +15,7 @@
             </p>
           </v-flex>
           <v-flex xs12 sm6>
-          <v-btn slot="activator" color="primary" dark>Projekt starten</v-btn>
+			<v-btn slot="activator" color="primary" dark  @click.stop="startProjectDialog = true">Projekt starten</v-btn>
           </v-flex>
         </v-layout>
 
@@ -33,14 +33,14 @@
                       <v-text-field
                         label="Titel"
                         persistent-hint
-                        v-model="newProject.title">
+                        v-model="newObject.title">
                       </v-text-field>
                     </v-flex>
                     <v-flex xs12>
                       <v-textarea
                         label="Beschreibung"
                         persistent-hint
-                        v-model="newProject.description">
+                        v-model="newObject.description">
                       </v-textarea>
                     </v-flex>
                     <v-flex xs12 sm6>
@@ -49,14 +49,14 @@
                         type="number"
                         step="0.0001"
                         min="0"
-                        v-model="newProject.amountGoal">
+                        v-model="newObject.amountGoal">
                       </v-text-field>
                     </v-flex>
                     <v-flex xs12 sm6>
                       <v-text-field
                         label="Laufzeit (in Tagen)"
                         type="number"
-                        v-model="newProject.duration">
+                        v-model="newObject.duration">
                       </v-text-field>
                     </v-flex>
                     <v-flex xs12>
@@ -93,13 +93,77 @@
                   color="blue darken-1"
                   flat
                   @click="startProjectDialog = false;
-                  newProject.isLoading = false;">
+                  newObject.isLoading = false;">
                   Schließen
                 </v-btn>
                 <v-btn color="blue darken-1"
                   flat
                   @click="startProject"
-                  :loading="newProject.isLoading">
+                  :loading="newObject.isLoading">
+                  Speichern
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+        </v-layout>
+
+        <v-layout row justify-center>
+          <v-dialog v-model="addBackingOptionDialog" max-width="600px" persistent>
+            
+            <v-card>
+              <v-card-title>
+                <span class="headline font-weight-bold mt-2 ml-4">Backing Option hinzufügen</span>
+              </v-card-title>
+              <v-card-text class="pt-0">
+                <v-container class="pt-0" grid-list-md>
+                  <v-layout wrap>
+                    <v-flex xs12>
+                      <v-text-field
+                        label="Titel"
+                        persistent-hint
+                        v-model="newObject.title">
+                      </v-text-field>
+                    </v-flex>
+                    <v-flex xs12>
+                      <v-textarea
+                        label="Beschreibung"
+                        persistent-hint
+                        v-model="newObject.description">
+                      </v-textarea>
+                    </v-flex>
+                    <v-flex xs12 sm6>
+                      <v-text-field
+                        label="Preis (in ETH)"
+                        type="number"
+                        step="0.0001"
+                        min="0"
+                        v-model="newObject.price">
+                      </v-text-field>
+                    </v-flex>
+                    <v-flex xs12 sm6>
+                      <v-text-field
+                        label="Verfügbare Menge"
+                        type="number"
+                        v-model="newObject.amount">
+                      </v-text-field>
+                    </v-flex>
+
+                  </v-layout>
+                </v-container>
+              </v-card-text>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn
+                  color="blue darken-1"
+                  flat
+                  @click="addBackingOptionDialog = false;
+                  newObject.isLoading = false;">
+                  Schließen
+                </v-btn>
+                <v-btn color="blue darken-1"
+                  flat
+                  @click="addBackingOption(activeIndex)"
+                  :loading="newObject.isLoading">
                   Speichern
                 </v-btn>
               </v-card-actions>
@@ -181,10 +245,22 @@
                   <v-btn
                     class="mt-3"
                     color="light-blue darken-1 white--text"
-                    @click="fundProject(index)"
+                    @click="watchProjectDetails(index)"
                     :loading="project.isLoading"
                   >
-                    Fund
+                    Details
+                  </v-btn>
+                </v-flex>
+                <v-flex
+                  v-if="project.currentState == 0 && account == project.projectStarter"
+                  class="d-flex ml-3" xs12 sm6 md3>
+                  <v-btn
+                    class="mt-3"
+                    color="light-blue darken-1 white--text"
+                    @click="addBackingOptionDialog = true; activeIndex = index;"
+                    :loading="project.isLoading"
+                  >
+                    Add Option
                   </v-btn>
                 </v-flex>
                 <v-flex class="d-flex ml-3" xs12 sm6 md3>
@@ -222,8 +298,8 @@
 
 <script>
 // We import our the scripts for the smart contract instantiation, and web3
-import crowdfundInstance from '../contracts/crowdfundInstance';
-import crowdfundProject from '../contracts/crowdfundProjectInstance';
+import crowdfundInstance from '../contracts/crowdfundInstanceNew';
+import crowdfundProject from '../contracts/crowdfundProjectInstanceNew';
 import web3 from '../contracts/web3';
 
 export default {
@@ -231,6 +307,8 @@ export default {
   data() {
     return {
       startProjectDialog: false,
+      addBackingOptionDialog: false,
+      activeIndex: null,
       account: null,
       stateMap: [
         { color: 'primary', text: 'Laufend' },
@@ -238,7 +316,7 @@ export default {
         { color: 'success', text: 'Abgeschlossen' },
       ],
       projectData: [],
-      newProject: { isLoading: false },
+      newObject: { isLoading: false },
     };
   },
   mounted() {
@@ -250,7 +328,26 @@ export default {
   },
   methods: {
     getProjects() {
-      crowdfundInstance.methods.returnAllProjects().call().then((projects) => {
+      crowdfundInstance.methods.getProjectCount().call().then((projectCount) => {
+        for (var i = 0; i < projectCount; i++){
+          crowdfundInstance.methods.getProject(i).call().then((projectData) => {
+            console.log(projectData);
+            const projectInfo = {}
+            projectInfo.projectTitle = projectData[2];
+            projectInfo.projectDesc = projectData[3];
+            projectInfo.projectStarter = projectData[0];
+            projectInfo.deadline = "1560773997"; 
+            projectInfo.goalAmount = "2000000000000000000";
+            projectInfo.currentAmount = 0;
+            projectInfo.currentState = "0"; 
+            projectInfo.isLoading = false;
+            projectInfo.contract = projectData[1];
+            this.projectData.push(projectInfo);
+          });
+        }
+	    });
+	 
+	  /*crowdfundInstance.methods.returnAllProjects().call().then((projects) => {
         projects.forEach((projectAddress) => {
           const projectInst = crowdfundProject(projectAddress);
           projectInst.methods.getDetails().call().then((projectData) => {
@@ -260,15 +357,30 @@ export default {
             this.projectData.push(projectInfo);
           });
         });
-      });
+      });*/
     },
     startProject() {
-      /*this.newProject.isLoading = true;
+      this.newObject.isLoading = true;
+      crowdfundInstance.methods.addnewProject(
+        this.newObject.title,
+        this.newObject.description/*,
+        this.newObject.duration,
+        web3.utils.toWei(this.newObject.amountGoal, 'ether')
+        */
+      ).send({
+        from: this.account
+        }).then((isCreated) => {
+        console.log(isCreated)
+        this.startProjectDialog = false;
+        this.newObject = { isLoading: false };
+      });
+		
+      /*this.newObject.isLoading = true;
       crowdfundInstance.methods.startProject(
-        this.newProject.title,
-        this.newProject.description,
-        this.newProject.duration,
-        web3.utils.toWei(this.newProject.amountGoal, 'ether'),
+        this.newObject.title,
+        this.newObject.description,
+        this.newObject.duration,
+        web3.utils.toWei(this.newObject.amountGoal, 'ether'),
       ).send({
         from: this.account,
       }).then((res) => {
@@ -278,10 +390,37 @@ export default {
         projectInfo.currentState = 0;
         projectInfo.contract = crowdfundProject(projectInfo.contractAddress);
         this.startProjectDialog = false;
-        this.newProject = { isLoading: false };
+        this.newObject = { isLoading: false };
       });*/
     },
-    fundProject(index) {
+    addBackingOption(index) {
+      this.newObject.isLoading = true;
+      crowdfundInstance.methods.getProject(index).call().then((projectData) => {
+          const projectInst = crowdfundProject(projectData[1]);
+          projectInst.methods.addBackingOption(
+            this.newObject.title,
+            this.newObject.description,
+            this.newObject.price,
+            this.newObject.amount
+          ).send({
+            from: this.account,
+          }).then((data) => {
+            console.log(data);
+            this.newObject = { isLoading: false };
+          });  
+      });        
+    },
+    watchProjectDetails(index) {
+      crowdfundInstance.methods.getProject(index).call().then((projectData) => {
+         const projectInst = crowdfundProject(projectData[1]);
+         projectInst.methods.getBackingOptionsCount().call().then((backingOptionCount) => {
+            for (var i = 0; i < backingOptionCount; i++){
+              projectInst.methods.getBackingOption(i).call().then((backingOptionData) => {
+                console.log(backingOptionData);
+              });
+            }
+         });
+      });
       /*if (!this.projectData[index].fundAmount) {
         return;
       }
