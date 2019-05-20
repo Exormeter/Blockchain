@@ -1,8 +1,7 @@
-pragma solidity ^0.5.0;
+pragma solidity >=0.4.25 <0.6.0;
 
 import "./Ownable.sol";
-import "../../Libs/DateLib.sol";
-import "../../ProjectHubContract/contracts/ProjectHubContract.sol";
+import "./ProjectHubContract.sol";
 
 contract ProjectContract is Ownable{
 
