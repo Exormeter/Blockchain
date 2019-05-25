@@ -381,20 +381,10 @@ export default {
         this.newObject = { isLoading: false };
       });
     },
-    watchProjectDetails(projectIndex) {
+    getBackingOptions(projectIndex) {
       const projectInst = crowdfundProject(this.projectData[projectIndex].contract);
       projectInst.methods.getBackingOptionsCount().call().then((backingOptionCount) => {
         for (var i = 0; i < backingOptionCount; i++){
-          projectInst.methods.getBackingOption(i).call().then((backingOptionData) => {
-            console.log(backingOptionData);
-          });
-        }
-      });
-    },
-    getBackingOptions(projectIndex) {
-      const projectInst = crowdfundProject(this.projectData[projectIndex].contract);
-      projectInst.methods.getBackingOptionsCount().call().then((optionsCount) => {
-        for (var i = 0; i < optionsCount; i++){
           projectInst.methods.getBackingOption(i).call().then((backingOption) => {
             console.log(backingOption);
           });
