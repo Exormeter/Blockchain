@@ -21,7 +21,7 @@
 
         <v-layout row justify-center>
           <v-dialog v-model="startProjectDialog" max-width="600px" persistent>
-            
+
             <v-card>
               <v-card-title>
                 <span class="headline font-weight-bold mt-2 ml-4">Projekt erstellen</span>
@@ -109,7 +109,7 @@
 
         <v-layout row justify-center>
           <v-dialog v-model="addBackingOptionDialog" max-width="600px" persistent>
-            
+
             <v-card>
               <v-card-title>
                 <span class="headline font-weight-bold mt-2 ml-4">Backing Option hinzufügen</span>
@@ -336,17 +336,17 @@ export default {
             projectInfo.projectTitle = projectData[2];
             projectInfo.projectDesc = projectData[3];
             projectInfo.projectStarter = projectData[0];
-            projectInfo.deadline = "1560773997"; 
+            projectInfo.deadline = "1560773997";
             projectInfo.goalAmount = "2000000000000000000";
             projectInfo.currentAmount = 0;
-            projectInfo.currentState = "0"; 
+            projectInfo.currentState = "0";
             projectInfo.isLoading = false;
             projectInfo.contract = projectData[1];
             this.projectData.push(projectInfo);
           });
         }
 	    });
-	 
+
 	  /*crowdfundInstance.methods.returnAllProjects().call().then((projects) => {
         projects.forEach((projectAddress) => {
           const projectInst = crowdfundProject(projectAddress);
@@ -374,7 +374,7 @@ export default {
         this.startProjectDialog = false;
         this.newObject = { isLoading: false };
       });
-		
+
       /*this.newObject.isLoading = true;
       crowdfundInstance.methods.startProject(
         this.newObject.title,
@@ -407,8 +407,8 @@ export default {
           }).then((data) => {
             console.log(data);
             this.newObject = { isLoading: false };
-          });  
-      });        
+          });
+      });
     },
     watchProjectDetails(index) {
       crowdfundInstance.methods.getProject(index).call().then((projectData) => {
@@ -421,26 +421,81 @@ export default {
             }
          });
       });
-      /*if (!this.projectData[index].fundAmount) {
-        return;
-      }
-
-      const projectContract = this.projectData[index].contract;
-      this.projectData[index].isLoading = true;
-      projectContract.methods.contribute().send({
-        from: this.account,
-        value: web3.utils.toWei(this.projectData[index].fundAmount, 'ether'),
-      }).then((res) => {
-        const newTotal = parseInt(res.events.FundingReceived.returnValues.currentTotal, 10);
-        const projectGoal = parseInt(this.projectData[index].goalAmount, 10);
-        this.projectData[index].currentAmount = newTotal;
-        this.projectData[index].isLoading = false;
-
-        // Set project state to success
-        if (newTotal >= projectGoal) {
-          this.projectData[index].currentState = 2;
-        }
-      });*/
+    },
+    getBackingOptions(projectIndex) {
+      crowdfundInstance.methods.getProject(projectIndex).call().then((projectData) => {
+        const projectInst = crowdfundProject(projectData[1]);
+        projectInst.methods.getBackingOptionsCount().call().then((optionsCount) => {
+          for (var i = 0; i < optionsCount; i++){
+            projectInst.methods.getBackingOption(i).call().then((backingOption) => {
+              console.log(backingOption);
+            });
+          }
+        });
+      });
+    },
+    getInvestorCount(projectIndex) {
+      crowdfundInstance.methods.getProject(projectIndex).call().then((projectData) => {
+        const projectInst = crowdfundProject(projectData[1]);
+        projectInst.methods.getInvestorCount().call().then((investorCount) => {
+          console.log(investorCount);
+        });
+      });
+    },
+    addRequest(projectIndex, title, description, date, amount) {
+      crowdfundInstance.methods.getProject(projectIndex).call().then((projectData) => {
+        const projectInst = crowdfundProject(projectData[1]);
+        projectInst.methods.addRequest(
+          title,
+          description,
+          date,
+          amount
+        ).send({
+          from: this.account,
+        }).then((status) => {
+          console.log(status);
+        });
+      });
+    },
+    requestPayout(projectIndex) {
+      crowdfundInstance.methods.getProject(projectIndex).call().then((projectData) => {
+        const projectInst = crowdfundProject(projectData[1]);
+        projectInst.methods.requestPayout().call().then((status) => {
+          console.log(status);
+        });
+      });
+    },
+    getCurrentRequest(projectIndex) {
+      crowdfundInstance.methods.getProject(projectIndex).call().then((projectData) => {
+        const projectInst = crowdfundProject(projectData[1]);
+        projectInst.methods.getCurrentRequest().call().then((request) => {
+          console.log(request);
+        });
+      });
+    },
+    voteForCurrentRequest(projectIndex, vote) {
+      crowdfundInstance.methods.getProject(projectIndex).call().then((projectData) => {
+        const projectInst = crowdfundProject(projectData[1]);
+        projectInst.methods.voteForCurrentRequest(
+          vote
+        ).send({
+          from: this.account,
+        }).then(() => {
+          console.log("Vote submitted");
+        });
+      });
+    },
+    addInvestor(projectIndex, optionId) {
+      crowdfundInstance.methods.getProject(projectIndex).call().then((projectData) => {
+        const projectInst = crowdfundProject(projectData[1]);
+        projectInst.methods.addInvestor(
+          optionId
+        ).send({
+          from: this.account,
+        }).then((status) => {
+          console.log(status);
+        });
+      });
     },
     getRefund(index) {
       /*this.projectData[index].isLoading = true;
