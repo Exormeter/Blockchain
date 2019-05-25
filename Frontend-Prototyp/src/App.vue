@@ -112,7 +112,7 @@
 
             <v-card>
               <v-card-title>
-                <span class="headline font-weight-bold mt-2 ml-4">Backing Option hinzufügen</span>
+                <span class="headline font-weight-bold mt-2 ml-4">Backing-Option hinzufügen</span>
               </v-card-title>
               <v-card-text class="pt-0">
                 <v-container class="pt-0" grid-list-md>
@@ -170,6 +170,33 @@
             </v-card>
           </v-dialog>
         </v-layout>
+
+        <v-layout row justify-center>
+          <v-dialog v-model="viewBackingOptionsDialog" max-width="600px" persistent>
+
+            <v-card>
+              <v-card-title class="headline grey lighten-2" primary-title>
+                <span>Verfügbare Backing-Optionen</span>
+              </v-card-title>
+              <v-card-text class="pt-0">
+                Backing-Option1
+                Dies ist ein Text, welcher Backing-Option1 beschreibt
+              </v-card-text>
+              <v-divider></v-divider>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn
+                  color="blue darken-1"
+                  flat
+                  @click="viewBackingOptionsDialog = false;
+                  newObject.isLoading = false;">
+                  Schließen
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+        </v-layout>
+
       </v-container>
 
       <v-container
@@ -247,10 +274,10 @@
                   <v-btn
                     class="mt-3"
                     color="light-blue darken-1 white--text"
-                    @click="watchProjectDetails(index)"
+                    @click="viewBackingOptionsDialog = true; getBackingOptions(index);"
                     :loading="project.isLoading"
                   >
-                    Details
+                    View
                   </v-btn>
                 </v-flex>
                 <v-flex
@@ -310,6 +337,7 @@ export default {
     return {
       startProjectDialog: false,
       addBackingOptionDialog: false,
+      viewBackingOptionsDialog: false,
       activeIndex: null,
       account: null,
       stateMap: [
