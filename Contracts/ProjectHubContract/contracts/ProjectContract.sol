@@ -63,13 +63,14 @@ contract ProjectContract is Ownable{
         backerOptionsID++;
     }
 
-    function getBackingOption(uint index) public view returns(string memory, string memory, uint, int)
+    function getBackingOption(uint index) public view returns(string memory, string memory, uint, int, int)
     {
         if(index >= backingOptions.length){
-            return ("", "", 0, 0);
+            return ("", "", 0, 0, 0);
         }
         return (backingOptions[index].optionTitle, backingOptions[index].optionDescription,
-            backingOptions[index].optionAmountEther, backingOptions[index].optionAvailability);
+            backingOptions[index].optionAmountEther, backingOptions[index].optionAvailability,
+            backingOptions[index].id);
     }
 
     function getBackingOptionsCount()public view returns (uint){
@@ -172,5 +173,8 @@ contract ProjectContract is Ownable{
         msg.sender.transfer(currentRequest.amount);
         currentRequest.wasPayed = true;
         return true;
+    }
+
+    function () external payable {
     }
 }

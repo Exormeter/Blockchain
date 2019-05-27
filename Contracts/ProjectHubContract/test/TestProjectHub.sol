@@ -8,7 +8,7 @@ import "../contracts/ProjectHubContract.sol";
 contract TestProjectHub{
     struct Project{
         address owner;
-        address projectAdress;
+        address payable projectAdress;
         string projectName;
         string projectDescription;
     }
@@ -31,7 +31,7 @@ contract TestProjectHub{
 
     function testProjectRetrival() public{
         address _owner;
-        address _projectAdress;
+        address payable _projectAdress;
         string memory _projectName;
         string memory _projectDescription;
 
@@ -45,7 +45,7 @@ contract TestProjectHub{
 
     function testProjectAddressRetrival() public{
         address _owner;
-        address _projectAddress;
+        address payable _projectAddress;
         string memory _projectName;
         string memory _projectDescription;
 
@@ -59,7 +59,7 @@ contract TestProjectHub{
 
     function testAddBackingOption() public{
         address _owner;
-        address _projectAddress;
+        address payable _projectAddress;
         string memory _projectName;
         string memory _projectDescription;
 
@@ -71,7 +71,7 @@ contract TestProjectHub{
         ProjectContract projectContract = ProjectContract(_projectAddress);
         projectContract.addBackingOption("Option1", "Option1", 10, 10);
 
-        (string memory title,,,) = projectContract.getBackingOption(0);
+        (string memory title,,,,) = projectContract.getBackingOption(0);
 
         Assert.equal(projectContract.getBackingOptionsCount(), 1, "BackingOptions should be 1");
         Assert.equal(title, "Option1", "Name should be Option1");

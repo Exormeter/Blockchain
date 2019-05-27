@@ -1,5 +1,4 @@
 pragma solidity ^0.5;
-pragma experimental ABIEncoderV2;
 
 import "./ProjectContract.sol";
 
@@ -13,7 +12,7 @@ contract ProjectHubContract{
 
     struct Project{
         address owner;
-        address projectAdress;
+        address payable projectAdress;
         string projectName;
         string projectDescription;
     }
@@ -33,7 +32,7 @@ contract ProjectHubContract{
     }
 
     function getProjects(uint projectIndex) public view returns (address owner,
-                                                                address projectAdress,
+                                                                address payable projectAdress,
                                                                 string memory projectName,
                                                                 string memory projectDescription)
     {
@@ -43,7 +42,6 @@ contract ProjectHubContract{
                 projects[projectIndex].projectAdress,
                 projects[projectIndex].projectName,
                 projects[projectIndex].projectDescription);
-        //return projects;
     }
     
     function getProjectCountForFounder() public view returns (uint)
@@ -76,7 +74,7 @@ contract ProjectHubContract{
                 projectsBackedByInvestor[msg.sender][projectIndex].projectDescription);
     }
 
-    function addProjectToInvestor(address investor, address _projectAddress, address _owner,
+    function addProjectToInvestor(address investor, address payable _projectAddress, address _owner,
                     string memory _projectName, string memory _projectDescription) public
     {
         projectsBackedByInvestor[investor].push(Project(_owner, _projectAddress, _projectName, _projectDescription));
