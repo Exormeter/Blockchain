@@ -1,4 +1,4 @@
-<template>
+<template ref="foo">
   <v-app class="grey lighten-3">
     <v-content>
       <v-container>
@@ -21,7 +21,7 @@
 
         <v-layout row justify-center>
           <v-dialog v-model="startProjectDialog" max-width="600px" persistent>
-            
+
             <v-card>
               <v-card-title>
                 <span class="headline font-weight-bold mt-2 ml-4">Projekt erstellen</span>
@@ -109,10 +109,10 @@
 
         <v-layout row justify-center>
           <v-dialog v-model="addBackingOptionDialog" max-width="600px" persistent>
-            
+
             <v-card>
               <v-card-title>
-                <span class="headline font-weight-bold mt-2 ml-4">Backing Option hinzufügen</span>
+                <span class="headline font-weight-bold mt-2 ml-4">Backing-Option hinzufügen</span>
               </v-card-title>
               <v-card-text class="pt-0">
                 <v-container class="pt-0" grid-list-md>
@@ -170,6 +170,33 @@
             </v-card>
           </v-dialog>
         </v-layout>
+
+        <v-layout row justify-center>
+          <v-dialog v-model="viewBackingOptionsDialog" max-width="600px" persistent>
+
+            <v-card>
+              <v-card-title class="headline grey lighten-2" primary-title>
+                <span>Verfügbare Backing-Optionen</span>
+              </v-card-title>
+              <v-card-text class="pt-0">
+                Backing-Option1
+                Dies ist ein Text, welcher Backing-Option1 beschreibt
+              </v-card-text>
+              <v-divider></v-divider>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn
+                  color="blue darken-1"
+                  flat
+                  @click="viewBackingOptionsDialog = false;
+                  newObject.isLoading = false;">
+                  Schließen
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+        </v-layout>
+
       </v-container>
 
       <v-container
@@ -232,8 +259,10 @@
                     <small v-if="project.currentState == 2">has been achieved</small>
                   </div>
                 </v-card-title>
+                <!--  v-if="project.currentState == 0 " #&& account != project.projectStarter-->
+                
                 <v-flex
-                  v-if="project.currentState == 0 && account != project.projectStarter"
+                  v-if="project.currentState == 0 "
                   class="d-flex ml-3" xs12 sm6 md3>
                   <v-text-field
                     label="Betrag (in ETH)"
@@ -245,10 +274,10 @@
                   <v-btn
                     class="mt-3"
                     color="light-blue darken-1 white--text"
-                    @click="watchProjectDetails(index)"
+                    @click="viewBackingOptionsDialog = true; getBackingOptions(index);"
                     :loading="project.isLoading"
                   >
-                    Details
+                    View
                   </v-btn>
                 </v-flex>
                 <v-flex
@@ -308,6 +337,7 @@ export default {
     return {
       startProjectDialog: false,
       addBackingOptionDialog: false,
+      viewBackingOptionsDialog: false,
       activeIndex: null,
       account: null,
       stateMap: [
@@ -336,32 +366,20 @@ export default {
             projectInfo.projectTitle = projectData[2];
             projectInfo.projectDesc = projectData[3];
             projectInfo.projectStarter = projectData[0];
-            projectInfo.deadline = "1560773997"; 
+            projectInfo.deadline = "1560773997";
             projectInfo.goalAmount = "2000000000000000000";
             projectInfo.currentAmount = 0;
-            projectInfo.currentState = "0"; 
+            projectInfo.currentState = "0";
             projectInfo.isLoading = false;
             projectInfo.contract = projectData[1];
             this.projectData.push(projectInfo);
           });
         }
 	    });
-	 
-	  /*crowdfundInstance.methods.returnAllProjects().call().then((projects) => {
-        projects.forEach((projectAddress) => {
-          const projectInst = crowdfundProject(projectAddress);
-          projectInst.methods.getDetails().call().then((projectData) => {
-            const projectInfo = projectData;
-            projectInfo.isLoading = false;
-            projectInfo.contract = projectInst;
-            this.projectData.push(projectInfo);
-          });
-        });
-      });*/
     },
     startProject() {
       this.newObject.isLoading = true;
-      crowdfundInstance.methods.addnewProject(
+      crowdfundInstance.methods.addNewProject(
         this.newObject.title,
         this.newObject.description/*,
         this.newObject.duration,
@@ -374,73 +392,83 @@ export default {
         this.startProjectDialog = false;
         this.newObject = { isLoading: false };
       });
-		
-      /*this.newObject.isLoading = true;
-      crowdfundInstance.methods.startProject(
-        this.newObject.title,
-        this.newObject.description,
-        this.newObject.duration,
-        web3.utils.toWei(this.newObject.amountGoal, 'ether'),
-      ).send({
-        from: this.account,
-      }).then((res) => {
-        const projectInfo = res.events.ProjectStarted.returnValues;
-        projectInfo.isLoading = false;
-        projectInfo.currentAmount = 0;
-        projectInfo.currentState = 0;
-        projectInfo.contract = crowdfundProject(projectInfo.contractAddress);
-        this.startProjectDialog = false;
-        this.newObject = { isLoading: false };
-      });*/
+
     },
     addBackingOption(index) {
       this.newObject.isLoading = true;
-      crowdfundInstance.methods.getProject(index).call().then((projectData) => {
-          const projectInst = crowdfundProject(projectData[1]);
-          projectInst.methods.addBackingOption(
-            this.newObject.title,
-            this.newObject.description,
-            this.newObject.price,
-            this.newObject.amount
-          ).send({
-            from: this.account,
-          }).then((data) => {
-            console.log(data);
-            this.newObject = { isLoading: false };
-          });  
-      });        
-    },
-    watchProjectDetails(index) {
-      crowdfundInstance.methods.getProject(index).call().then((projectData) => {
-         const projectInst = crowdfundProject(projectData[1]);
-         projectInst.methods.getBackingOptionsCount().call().then((backingOptionCount) => {
-            for (var i = 0; i < backingOptionCount; i++){
-              projectInst.methods.getBackingOption(i).call().then((backingOptionData) => {
-                console.log(backingOptionData);
-              });
-            }
-         });
-      });
-      /*if (!this.projectData[index].fundAmount) {
-        return;
-      }
-
-      const projectContract = this.projectData[index].contract;
-      this.projectData[index].isLoading = true;
-      projectContract.methods.contribute().send({
+      const projectInst = crowdfundProject(this.projectData[index].contract);
+      projectInst.methods.addBackingOption(
+        this.newObject.title,
+        this.newObject.description,
+        this.newObject.price,
+        this.newObject.amount
+      ).send({
         from: this.account,
-        value: web3.utils.toWei(this.projectData[index].fundAmount, 'ether'),
-      }).then((res) => {
-        const newTotal = parseInt(res.events.FundingReceived.returnValues.currentTotal, 10);
-        const projectGoal = parseInt(this.projectData[index].goalAmount, 10);
-        this.projectData[index].currentAmount = newTotal;
-        this.projectData[index].isLoading = false;
-
-        // Set project state to success
-        if (newTotal >= projectGoal) {
-          this.projectData[index].currentState = 2;
+      }).then((data) => {
+        console.log(data);
+        this.newObject = { isLoading: false };
+      });
+    },
+    getBackingOptions(projectIndex) {
+      const projectInst = crowdfundProject(this.projectData[projectIndex].contract);
+      projectInst.methods.getBackingOptionsCount().call().then((backingOptionCount) => {
+        for (var i = 0; i < backingOptionCount; i++){
+          projectInst.methods.getBackingOption(i).call().then((backingOption) => {
+            console.log(backingOption);
+          });
         }
-      });*/
+      });
+    },
+    getInvestorCount(projectIndex) {
+      const projectInst = crowdfundProject(this.projectData[projectIndex].contract);
+      projectInst.methods.getInvestorCount().call().then((investorCount) => {
+        console.log(investorCount);
+      });
+    },
+    addRequest(projectIndex, title, description, date, amount) {
+      const projectInst = crowdfundProject(this.projectData[projectIndex].contract);
+      projectInst.methods.addRequest(
+        title,
+        description,
+        date,
+        amount
+      ).send({
+        from: this.account,
+      }).then((status) => {
+        console.log(status);
+      });
+    },
+    requestPayout(projectIndex) {
+      const projectInst = crowdfundProject(this.projectData[projectIndex].contract);
+      projectInst.methods.requestPayout().call().then((status) => {
+        console.log(status);
+      });
+    },
+    getCurrentRequest(projectIndex) {
+      const projectInst = crowdfundProject(this.projectData[projectIndex].contract);
+      projectInst.methods.getCurrentRequest().call().then((request) => {
+        console.log(request);
+      });
+    },
+    voteForCurrentRequest(projectIndex, vote) {
+      const projectInst = crowdfundProject(this.projectData[projectIndex].contract);
+      projectInst.methods.voteForCurrentRequest(
+        vote
+      ).send({
+        from: this.account,
+      }).then(() => {
+        console.log("Vote submitted");
+      });
+    },
+    addInvestor(projectIndex, optionId) {
+      const projectInst = crowdfundProject(this.projectData[projectIndex].contract);
+      projectInst.methods.addInvestor(
+        optionId
+      ).send({
+        from: this.account,
+      }).then((status) => {
+        console.log(status);
+      });
     },
     getRefund(index) {
       /*this.projectData[index].isLoading = true;

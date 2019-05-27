@@ -4,6 +4,6 @@ import App from './App.vue';
 
 Vue.config.productionTip = false;
 
-new Vue({
+var vm = new Vue({
   render: h => h(App),
 }).$mount('#app');
