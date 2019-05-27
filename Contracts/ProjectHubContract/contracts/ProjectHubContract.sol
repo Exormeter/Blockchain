@@ -32,15 +32,18 @@ contract ProjectHubContract{
         return projects.length;
     }
 
-    function getProject(uint projectIndex) public view returns (Project[] memory)
+    function getProjects(uint projectIndex) public view returns (address owner,
+                                                                address projectAdress,
+                                                                string memory projectName,
+                                                                string memory projectDescription)
     {
         require(projectIndex < projects.length, "Index is out of bounds");
 
-        // return (projects[projectIndex].owner,
-        //         projects[projectIndex].projectAdress,
-        //         projects[projectIndex].projectName,
-        //         projects[projectIndex].projectDescription);
-        return projects;
+        return (projects[projectIndex].owner,
+                projects[projectIndex].projectAdress,
+                projects[projectIndex].projectName,
+                projects[projectIndex].projectDescription);
+        //return projects;
     }
     
     function getProjectCountForFounder() public view returns (uint)
