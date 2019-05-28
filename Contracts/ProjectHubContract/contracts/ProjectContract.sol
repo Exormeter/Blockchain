@@ -8,6 +8,7 @@ contract ProjectContract is Ownable{
     string projectTitle;
     string projectDescription;
     int backerOptionsID = 1;
+    bool wasFirstRequestGiven = false;
     Request currentRequest;
     ProjectHubContract projectHub;
     BackingOption[] backingOptions;
@@ -26,7 +27,7 @@ contract ProjectContract is Ownable{
     struct Request{
         string requestTitle;
         string requestDescription;
-        uint256 valideUntil;
+        uint valideUntil;
         uint amount;
         int numberAcceptedVotes;
         int numberRejectedVotes;
@@ -109,11 +110,10 @@ contract ProjectContract is Ownable{
     function addRequest(string memory _requestTitle, string memory _requestDescription,
     uint256 _valideUntil, uint _amount) public onlyOwner returns (bool)
     {
-        if(currentRequest.valideUntil != 0 && currentRequest.valideUntil < block.timestamp)
-        {
-            return false;
+        if(wasFirstRequestGiven){
+            require(currentRequest.valideUntil < block.timestamp, "Current Request is still valide");
         }
-        requestPayout();
+        wasFirstRequestGiven = true;
         currentRequest = Request(_requestTitle, _requestDescription, _valideUntil, _amount, 0, 0, false);
         for(uint i = 0; i<investorAddresses.length; i++){
             Investors[investorAddresses[i]].currentVote = Vote.NoVoteGiven;
@@ -124,20 +124,17 @@ contract ProjectContract is Ownable{
     function voteForCurrentRequest(bool isAccepted) public
     {
 
-        //Addresse ist kein Investor
-        if(Investors[msg.sender].investorExists == 0){
-            return;
-        }
+        require(Investors[msg.sender].investorExists != 0, "Sender address is not investor");
 
-        //Addresse hat bereits abgestimmt
-        if(Investors[msg.sender].currentVote != Vote.NoVoteGiven){
-            return;
-        }
+        require(Investors[msg.sender].currentVote == Vote.NoVoteGiven, "Investor has already voted");
+
         if(isAccepted){
             Investors[msg.sender].currentVote = Vote.Accepted;
+            currentRequest.numberAcceptedVotes++;
         }
         else{
             Investors[msg.sender].currentVote = Vote.Rejected;
+            currentRequest.numberRejectedVotes++;
         }
     }
 
@@ -160,19 +157,15 @@ contract ProjectContract is Ownable{
         );
     }
 
-    function requestPayout() public onlyOwner returns (bool)
+    function requestPayout() public onlyOwner
     {
-        //Mehrheit ist nicht erreicht
-        if(!((currentRequest.numberAcceptedVotes / 2) > int256 (investorAddresses.length))){
-            return false;
-        }
-        //Der Request wurde bereits ausgezahlt
-        if(currentRequest.wasPayed){
-            return false;
-        }
+        require(((currentRequest.numberAcceptedVotes / 2) > int256 (investorAddresses.length)), "Majority was not reached");
+        
+        require(!currentRequest.wasPayed, "Request was already payed out");
+        
         msg.sender.transfer(currentRequest.amount);
         currentRequest.wasPayed = true;
-        return true;
+        wasFirstRequestGiven = false;
     }
 
     function () external payable {
