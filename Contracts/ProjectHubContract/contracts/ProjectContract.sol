@@ -9,6 +9,7 @@ contract ProjectContract is Ownable{
     string projectDescription;
     int backerOptionsID = 1;
     bool wasFirstRequestGiven = false;
+    bool backingAddingPeriodeIsOver = false;
     Request currentRequest;
     ProjectHubContract projectHub;
     BackingOption[] backingOptions;
@@ -58,17 +59,21 @@ contract ProjectContract is Ownable{
     function addBackingOption(string memory _optionTitle, string memory _optionDescription,
     uint _optionAmountEther, int _optionAvailability) public onlyOwner
     {
+        require(!backingAddingPeriodeIsOver, "The periode of adding backing options to the contract is over");
         BackingOption memory backingOption = BackingOption(_optionTitle, _optionDescription, _optionAmountEther,
             _optionAvailability, backerOptionsID);
         backingOptions.push(backingOption);
         backerOptionsID++;
     }
 
+    function closeAddingBackingOptionPeriode() public onlyOwner
+    {
+        backingAddingPeriodeIsOver = true;
+    }
+
     function getBackingOption(uint index) public view returns(string memory, string memory, uint, int, int)
     {
-        if(index >= backingOptions.length){
-            return ("", "", 0, 0, 0);
-        }
+        require(index < backingOptions.length, "The index is out of bounds");
         return (backingOptions[index].optionTitle, backingOptions[index].optionDescription,
             backingOptions[index].optionAmountEther, backingOptions[index].optionAvailability,
             backingOptions[index].id);
@@ -80,6 +85,7 @@ contract ProjectContract is Ownable{
 
     function addInvestor(int backingOptionID) public payable returns (bool)
     {
+        require(backingAddingPeriodeIsOver, "The adding backing option periode is not over yet");
         uint  optionIndex;
         for (uint i = 0; i<backingOptions.length; i++){
             if(backingOptions[i].id == backingOptionID){

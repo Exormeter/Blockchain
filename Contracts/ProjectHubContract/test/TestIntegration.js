@@ -38,8 +38,7 @@ contract("ContractHub", accounts => {
 
         let project = await hub.getProjects(0, {from: creatorAccount});
         let projectContract = await ProjectContract.at(project[1]);
-        projectContract.addBackingOption("TestOption", "TestOptionDescription", 500, 400, {from: creatorAccount});
-
+        await projectContract.closeAddingBackingOptionPeriode({from: creatorAccount})
         await projectContract.addInvestor(1, {from: investorAccountOne, value: 500});
 
         let currentContractBalance = await web3.eth.getBalance(project[1]);
