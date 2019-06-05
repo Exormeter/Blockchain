@@ -184,7 +184,13 @@
                   <div>{{ option[1] }}</div>
                   <div>Kosten: <span>{{ option[2] }}</span></div>
                   <div>Verfügbare Anzahl: <span>{{ option[3] }}</span></div>
-                  <v-btn>Wählen</v-btn> 
+                  <v-btn
+                    color="blue darken-1"
+                    flat
+                    @click="addInvestor(activeIndex, index, option[2])"
+                  >
+                  Wählen
+                  </v-btn> 
                 </div>
               </v-card-text>
               <v-divider></v-divider>
@@ -260,8 +266,8 @@
                     <small>Up Until: <b>{{ new Date(project.deadline * 1000) }}</b></small>
                     <br/><br/>
                     <small>Goal of <b>{{ project.goalAmount / 10**18 }} ETH </b></small>
-                    <small v-if="project.currentState == 1">wasn't achieved before deadline</small>
-                    <small v-if="project.currentState == 2">has been achieved</small>
+                    <small v-if="project.currentState == 2">wasn't achieved before deadline</small>
+                    <small v-if="project.currentState == 3">has been achieved</small>
                   </div>
                 </v-card-title>
                 <!--  v-if="project.currentState == 0 " #&& account != project.projectStarter-->
@@ -279,10 +285,10 @@
                   <v-btn
                     class="mt-3"
                     color="light-blue darken-1 white--text"
-                    @click="getBackingOptions(index);"
+                    @click="getBackingOptions(index); activeIndex = index;"
                     :loading="project.isLoading"
                   >
-                    View
+                  View
                   </v-btn>
                 </v-flex>
                 <v-flex
@@ -346,6 +352,7 @@ export default {
       activeIndex: null,
       account: null,
       stateMap: [
+        { color: 'blue-grey lighten-3', text: "Initialisierung"},
         { color: 'primary', text: 'Laufend' },
         { color: 'warning', text: 'Abgelaufen' },
         { color: 'success', text: 'Abgeschlossen' },
@@ -468,12 +475,13 @@ export default {
         console.log("Vote submitted");
       });
     },
-    addInvestor(projectIndex, optionId) {
+    addInvestor(projectIndex, optionId, optionValue) {
       const projectInst = crowdfundProject(this.projectData[projectIndex].contract);
       projectInst.methods.addInvestor(
-        optionId
+        optionId,
       ).send({
         from: this.account,
+        value: optionValue,
       }).then((status) => {
         console.log(status);
       });
