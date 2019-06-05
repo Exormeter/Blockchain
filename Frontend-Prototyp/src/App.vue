@@ -209,6 +209,51 @@
 
 
         <v-layout row justify-center>
+          <v-dialog v-model="viewRequestDialog" max-width="600px" persistent>
+
+            <v-card>
+              <v-card-title class="headline" primary-title>
+                <span>Aktuelle Anfrage</span>
+              </v-card-title>
+              <v-card-text class="pt-0">
+                <div>
+                  <div class="headline">{{ currentRequest[0] }}</div>
+                  <div>{{ currentRequest[1] }}</div>
+                  <div>Kosten: <span>{{ currentRequest[3] }}</span></div>
+                  <div>Laufzeit bis: <span>{{ new Date(currentRequest[2]) }}</span></div>
+                  <v-btn
+                    color="blue darken-1"
+                    flat
+                    @click="voteForCurrentRequest(activeIndex, true)"
+                  >
+                  Akzeptieren
+                  </v-btn> 
+                  <v-btn
+                    color="red darken-1"
+                    flat
+                    @click="voteForCurrentRequest(activeIndex, false)"
+                  >
+                  Ablehnen
+                  </v-btn> 
+                </div>
+              </v-card-text>
+              <v-divider></v-divider>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn
+                  color="blue darken-1"
+                  flat
+                  @click="viewRequestDialog = false;
+                  newObject.isLoading = false;">
+                  Schließen
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+        </v-layout>
+
+
+        <v-layout row justify-center>
           <v-dialog v-model="addRequestDialog" max-width="600px" persistent>
             <v-card>
               <v-card-title>
@@ -352,6 +397,20 @@
                   View
                   </v-btn>
                 </v-flex>
+
+                <v-flex
+                  v-if="project.currentState == 0 "
+                  class="d-flex ml-3" xs12 sm6 md3>
+                  <v-btn
+                    class="mt-3"
+                    color="light-blue darken-1 white--text"
+                    @click="getCurrentRequest(index); activeIndex = index;"
+                    :loading="project.isLoading"
+                  >
+                  Show Request
+                  </v-btn>
+                </v-flex>
+
                 <v-flex
                   v-if="project.currentState == 0 && account == project.projectStarter"
                   class="d-flex ml-3" xs12 sm6 md3>
@@ -412,6 +471,7 @@ export default {
       addBackingOptionDialog: false,
       addRequestDialog: false,
       viewBackingOptionsDialog: false,
+      viewRequestDialog: false,
       activeIndex: null,
       account: null,
       stateMap: [
@@ -423,6 +483,7 @@ export default {
       projectData: [],
       newObject: { isLoading: false },
       currentOptions: [],
+      currentRequest: {},
     };
   },
   mounted() {
@@ -509,13 +570,13 @@ export default {
       projectInst.methods.addRequest(
         this.newObject.title,
         this.newObject.description,
-        this.newObject.validUntil,
+        new Date().getTime() + (this.newObject.validUntil*86400),
         this.newObject.amount
       ).send({
         from: this.account,
       }).then((status) => {
         console.log(status);
-        addRequestDialog = false;
+        this.addRequestDialog = false;
       });
     },
     requestPayout(projectIndex) {
@@ -527,6 +588,8 @@ export default {
     getCurrentRequest(projectIndex) {
       const projectInst = crowdfundProject(this.projectData[projectIndex].contract);
       projectInst.methods.getCurrentRequest().call().then((request) => {
+        this.currentRequest = request;
+        this.viewRequestDialog = true;
         console.log(request);
       });
     },
