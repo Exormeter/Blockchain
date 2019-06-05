@@ -175,12 +175,17 @@
           <v-dialog v-model="viewBackingOptionsDialog" max-width="600px" persistent>
 
             <v-card>
-              <v-card-title class="headline grey lighten-2" primary-title>
+              <v-card-title class="headline" primary-title>
                 <span>Verfügbare Backing-Optionen</span>
               </v-card-title>
-              <v-card-text class="pt-0">
-                Backing-Option1
-                Dies ist ein Text, welcher Backing-Option1 beschreibt
+              <v-card-text class="pt-0" v-for="(option, index) in currentOptions" :key="index">
+                <div>
+                  <div class="headline">{{ option[0] }}</div>
+                  <div>{{ option[1] }}</div>
+                  <div>Kosten: <span>{{ option[2] }}</span></div>
+                  <div>Verfügbare Anzahl: <span>{{ option[3] }}</span></div>
+                  <v-btn>Wählen</v-btn> 
+                </div>
               </v-card-text>
               <v-divider></v-divider>
               <v-card-actions>
@@ -274,7 +279,7 @@
                   <v-btn
                     class="mt-3"
                     color="light-blue darken-1 white--text"
-                    @click="viewBackingOptionsDialog = true; getBackingOptions(index);"
+                    @click="getBackingOptions(index);"
                     :loading="project.isLoading"
                   >
                     View
@@ -347,6 +352,7 @@ export default {
       ],
       projectData: [],
       newObject: { isLoading: false },
+      currentOptions: [],
     };
   },
   mounted() {
@@ -410,11 +416,13 @@ export default {
       });
     },
     getBackingOptions(projectIndex) {
+      this.currentOptions = [];
       const projectInst = crowdfundProject(this.projectData[projectIndex].contract);
       projectInst.methods.getBackingOptionsCount().call().then((backingOptionCount) => {
         for (var i = 0; i < backingOptionCount; i++){
           projectInst.methods.getBackingOption(i).call().then((backingOption) => {
-            console.log(backingOption);
+            this.currentOptions.push(backingOption);
+            this.viewBackingOptionsDialog = true; 
           });
         }
       });
