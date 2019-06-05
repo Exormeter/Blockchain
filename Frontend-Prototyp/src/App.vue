@@ -109,7 +109,6 @@
 
         <v-layout row justify-center>
           <v-dialog v-model="addBackingOptionDialog" max-width="600px" persistent>
-
             <v-card>
               <v-card-title>
                 <span class="headline font-weight-bold mt-2 ml-4">Backing-Option hinzufügen</span>
@@ -202,6 +201,68 @@
                   @click="viewBackingOptionsDialog = false;
                   newObject.isLoading = false;">
                   Schließen
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+        </v-layout>
+
+
+        <v-layout row justify-center>
+          <v-dialog v-model="addRequestDialog" max-width="600px" persistent>
+            <v-card>
+              <v-card-title>
+                <span class="headline font-weight-bold mt-2 ml-4">Auszahlungs-Anfrage erstellen</span>
+              </v-card-title>
+              <v-card-text class="pt-0">
+                <v-container class="pt-0" grid-list-md>
+                  <v-layout wrap>
+                    <v-flex xs12>
+                      <v-text-field
+                        label="Titel"
+                        persistent-hint
+                        v-model="newObject.title">
+                      </v-text-field>
+                    </v-flex>
+                    <v-flex xs12>
+                      <v-textarea
+                        label="Beschreibung"
+                        persistent-hint
+                        v-model="newObject.description">
+                      </v-textarea>
+                    </v-flex>
+                    <v-flex xs12 sm6>
+                      <v-text-field
+                        label="Laufzeit (in Tagen)"
+                        type="number"
+                        v-model="newObject.validUntil">
+                      </v-text-field>
+                    </v-flex>
+                    <v-flex xs12 sm6>
+                      <v-text-field
+                        label="Benötigte Menge"
+                        type="number"
+                        v-model="newObject.amount">
+                      </v-text-field>
+                    </v-flex>
+
+                  </v-layout>
+                </v-container>
+              </v-card-text>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn
+                  color="blue darken-1"
+                  flat
+                  @click="addRequestDialog = false;
+                  newObject.isLoading = false;">
+                  Schließen
+                </v-btn>
+                <v-btn color="blue darken-1"
+                  flat
+                  @click="addRequest(activeIndex)"
+                  :loading="newObject.isLoading">
+                  Speichern
                 </v-btn>
               </v-card-actions>
             </v-card>
@@ -303,15 +364,16 @@
                     Add Option
                   </v-btn>
                 </v-flex>
-                <v-flex class="d-flex ml-3" xs12 sm6 md3>
+                <v-flex
+                  v-if="project.currentState == 0 && account == project.projectStarter"
+                  class="d-flex ml-3" xs12 sm6 md3>
                   <v-btn
                     class="mt-3"
-                    color="amber darken-1 white--text"
-                    v-if="project.currentState == 1"
-                    @click="getRefund(index)"
+                    color="light-blue darken-1 white--text"
+                    @click="addRequestDialog = true; activeIndex = index;"
                     :loading="project.isLoading"
                   >
-                    Get refund
+                    Add Request
                   </v-btn>
                 </v-flex>
                 <v-card-actions v-if="project.currentState == 0" class="text-xs-center">
@@ -348,6 +410,7 @@ export default {
     return {
       startProjectDialog: false,
       addBackingOptionDialog: false,
+      addRequestDialog: false,
       viewBackingOptionsDialog: false,
       activeIndex: null,
       account: null,
@@ -441,16 +504,18 @@ export default {
       });
     },
     addRequest(projectIndex, title, description, date, amount) {
+      this.newObject.isLoading = true;
       const projectInst = crowdfundProject(this.projectData[projectIndex].contract);
       projectInst.methods.addRequest(
-        title,
-        description,
-        date,
-        amount
+        this.newObject.title,
+        this.newObject.description,
+        this.newObject.validUntil,
+        this.newObject.amount
       ).send({
         from: this.account,
       }).then((status) => {
         console.log(status);
+        addRequestDialog = false;
       });
     },
     requestPayout(projectIndex) {
