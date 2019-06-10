@@ -2,6 +2,13 @@ pragma solidity ^0.5;
 
 import "./ProjectContract.sol";
 
+/**
+ * @title ProjectHubContract
+ * @author Nils Kirchhof
+ * @notice The ProjectHubContracts acts as an hub for all other ProjectContracts that are concluded
+ * It saves the addresses of these contracts, as well as the creators and investors that have payed
+ * Ethereum to be part of the project
+ */
 
 contract ProjectHubContract{
 
@@ -18,19 +25,42 @@ contract ProjectHubContract{
     }
 
 
+    /**
+    * @notice This function add a new projectContract to the ProjectHubContract. The caller address becomes
+    * automaticly the owner of the new ProjectContract. The new ProjectContract is then added to the list
+    * of ProjectContracts inside the ProjectHubContract.
+    * @param projectName The name of the new ProjectContract
+    * @param projectDescription The description of the new ProjectContract
+    * @return Returns true when the new ProjectContract was successfully created
+    */
     function addNewProject(string memory projectName, string memory projectDescription) public returns (bool)
     {
         ProjectContract projectContract = new ProjectContract(msg.sender, projectName, projectDescription, this);
         Project memory project = Project(msg.sender, address(projectContract), projectName, projectDescription);
         projects.push(project);
         projectsCreatedByFounder[msg.sender].push(project);
+        return true;
     }
 
+    /**
+    * @notice This function returns the number of ProjectsContracts inside the Hub.
+    * @return Number of ProjectContracts
+    */
     function getProjectCount() public view returns (uint)
     {
         return projects.length;
     }
 
+    /**
+    * @notice This function returns a specific ProjectContract, given an index. It is used in
+    * conjunction with getProjectCount() to retrive all avaiable ProjectContracs. It throws
+    * exception if the index if larger then the list size.
+    * @param projectIndex Index of the ProjectContract
+    * @return Address of the ProjectContract owner
+    * @return Address of the ProjectContract
+    * @return Name of ProjectContract
+    * @return Description of ProjectContract
+    */
     function getProjects(uint projectIndex) public view returns (address owner,
                                                                 address payable projectAdress,
                                                                 string memory projectName,
@@ -43,12 +73,27 @@ contract ProjectHubContract{
                 projects[projectIndex].projectName,
                 projects[projectIndex].projectDescription);
     }
-    
+
+    /**
+    * @notice This function return the number of ProjectContracts the caller owns.
+    * @return Number of ProjectContracts owned by caller
+    */
     function getProjectCountForFounder() public view returns (uint)
     {
         return projectsCreatedByFounder[msg.sender].length;
     }
 
+    /**
+    * @notice This function returns a specific ProjectContract that is owner by caller,
+    * given an index. It is used in conjunction with getProjectCountForFounder() to retrive
+    * all avaiable ProjectContracs owned by caller. It throws
+    * exception if the index if larger then the list size.
+    * @param projectIndex Index of the ProjectContract
+    * @return Address of the ProjectContract owner
+    * @return Address of the ProjectContract
+    * @return Name of ProjectContract
+    * @return Description of ProjectContract
+    */
     function getProjectByFounderForIndex(uint projectIndex) public view returns (address, address, string memory, string memory)
     {
         require(projectIndex < projectsCreatedByFounder[msg.sender].length, "Index is out of bounds");
@@ -59,11 +104,26 @@ contract ProjectHubContract{
                 projectsCreatedByFounder[msg.sender][projectIndex].projectDescription);
     }
 
+    /**
+    * @notice This function return the number of ProjectContracts the caller has invested in.
+    * @return Number of ProjectContracts invested in by caller
+    */
     function getProjectCountForInvestor() public view returns (uint)
     {
         return projectsBackedByInvestor[msg.sender].length;
     }
 
+    /**
+    * @notice This function returns a specific ProjectContract that is invested in by caller,
+    * given an index. It is used in conjunction with getProjectCountForInvestor() to retrive
+    * all avaiable ProjectContracs invested in by caller. It throws
+    * exception if the index if larger then the list size.
+    * @param projectIndex Index of the ProjectContract
+    * @return Address of the ProjectContract owner
+    * @return Address of the ProjectContract
+    * @return Name of ProjectContract
+    * @return Description of ProjectContract
+    */
     function getProjectByInvestorForIndex(uint projectIndex) public view returns (address, address, string memory, string memory)
     {
         require(projectIndex < projectsBackedByInvestor[msg.sender].length, "Index is out of bounds");
@@ -74,6 +134,15 @@ contract ProjectHubContract{
                 projectsBackedByInvestor[msg.sender][projectIndex].projectDescription);
     }
 
+    /**
+    * @notice This function is only used internally by the ProjectContract to inform the
+    * ProjectHubContract that a new investor has been added to a ProjectContract
+    * @param investor The address of the new investor
+    * @param _projectAddress The address of the contract the investor has invested in
+    * @param _owner The address of the owner of the ProjectContract the new investor has invested in
+    * @param _projectName The Name of the ProjectContract the new investor has invested in
+    * @param _projectDescription The Description of the ProjectContract the new investor has invested in
+    */
     function addProjectToInvestor(address investor, address payable _projectAddress, address _owner,
                     string memory _projectName, string memory _projectDescription) public
     {
