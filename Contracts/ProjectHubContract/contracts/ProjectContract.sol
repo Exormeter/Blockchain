@@ -3,6 +3,9 @@ pragma solidity >=0.4.25 <0.6.0;
 import "./Ownable.sol";
 import "./ProjectHubContract.sol";
 
+/// @title SomeContract
+/// @notice
+/// @dev
 contract ProjectContract is Ownable{
 
     string projectTitle;
