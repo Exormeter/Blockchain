@@ -24,7 +24,7 @@ contract TestProjectHub{
     function testAddProject() public{
 
         ProjectHubContract hub = new ProjectHubContract();
-        hub.addNewProject("Test", "TestDescription");
+        hub.addNewProject("Test", "TestDescription", 100, 1000000);
 
         Assert.equal(hub.getProjectCount(), 1, "Projects should be 1");
     }
@@ -36,8 +36,8 @@ contract TestProjectHub{
         string memory _projectDescription;
 
         ProjectHubContract hub = new ProjectHubContract();
-        hub.addNewProject("Test", "TestDescription");
-        (_owner, _projectAdress, _projectName, _projectDescription) = hub.getProjects(0);
+        hub.addNewProject("Test", "TestDescription", 100, 1000000);
+        (_owner, _projectAdress, _projectName, _projectDescription,,) = hub.getProjects(0);
 
 
         Assert.equal(_projectName, "Test", "Name should be test");
@@ -50,8 +50,8 @@ contract TestProjectHub{
         string memory _projectDescription;
 
         ProjectHubContract hub = new ProjectHubContract();
-        hub.addNewProject("Test", "TestDescription");
-        (_owner, _projectAddress, _projectName, _projectDescription) = hub.getProjects(0);
+        hub.addNewProject("Test", "TestDescription", 100, 1000000);
+        (_owner, _projectAddress, _projectName, _projectDescription,,) = hub.getProjects(0);
 
         ProjectContract projectContract = ProjectContract(_projectAddress);
         Assert.equal(projectContract.getBackingOptionsCount(),0, "Name should be test");
@@ -64,9 +64,9 @@ contract TestProjectHub{
         string memory _projectDescription;
 
         ProjectHubContract hub = new ProjectHubContract();
-        hub.addNewProject("Test", "TestDescription");
+        hub.addNewProject("Test", "TestDescription", 100, 1000000);
 
-        (_owner, _projectAddress, _projectName, _projectDescription) = hub.getProjects(0);
+        (_owner, _projectAddress, _projectName, _projectDescription,,) = hub.getProjects(0);
 
         ProjectContract projectContract = ProjectContract(_projectAddress);
         projectContract.addBackingOption("Option1", "Option1", 10, 10);

@@ -22,6 +22,8 @@ contract ProjectHubContract{
         address payable projectAdress;
         string projectName;
         string projectDescription;
+        uint goal;
+        uint fundingCloseDate;
     }
 
 
@@ -31,12 +33,15 @@ contract ProjectHubContract{
     * of ProjectContracts inside the ProjectHubContract.
     * @param projectName The name of the new ProjectContract
     * @param projectDescription The description of the new ProjectContract
+    * @param fundingGoal The goal for the funding campain in Wei
+    * @param fundingCloseDate The date until the goal needs to be reached
     * @return Returns true when the new ProjectContract was successfully created
     */
-    function addNewProject(string memory projectName, string memory projectDescription) public returns (bool)
+    function addNewProject(string memory projectName, string memory projectDescription, uint fundingGoal,
+                            uint fundingCloseDate) public returns (bool)
     {
-        ProjectContract projectContract = new ProjectContract(msg.sender, projectName, projectDescription, this);
-        Project memory project = Project(msg.sender, address(projectContract), projectName, projectDescription);
+        ProjectContract projectContract = new ProjectContract(msg.sender, projectName, projectDescription, fundingGoal, fundingCloseDate, this);
+        Project memory project = Project(msg.sender, address(projectContract), projectName, projectDescription, fundingGoal, fundingCloseDate);
         projects.push(project);
         projectsCreatedByFounder[msg.sender].push(project);
         return true;
@@ -60,18 +65,24 @@ contract ProjectHubContract{
     * @return Address of the ProjectContract
     * @return Name of ProjectContract
     * @return Description of ProjectContract
+    * @return Funding goal
+    * @return Funding closeing Date
     */
     function getProjects(uint projectIndex) public view returns (address owner,
                                                                 address payable projectAdress,
                                                                 string memory projectName,
-                                                                string memory projectDescription)
+                                                                string memory projectDescription,
+                                                                uint goal,
+                                                                uint fundigCloseDate)
     {
         require(projectIndex < projects.length, "Index is out of bounds");
 
         return (projects[projectIndex].owner,
                 projects[projectIndex].projectAdress,
                 projects[projectIndex].projectName,
-                projects[projectIndex].projectDescription);
+                projects[projectIndex].projectDescription,
+                projects[projectIndex].goal,
+                projects[projectIndex].fundingCloseDate);
     }
 
     /**
@@ -93,15 +104,19 @@ contract ProjectHubContract{
     * @return Address of the ProjectContract
     * @return Name of ProjectContract
     * @return Description of ProjectContract
+    * @return Funding goal
+    * @return Funding closeing Date
     */
-    function getProjectByFounderForIndex(uint projectIndex) public view returns (address, address, string memory, string memory)
+    function getProjectByFounderForIndex(uint projectIndex) public view returns (address, address, string memory, string memory, uint, uint)
     {
         require(projectIndex < projectsCreatedByFounder[msg.sender].length, "Index is out of bounds");
 
         return (projectsCreatedByFounder[msg.sender][projectIndex].owner,
                 projectsCreatedByFounder[msg.sender][projectIndex].projectAdress,
                 projectsCreatedByFounder[msg.sender][projectIndex].projectName,
-                projectsCreatedByFounder[msg.sender][projectIndex].projectDescription);
+                projectsCreatedByFounder[msg.sender][projectIndex].projectDescription,
+                projectsCreatedByFounder[msg.sender][projectIndex].goal,
+                projectsCreatedByFounder[msg.sender][projectIndex].fundingCloseDate);
     }
 
     /**
@@ -123,15 +138,19 @@ contract ProjectHubContract{
     * @return Address of the ProjectContract
     * @return Name of ProjectContract
     * @return Description of ProjectContract
+    * @return Funding goal
+    * @return Funding closeing Date
     */
-    function getProjectByInvestorForIndex(uint projectIndex) public view returns (address, address, string memory, string memory)
+    function getProjectByInvestorForIndex(uint projectIndex) public view returns (address, address, string memory, string memory, uint, uint)
     {
         require(projectIndex < projectsBackedByInvestor[msg.sender].length, "Index is out of bounds");
 
         return (projectsBackedByInvestor[msg.sender][projectIndex].owner,
                 projectsBackedByInvestor[msg.sender][projectIndex].projectAdress,
                 projectsBackedByInvestor[msg.sender][projectIndex].projectName,
-                projectsBackedByInvestor[msg.sender][projectIndex].projectDescription);
+                projectsBackedByInvestor[msg.sender][projectIndex].projectDescription,
+                projectsBackedByInvestor[msg.sender][projectIndex].goal,
+                projectsBackedByInvestor[msg.sender][projectIndex].fundingCloseDate);
     }
 
     /**
@@ -142,11 +161,13 @@ contract ProjectHubContract{
     * @param _owner The address of the owner of the ProjectContract the new investor has invested in
     * @param _projectName The Name of the ProjectContract the new investor has invested in
     * @param _projectDescription The Description of the ProjectContract the new investor has invested in
+    * @param _goal The goal in Wei for the ProjectContract
+    * @param _fundingCloseDate The date until the funding closes
     */
     function addProjectToInvestor(address investor, address payable _projectAddress, address _owner,
-                    string memory _projectName, string memory _projectDescription) public
+                    string memory _projectName, string memory _projectDescription, uint _goal, uint _fundingCloseDate) public
     {
-        projectsBackedByInvestor[investor].push(Project(_owner, _projectAddress, _projectName, _projectDescription));
+        projectsBackedByInvestor[investor].push(Project(_owner, _projectAddress, _projectName, _projectDescription, _goal, _fundingCloseDate));
     }
 }
 

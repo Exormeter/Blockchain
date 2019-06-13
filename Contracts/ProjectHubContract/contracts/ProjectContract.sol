@@ -16,13 +16,15 @@ contract ProjectContract is Ownable{
 
     string projectTitle;
     string projectDescription;
-    int backerOptionsID = 1;
+    uint backerOptionsID = 1;
     bool wasFirstRequestGiven = false;
     bool backingAddingPeriodeIsOver = false;
+    uint fundingGoal;
+    uint fundingClosingDate;
     Request currentRequest;
     ProjectHubContract projectHub;
     BackingOption[] backingOptions;
-    address[] investorAddresses;
+    address payable[] investorAddresses;
     mapping(address => Investor) Investors;
 
 
@@ -31,7 +33,7 @@ contract ProjectContract is Ownable{
         string optionDescription;
         uint optionAmountEther;
         int optionAvailability;
-        int id;
+        uint id;
     }
 
     struct Request{
@@ -45,8 +47,8 @@ contract ProjectContract is Ownable{
     }
 
     struct Investor{
-        address investorAddress;
-        int choosenBackingOptionID;
+        address payable investorAddress;
+        uint choosenBackingOptionID;
         Vote currentVote;
         int investorExists; //is needed because a mapping contains "all" possible keys
     }
@@ -63,12 +65,17 @@ contract ProjectContract is Ownable{
     * @param _owner The caller of addNowProject(), which will become the owner of the new ProjectContract
     * @param _projectTitle The new title for the ProjectContract
     * @param _projectHub Reference to the ProjectHubContract
+    * @param _fundingGoal Goal in Wei there the funding is reached
+    * @param _fundingCloseDate Date where the funding goal need to be met
     */
-    constructor(address _owner, string memory _projectTitle, string memory _projectDescription, ProjectHubContract _projectHub) public
+    constructor(address _owner, string memory _projectTitle, string memory _projectDescription, uint _fundingGoal,
+                uint _fundingCloseDate, ProjectHubContract _projectHub) public
     {
         owner = _owner;
         projectTitle = _projectTitle;
         projectDescription = _projectDescription;
+        fundingGoal = _fundingGoal;
+        fundingClosingDate = _fundingCloseDate;
         projectHub = _projectHub;
     }
 
@@ -120,7 +127,7 @@ contract ProjectContract is Ownable{
     * @return Availability of the backing option
     * @return ID of the backing option
     */
-    function getBackingOption(uint index) public view returns(string memory, string memory, uint, int, int)
+    function getBackingOption(uint index) public view returns(string memory, string memory, uint, int, uint)
     {
         require(index < backingOptions.length, "The index is out of bounds");
         return (backingOptions[index].optionTitle, backingOptions[index].optionDescription,
@@ -136,7 +143,7 @@ contract ProjectContract is Ownable{
     * is decresed by one. The sended ether amount is added to the contract.
     * @param backingOptionID ID of the backing option the investor wants to invest in
     */
-    function addInvestor(int backingOptionID) public payable
+    function addInvestor(uint backingOptionID) public payable
     {
         require(backingAddingPeriodeIsOver, "The adding backing option periode is not over yet");
         uint  optionIndex;
@@ -155,8 +162,10 @@ contract ProjectContract is Ownable{
 
         require(Investors[msg.sender].investorExists == 0, "Investor has already invested");
 
+        require(block.timestamp < fundingClosingDate, "The funding is closed, date is reached");
+
         Investors[msg.sender] = Investor(msg.sender, backingOptionID, Vote.NoVoteGiven, 1);
-        projectHub.addProjectToInvestor(msg.sender, address(this), owner, projectTitle, projectDescription);
+        projectHub.addProjectToInvestor(msg.sender, address(this), owner, projectTitle, projectDescription, fundingGoal, fundingClosingDate);
         backingOptions[optionIndex].optionAvailability--;
     }
 
@@ -171,15 +180,18 @@ contract ProjectContract is Ownable{
 
     /**
     * @notice This function allows the owner of the ProjectContract to add an request for payout. As
-    * long as a request is active, adding new requests throws an exception.
+    * long as a request is active, adding new requests throws an exception. The funding Goal needs to
+    * be reached before a request can be requested
     * @param _requestTitle Title of the new request
     * @param _requestDescription Description of the new request
     * @param _valideUntil Date till which the request is valide, in seconds since 1970
-    * @param _amout The amount the owner requested in Wei
+    * @param _amount The amount the owner requested in Wei
     */
     function addRequest(string memory _requestTitle, string memory _requestDescription,
     uint256 _valideUntil, uint _amount) public onlyOwner
     {
+        require(fundingGoal < address(this).balance, "Funding Goal was not reached yet");
+
         if(wasFirstRequestGiven){
             require(currentRequest.valideUntil < block.timestamp, "Current Request is still valide");
         }
@@ -249,12 +261,31 @@ contract ProjectContract is Ownable{
     function requestPayout() public onlyOwner
     {
         require(((currentRequest.numberAcceptedVotes / 2) > int256 (investorAddresses.length)), "Majority was not reached");
-        
+
         require(!currentRequest.wasPayed, "Request was already payed out");
         
         msg.sender.transfer(currentRequest.amount);
         currentRequest.wasPayed = true;
         wasFirstRequestGiven = false;
+    }
+
+    /**
+    * @notice The function allows the payed in ether to by payed back if the funding goal was
+    * not reached and the funding periode is over. Anyone can trigger this function.
+    */
+    function requestPayback() public
+    {
+        require(fundingGoal > address(this).balance, "The funding goal was reached");
+
+        require(block.timestamp > fundingClosingDate, "The funding periode is not over jet");
+
+        for(uint i = 0; i<investorAddresses.length; i++){
+            uint choosenBackingOptionIndex = Investors[investorAddresses[i]].choosenBackingOptionID - 1;
+            address payable investorAddress = investorAddresses[i];
+            uint backingAmount = backingOptions[choosenBackingOptionIndex].optionAmountEther;
+            investorAddress.transfer(backingAmount);
+        }
+
     }
 
     function () external payable {

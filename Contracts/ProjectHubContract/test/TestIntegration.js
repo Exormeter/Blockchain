@@ -7,7 +7,11 @@ contract("ContractHub", accounts => {
     it("Should return the right Contract Name", async () => {
         let hub = await ContractHub.deployed();
         let creatorAccount = accounts[0];
-        hub.addNewProject("TestProject", "TestDescription", {from: creatorAccount});
+        let date = new Date();
+        let timestamp = date.getTime();
+        timestamp = Math.floor(timestamp/1000);
+        timestamp += 86400;
+        hub.addNewProject("TestProject", "TestDescription", 100, timestamp, {from: creatorAccount});
         let project = await hub.getProjects(0, {from: creatorAccount});
 
         assert.equal("TestProject", project[2]);
