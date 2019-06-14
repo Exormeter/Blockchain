@@ -3,25 +3,6 @@ import web3 from './web3';
 
 const abi = [
 	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "backingOptionID",
-				"type": "int256"
-			}
-		],
-		"name": "addInvestor",
-		"outputs": [
-			{
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"payable": true,
-		"stateMutability": "payable",
-		"type": "function"
-	},
-	{
 		"constant": true,
 		"inputs": [],
 		"name": "getBackingOptionsCount",
@@ -39,14 +20,23 @@ const abi = [
 		"constant": false,
 		"inputs": [],
 		"name": "requestPayout",
-		"outputs": [
-			{
-				"name": "",
-				"type": "bool"
-			}
-		],
+		"outputs": [],
 		"payable": false,
 		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "backingOptionID",
+				"type": "uint256"
+			}
+		],
+		"name": "addInvestor",
+		"outputs": [],
+		"payable": true,
+		"stateMutability": "payable",
 		"type": "function"
 	},
 	{
@@ -61,7 +51,7 @@ const abi = [
 				"type": "string"
 			},
 			{
-				"name": "_optionAmountEther",
+				"name": "_optionAmountWei",
 				"type": "uint256"
 			},
 			{
@@ -143,6 +133,24 @@ const abi = [
 	},
 	{
 		"constant": false,
+		"inputs": [],
+		"name": "closeAddingBackingOptionPeriode",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [],
+		"name": "requestPayback",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
 		"inputs": [
 			{
 				"name": "_requestTitle",
@@ -162,12 +170,7 @@ const abi = [
 			}
 		],
 		"name": "addRequest",
-		"outputs": [
-			{
-				"name": "",
-				"type": "bool"
-			}
-		],
+		"outputs": [],
 		"payable": false,
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -197,6 +200,10 @@ const abi = [
 			{
 				"name": "",
 				"type": "int256"
+			},
+			{
+				"name": "",
+				"type": "uint256"
 			}
 		],
 		"payable": false,
@@ -246,6 +253,14 @@ const abi = [
 				"type": "string"
 			},
 			{
+				"name": "_fundingGoal",
+				"type": "uint256"
+			},
+			{
+				"name": "_fundingCloseDate",
+				"type": "uint256"
+			},
+			{
 				"name": "_projectHub",
 				"type": "address"
 			}
@@ -253,6 +268,11 @@ const abi = [
 		"payable": false,
 		"stateMutability": "nonpayable",
 		"type": "constructor"
+	},
+	{
+		"payable": true,
+		"stateMutability": "payable",
+		"type": "fallback"
 	},
 	{
 		"anonymous": false,
