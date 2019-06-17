@@ -24,7 +24,9 @@ contract TestProjectHub{
     function testAddProject() public{
 
         ProjectHubContract hub = new ProjectHubContract();
-        hub.addNewProject("Test", "TestDescription", 100, 1000000);
+        uint currentTime = block.timestamp;
+        currentTime = currentTime + 1000000;
+        hub.addNewProject("Test", "TestDescription", 100, currentTime);
 
         Assert.equal(hub.getProjectCount(), 1, "Projects should be 1");
     }
@@ -36,7 +38,9 @@ contract TestProjectHub{
         string memory _projectDescription;
 
         ProjectHubContract hub = new ProjectHubContract();
-        hub.addNewProject("Test", "TestDescription", 100, 1000000);
+        uint currentTime = block.timestamp;
+        currentTime = currentTime + 1000000;
+        hub.addNewProject("Test", "TestDescription", 100, currentTime);
         (_owner, _projectAdress, _projectName, _projectDescription,,) = hub.getProjects(0);
 
 
@@ -50,7 +54,9 @@ contract TestProjectHub{
         string memory _projectDescription;
 
         ProjectHubContract hub = new ProjectHubContract();
-        hub.addNewProject("Test", "TestDescription", 100, 1000000);
+        uint currentTime = block.timestamp;
+        currentTime = currentTime + 1000000;
+        hub.addNewProject("Test", "TestDescription", 100, currentTime);
         (_owner, _projectAddress, _projectName, _projectDescription,,) = hub.getProjects(0);
 
         ProjectContract projectContract = ProjectContract(_projectAddress);
@@ -64,7 +70,9 @@ contract TestProjectHub{
         string memory _projectDescription;
 
         ProjectHubContract hub = new ProjectHubContract();
-        hub.addNewProject("Test", "TestDescription", 100, 1000000);
+        uint currentTime = block.timestamp;
+        currentTime = currentTime + 1000000;
+        hub.addNewProject("Test", "TestDescription", 100, currentTime);
 
         (_owner, _projectAddress, _projectName, _projectDescription,,) = hub.getProjects(0);
 

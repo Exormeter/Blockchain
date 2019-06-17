@@ -40,6 +40,8 @@ contract ProjectHubContract{
     function addNewProject(string memory projectName, string memory projectDescription, uint fundingGoal,
                             uint fundingCloseDate) public returns (bool)
     {
+        require(fundingCloseDate > block.timestamp, "The given date is in the past");
+        
         ProjectContract projectContract = new ProjectContract(msg.sender, projectName, projectDescription, fundingGoal, fundingCloseDate, this);
         Project memory project = Project(msg.sender, address(projectContract), projectName, projectDescription, fundingGoal, fundingCloseDate);
         projects.push(project);

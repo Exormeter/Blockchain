@@ -17,6 +17,19 @@ contract("ContractHub", accounts => {
         assert.equal("TestProject", project[2]);
     });
 
+    it("Should not be able to return a request at this point", async () => {
+        let hub = await ContractHub.deployed();
+        let creatorAccount = accounts[0];
+        let project = await hub.getProjects(0, {from: creatorAccount});
+        try{
+            await project.getCurrentRequest();
+        }
+        catch(Error){
+            assert.notEqual(Error, undefined, 'Error must be thrown');
+        }
+        
+    })
+
     it("Should have the right Backing Option ID", async () => {
         let hub = await ContractHub.deployed();
         let creatorAccount = accounts[0];

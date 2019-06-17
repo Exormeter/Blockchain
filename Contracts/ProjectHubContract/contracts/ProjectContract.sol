@@ -181,7 +181,8 @@ contract ProjectContract is Ownable{
     /**
     * @notice This function allows the owner of the ProjectContract to add an request for payout. As
     * long as a request is active, adding new requests throws an exception. The funding Goal needs to
-    * be reached before a request can be requested
+    * be reached before a request can be requested. _valideUntil musst be in the future, otherwise an
+    * exception is throw.
     * @param _requestTitle Title of the new request
     * @param _requestDescription Description of the new request
     * @param _valideUntil Date till which the request is valide, in seconds since 1970
@@ -190,6 +191,8 @@ contract ProjectContract is Ownable{
     function addRequest(string memory _requestTitle, string memory _requestDescription,
     uint256 _valideUntil, uint _amount) public onlyOwner
     {
+        require(_valideUntil > block.timestamp, "The given date is in the past");
+
         require(fundingGoal < address(this).balance, "Funding Goal was not reached yet");
 
         if(wasFirstRequestGiven){
@@ -225,7 +228,8 @@ contract ProjectContract is Ownable{
     }
 
     /**
-    * @notice This function return the current active request
+    * @notice This function return the current request, throws an exception if no
+    * request is currently available, because no request was requested.
     * @return Title of the request
     * @return Description of the request
     * @return Timestamp until the request is valide in seconds since 1970
@@ -234,23 +238,13 @@ contract ProjectContract is Ownable{
     * @return Number of votes for reject
     * @return Boolean for if the request was payed out
     */
-    function getCurrentRequest() public view returns (string memory requestTitle,
-            string memory requestDescription,
-            uint256 valideUntil,
-            uint amount,
-            int numberAcceptedVotes,
-            int numberRejectedVotes,
-            bool wasPayed
-        )
+    function getCurrentRequest() public view returns (string memory requestTitle, string memory requestDescription, uint256 valideUntil,
+                                                        uint amount, int numberAcceptedVotes, int numberRejectedVotes, bool wasPayed)
     {
-        return (currentRequest.requestTitle,
-            currentRequest.requestDescription,
-            currentRequest.valideUntil,
-            currentRequest.amount,
-            currentRequest.numberAcceptedVotes,
-            currentRequest.numberRejectedVotes,
-            currentRequest.wasPayed
-        );
+        require(currentRequest.valideUntil != 0, "No request is available");
+
+        return (currentRequest.requestTitle, currentRequest.requestDescription, currentRequest.valideUntil,
+            currentRequest.amount, currentRequest.numberAcceptedVotes, currentRequest.numberRejectedVotes,currentRequest.wasPayed);
     }
 
     /**
