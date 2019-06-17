@@ -1,7 +1,7 @@
 /* eslint-disable */
 import web3 from './web3';
 
-const address = '0xc5f6435d2c7c5a76bb5f0f940c4c2418284d87d5';
+const address = '0x0ffb9e1c4ec16377f692a69babf011166f7f7fed';
 const abi = [
 	{
 		"constant": false,
@@ -13,6 +13,14 @@ const abi = [
 			{
 				"name": "projectDescription",
 				"type": "string"
+			},
+			{
+				"name": "fundingGoal",
+				"type": "uint256"
+			},
+			{
+				"name": "fundingCloseDate",
+				"type": "uint256"
 			}
 		],
 		"name": "addNewProject",
@@ -48,43 +56,20 @@ const abi = [
 			{
 				"name": "_projectDescription",
 				"type": "string"
+			},
+			{
+				"name": "_goal",
+				"type": "uint256"
+			},
+			{
+				"name": "_fundingCloseDate",
+				"type": "uint256"
 			}
 		],
 		"name": "addProjectToInvestor",
 		"outputs": [],
 		"payable": false,
 		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "projectIndex",
-				"type": "uint256"
-			}
-		],
-		"name": "getProject",
-		"outputs": [
-			{
-				"name": "",
-				"type": "address"
-			},
-			{
-				"name": "",
-				"type": "address"
-			},
-			{
-				"name": "",
-				"type": "string"
-			},
-			{
-				"name": "",
-				"type": "string"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
 		"type": "function"
 	},
 	{
@@ -112,6 +97,14 @@ const abi = [
 			{
 				"name": "",
 				"type": "string"
+			},
+			{
+				"name": "",
+				"type": "uint256"
+			},
+			{
+				"name": "",
+				"type": "uint256"
 			}
 		],
 		"payable": false,
@@ -143,6 +136,14 @@ const abi = [
 			{
 				"name": "",
 				"type": "string"
+			},
+			{
+				"name": "",
+				"type": "uint256"
+			},
+			{
+				"name": "",
+				"type": "uint256"
 			}
 		],
 		"payable": false,
@@ -184,6 +185,45 @@ const abi = [
 		"outputs": [
 			{
 				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "projectIndex",
+				"type": "uint256"
+			}
+		],
+		"name": "getProjects",
+		"outputs": [
+			{
+				"name": "owner",
+				"type": "address"
+			},
+			{
+				"name": "projectAdress",
+				"type": "address"
+			},
+			{
+				"name": "projectName",
+				"type": "string"
+			},
+			{
+				"name": "projectDescription",
+				"type": "string"
+			},
+			{
+				"name": "goal",
+				"type": "uint256"
+			},
+			{
+				"name": "fundigCloseDate",
 				"type": "uint256"
 			}
 		],
