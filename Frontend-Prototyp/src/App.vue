@@ -351,6 +351,8 @@
                     <small>Goal of <b>{{ project.goalAmount / 10**18 }} ETH </b></small>
                     <small v-if="project.currentState == 2">wasn't achieved before deadline</small>
                     <small v-if="project.currentState == 3">has been achieved</small>
+                    <br/><br/>
+                    <small>Anzahl Investoren: <b>{{ project.investorCount }}</b></small>
                   </div>
                 </v-card-title>
                 <!--  v-if="project.currentState == 0 " #&& account != project.projectStarter-->
@@ -482,7 +484,7 @@ export default {
       crowdfundInstance.methods.getProjectCount().call().then((projectCount) => {
         for (var i = 0; i < projectCount; i++){
           crowdfundInstance.methods.getProjects(i).call().then((projectData) => {
-            console.log(projectData);
+            console.log(i);
             const projectInfo = {}
             projectInfo.projectTitle = projectData[2];
             projectInfo.projectDesc = projectData[3];
@@ -494,6 +496,7 @@ export default {
             projectInfo.isLoading = false;
             projectInfo.contract = projectData[1];
             this.projectData.push(projectInfo);
+            //this.getInvestorCount(projectData[1]);
           });
         }
 	    });
@@ -547,7 +550,7 @@ export default {
     getInvestorCount(projectIndex) {
       const projectInst = crowdfundProject(this.projectData[projectIndex].contract);
       projectInst.methods.getInvestorCount().call().then((investorCount) => {
-        console.log(investorCount);
+        this.projectData[projectIndex].investorCount = investorCount;
       });
     },
     addRequest(projectIndex, title, description, date, amount) {
@@ -600,13 +603,23 @@ export default {
         console.log(status);
       });
     },
-    getRefund(index) {
-      /*this.projectData[index].isLoading = true;
-      this.projectData[index].contract.methods.getRefund().send({
+    requestPayback(projectIndex) {
+      const projectInst = crowdfundProject(this.projectData[projectIndex].contract);
+      projectInst.methods.requestPayback(
+      ).send({
         from: this.account,
-      }).then(() => {
-        this.projectData[index].isLoading = false;
-      });*/
+      }).then((status) => {
+        console.log(status);
+      });
+    },
+    requestPayout(projectIndex) {
+      const projectInst = crowdfundProject(this.projectData[projectIndex].contract);
+      projectInst.methods.requestPayout(
+      ).send({
+        from: this.account,
+      }).then((status) => {
+        console.log(status);
+      });
     },
     closeAddingBackingOptionPeriode(projectIndex) {
       const projectInst = crowdfundProject(this.projectData[projectIndex].contract);
@@ -614,7 +627,7 @@ export default {
       ).send({
         from: this.account,
       }).then((status) => {
-        
+
       });
     }
   },
