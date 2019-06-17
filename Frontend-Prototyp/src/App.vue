@@ -397,12 +397,12 @@
                 </v-flex>
 
                 <v-flex
-                  v-if="project.currentState == 0 "
+                  v-if="project.currentState == 0 && account == project.projectStarter"
                   class="d-flex ml-3" xs12 sm6 md3>
                   <v-btn
                     class="mt-3"
                     color="light-blue darken-1 white--text"
-                    @click="closeAddingBackingOptionPeriode(); activeIndex = index;"
+                    @click="closeAddingBackingOptionPeriode(index); activeIndex = index;"
                     :loading="project.isLoading"
                   >
                   Close
@@ -483,23 +483,31 @@ export default {
     getProjects() {
       crowdfundInstance.methods.getProjectCount().call().then((projectCount) => {
         for (var i = 0; i < projectCount; i++){
-          crowdfundInstance.methods.getProjects(i).call().then((projectData) => {
-            console.log(i);
-            const projectInfo = {}
-            projectInfo.projectTitle = projectData[2];
-            projectInfo.projectDesc = projectData[3];
-            projectInfo.projectStarter = projectData[0];
-            projectInfo.deadline = new Date(parseInt(projectData[5]));
-            projectInfo.goalAmount = projectData[4];
-            projectInfo.currentAmount = 0;
-            projectInfo.currentState = "0";
-            projectInfo.isLoading = false;
-            projectInfo.contract = projectData[1];
-            this.projectData.push(projectInfo);
-            //this.getInvestorCount(projectData[1]);
-          });
+          this.getProject(i);
         }
 	    });
+    },
+    async getProject(projectIndex) {
+      crowdfundInstance.methods.getProjects(projectIndex).call().then((projectData) => {
+        console.log(projectData);
+        const projectInfo = {}
+        projectInfo.projectTitle = projectData[2];
+        projectInfo.projectDesc = projectData[3];
+        projectInfo.projectStarter = projectData[0];
+        projectInfo.deadline = new Date(parseInt(projectData[5]));
+        projectInfo.goalAmount = projectData[4];
+        projectInfo.currentAmount = 0;
+        projectInfo.currentState = "0";
+        projectInfo.isLoading = false;
+        projectInfo.contract = projectData[1];
+        this.projectData.push(projectInfo);
+        this.getBalance(projectIndex);
+        //this.getInvestorCount(projectIndex);
+      });
+    },
+    async getBalance(projectIndex) {
+      var contract = this.projectData[projectIndex].contract;
+      this.projectData[projectIndex].currentAmount = await web3.eth.getBalance(contract);
     },
     startProject() {
       this.newObject.isLoading = true;
@@ -548,6 +556,7 @@ export default {
       });
     },
     getInvestorCount(projectIndex) {
+    console.log(projectIndex);
       const projectInst = crowdfundProject(this.projectData[projectIndex].contract);
       projectInst.methods.getInvestorCount().call().then((investorCount) => {
         this.projectData[projectIndex].investorCount = investorCount;
@@ -566,12 +575,6 @@ export default {
       }).then((status) => {
         console.log(status);
         this.addRequestDialog = false;
-      });
-    },
-    requestPayout(projectIndex) {
-      const projectInst = crowdfundProject(this.projectData[projectIndex].contract);
-      projectInst.methods.requestPayout().call().then((status) => {
-        console.log(status);
       });
     },
     getCurrentRequest(projectIndex) {
