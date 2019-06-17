@@ -59,6 +59,11 @@ contract ProjectContract is Ownable{
         NoVoteGiven
     }
 
+    event VoteGiven(
+        int numberAcceptedVotes,
+        int numberRejectedVotes
+    );
+
     /**
     * @notice Contrutor of the new ProjectContract, usually called by the ProjectContractHub. Creates the new ProjectContract
     * and sets the caller of the addNewProject() function in the ProjectContractHub as the owner of this new ProjectContract.
@@ -212,7 +217,8 @@ contract ProjectContract is Ownable{
     */
     function voteForCurrentRequest(bool isAccepted) public
     {
-
+        require(currentRequest.valideUntil != 0, "No request is avaiable");
+        
         require(Investors[msg.sender].investorExists != 0, "Sender address is not investor");
 
         require(Investors[msg.sender].currentVote == Vote.NoVoteGiven, "Investor has already voted");
@@ -225,6 +231,7 @@ contract ProjectContract is Ownable{
             Investors[msg.sender].currentVote = Vote.Rejected;
             currentRequest.numberRejectedVotes++;
         }
+        emit VoteGiven(currentRequest.numberAcceptedVotes, currentRequest.numberRejectedVotes);
     }
 
     /**
