@@ -487,9 +487,9 @@ export default {
         }
 	    });
     },
-    async getProject(projectIndex) {
-      crowdfundInstance.methods.getProjects(projectIndex).call().then((projectData) => {
-        console.log(projectData);
+    getProject(projectIndex) {
+      crowdfundInstance.methods.getProjects(projectIndex).call().then(async (projectData) => {
+        console.log(projectData[1]);
         const projectInfo = {}
         projectInfo.projectTitle = projectData[2];
         projectInfo.projectDesc = projectData[3];
@@ -500,14 +500,22 @@ export default {
         projectInfo.currentState = "0";
         projectInfo.isLoading = false;
         projectInfo.contract = projectData[1];
-        this.projectData.push(projectInfo);
-        this.getBalance(projectIndex);
+        this.getBalance(projectInfo, projectData[1]);
+        //this.projectData.push(projectInfo);
         //this.getInvestorCount(projectIndex);
       });
     },
-    async getBalance(projectIndex) {
-      var contract = this.projectData[projectIndex].contract;
-      this.projectData[projectIndex].currentAmount = await web3.eth.getBalance(contract);
+    async getBalance(projectInfo, contract) {
+      try {
+        var balance = await web3.eth.getBalance(contract);
+        projectInfo.currentAmount = balance;
+        this.getInvestorCount(projectInfo, contract);
+      } catch (err) {
+        console.log(err);
+        console.log("Could not fetch balance");
+        projectInfo.currentAmount = 0;
+        this.getInvestorCount(projectInfo, contract);
+      }
     },
     startProject() {
       this.newObject.isLoading = true;
@@ -555,11 +563,11 @@ export default {
         }
       });
     },
-    getInvestorCount(projectIndex) {
-    console.log(projectIndex);
-      const projectInst = crowdfundProject(this.projectData[projectIndex].contract);
+    getInvestorCount(projectInfo, contract) {
+      const projectInst = crowdfundProject(contract);
       projectInst.methods.getInvestorCount().call().then((investorCount) => {
-        this.projectData[projectIndex].investorCount = investorCount;
+        projectInfo.investorCount = investorCount;        
+        this.projectData.push(projectInfo);
       });
     },
     addRequest(projectIndex, title, description, date, amount) {
