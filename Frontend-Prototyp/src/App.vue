@@ -158,7 +158,7 @@
                 <div>
                   <div class="headline">{{ option[0] }}</div>
                   <div>{{ option[1] }}</div>
-                  <div>Kosten: <span>{{ option[2] }}</span></div>
+                  <div>Kosten: <span>{{ option[2] }} Wei</span></div>
                   <div>Verfügbare Anzahl: <span>{{ option[3] }}</span></div>
                   <v-btn
                     color="blue darken-1"
@@ -489,7 +489,6 @@ export default {
     },
     getProject(projectIndex) {
       crowdfundInstance.methods.getProjects(projectIndex).call().then(async (projectData) => {
-        console.log(projectData[1]);
         const projectInfo = {}
         projectInfo.projectTitle = projectData[2];
         projectInfo.projectDesc = projectData[3];
@@ -511,8 +510,6 @@ export default {
         projectInfo.currentAmount = balance;
         this.getInvestorCount(projectInfo, contract);
       } catch (err) {
-        console.log(err);
-        console.log("Could not fetch balance");
         projectInfo.currentAmount = 0;
         this.getInvestorCount(projectInfo, contract);
       }
@@ -542,7 +539,7 @@ export default {
       projectInst.methods.addBackingOption(
         this.newObject.title,
         this.newObject.description,
-        this.newObject.price,
+        web3.utils.toWei(this.newObject.price, 'ether'),
         this.newObject.amount
       ).send({
         from: this.account,
@@ -566,7 +563,8 @@ export default {
     getInvestorCount(projectInfo, contract) {
       const projectInst = crowdfundProject(contract);
       projectInst.methods.getInvestorCount().call().then((investorCount) => {
-        projectInfo.investorCount = investorCount;        
+        projectInfo.investorCount = investorCount;
+        console.log(projectInfo);
         this.projectData.push(projectInfo);
       });
     },
