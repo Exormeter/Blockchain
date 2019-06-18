@@ -240,6 +240,38 @@ UseCase 5: Ein Investor kann für die Geldentnahme abstimmen
 
 ![Klassenmodell](Diagramme/Klassenmodell.png)
 
+## 3.7 State Maschine
+
+Der Project Contract, welcher vom Creator angelegt werden kann um Geld für sein Projekt sammeln zu könnnen
+ist prinzipiell aufgebaut wie eine State Maschine. Grundsätzlich können drei große States identifiziert 
+werden, welche wiederum durch kleinere, feingranularere State Maschinen beschrieben werden können. Der
+erste State des Contracts ist die Backing Option Phase. In diese Phase kann der des Projektes Creator 
+dem Vertrag sogenante Backing Options hinzufügen. Wenn der Creator der Meinung ist, dass die 
+hinzgefügten Backing Optionen ausreichend sind, kann er diese Phase des Contracts abschließen.
+Es ist nun nicht mehr möglich, weitere Backing Options hinzuzufügen.
+
+![BackingOptionState](Diagramme/ContractBackingState.png)
+
+Ist diese Phase abgeschlossen, folgt die Investorenpahse. Hier können Investoren in den Contract 
+investieren, je nachdem welche Backing Option sie für sich auswählen. Die Investorenpahase endet, 
+wenn die vom Creator eingestellte Deadline ausläuft. Nach dieser Deadline können keine weiteren
+Investoren in den Contract investieren. Bei Ablauf der Deadline wird geprüft, ob der Contract die
+gewünschte Summe aufbringen konnte. Ist dies der Fall, so wechselt der Contract in die dritte Phase,
+die Requestphase. Sollte das Ziel nicht erreicht werden, wird allen Investoren das eingezahlte Geld
+zurückgezahlt. 
+
+![InvestorState](Diagramme/FundingLimits.png)
+
+In der letzten Phase des Contracts kann der Creator anfangen, Request zur Auszahlung des Geldes
+zu stellen. Jeder Investor kann dabei Votesn, ob er für oder gegen die Auszahlung mit dem
+gegenbenden Grund im Request ist. Sollte sich keine Mehrheit für einen Request finden, so kann
+der Creator einen neuen, überarbeiteten Request stellen und hoffen, das dieser angenommen wird.
+Sollte wärend der Votingperiode bereits eine Mehrheit für den Request vorliegen, so kann der 
+Creator auch vor ablauf des Zeitlimits sich den Betrag auszahlen lassen und dann einen neuen 
+Request stellen. 
+
+![RequestState](Diagramme/RequestStates.png)
+
 # 4 Projektorganisation
 
 ## 4.1 Annahmen
