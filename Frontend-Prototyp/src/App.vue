@@ -164,6 +164,7 @@
                     color="blue darken-1"
                     flat
                     @click="addInvestor(activeIndex, index, option[2])"
+                    :disabled="option[3] == 0 || account == project.projectStarter "
                   >
                   Wählen
                   </v-btn>
@@ -356,7 +357,7 @@
                 <!--  v-if="project.currentState == 0 " #&& account != project.projectStarter-->
 
                 <v-flex
-                  v-if="project.currentState == 0 "
+                  v-if="project.currentState == 1 "
                   class="d-flex ml-3" xs12 sm6 md3>
                   <v-btn
                     class="mt-3"
@@ -369,7 +370,7 @@
                 </v-flex>
 
                 <v-flex
-                  v-if="project.currentState == 0 "
+                  v-if="project.currentState == 3 "
                   class="d-flex ml-3" xs12 sm6 md3>
                   <v-btn
                     class="mt-3"
@@ -408,7 +409,7 @@
                 </v-flex>
 
                 <v-flex
-                  v-if="project.currentState == 0 && account == project.projectStarter"
+                  v-if="project.currentState == 3 && account == project.projectStarter"
                   class="d-flex ml-3" xs12 sm6 md3>
                   <v-btn
                     class="mt-3"
@@ -419,7 +420,7 @@
                     Add Request
                   </v-btn>
                 </v-flex>
-                <v-card-actions v-if="project.currentState == 0" class="text-xs-center">
+                <v-card-actions class="text-xs-center">
                   <span class="font-weight-bold" style="width: 200px;">
                     {{ project.currentAmount / 10**18 }} ETH
                   </span>
@@ -443,8 +444,8 @@
 
 <script>
 // We import our the scripts for the smart contract instantiation, and web3
-import crowdfundInstance from '../contracts/crowdfundInstanceNew';
-import crowdfundProject from '../contracts/crowdfundProjectInstanceNew';
+import crowdfundInstance from '../contracts/crowdFundInstanceNew';
+import crowdfundProject from '../contracts/crowdFundProjectInstanceNew';
 import web3 from '../contracts/web3';
 
 export default {
@@ -461,6 +462,7 @@ export default {
       stateMap: [
         { color: 'blue-grey lighten-3', text: "Initialisierung"},
         { color: 'primary', text: 'Laufend' },
+        { color: 'green lighten-3', text: "Ziel erreicht"},
         { color: 'warning', text: 'Abgelaufen' },
         { color: 'success', text: 'Abgeschlossen' },
       ],
@@ -494,7 +496,6 @@ export default {
         projectInfo.deadline = new Date(parseInt(projectData[5]));
         projectInfo.goalAmount = projectData[4];
         projectInfo.currentAmount = 0;
-        projectInfo.currentState = "0";
         projectInfo.isLoading = false;
         projectInfo.contract = projectData[1];
         this.getBalance(projectInfo, projectData[1]);
@@ -562,9 +563,7 @@ export default {
       const projectInst = crowdfundProject(contract);
       projectInst.methods.getInvestorCount().call().then((investorCount) => {
         projectInfo.investorCount = investorCount;
-        console.log(investorCount);
-        console.log(projectInfo);
-        this.projectData.push(projectInfo);
+        this.getContractState(projectInfo, contract);
       });
     },
     addRequest(projectIndex, title, description, date, amount) {
@@ -644,6 +643,14 @@ export default {
       if(response.status == "200"){
           console.log(response);
         }
+      });
+    },
+    getContractState(projectInfo, contract) {
+      const projectInst = crowdfundProject(contract);
+      projectInst.methods.getContractState().call().then((state) => {
+        projectInfo.currentState = state;
+        console.log(projectInfo);
+        this.projectData.push(projectInfo);
       });
     }
   }

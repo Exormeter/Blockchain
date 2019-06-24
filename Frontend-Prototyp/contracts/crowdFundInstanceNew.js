@@ -1,7 +1,7 @@
 /* eslint-disable */
 import web3 from './web3';
 
-const address = '0x14a9d0ceee2ac3132830daf7a0ecb90cfa203240';
+const address = '0xeb0c6a438ce4aefd7891212d20ca9af1bf938a95';
 const abi = [
 	{
 		"constant": true,
@@ -63,12 +63,7 @@ const abi = [
 			}
 		],
 		"name": "addNewProject",
-		"outputs": [
-			{
-				"name": "",
-				"type": "bool"
-			}
-		],
+		"outputs": [],
 		"payable": false,
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -230,6 +225,43 @@ const abi = [
 		"payable": false,
 		"stateMutability": "view",
 		"type": "function"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"name": "owner",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"name": "projectAdress",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"name": "projectName",
+				"type": "string"
+			},
+			{
+				"indexed": false,
+				"name": "projectDescription",
+				"type": "string"
+			},
+			{
+				"indexed": false,
+				"name": "goal",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"name": "fundingCloseDate",
+				"type": "uint256"
+			}
+		],
+		"name": "CreatedProject",
+		"type": "event"
 	}
 ];
 

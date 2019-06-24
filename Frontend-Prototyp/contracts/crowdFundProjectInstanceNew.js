@@ -68,6 +68,20 @@ const abi = [
 	{
 		"constant": true,
 		"inputs": [],
+		"name": "getContractState",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint8"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
 		"name": "getCurrentRequest",
 		"outputs": [
 			{
@@ -165,7 +179,7 @@ const abi = [
 				"type": "uint256"
 			},
 			{
-				"name": "_amount",
+				"name": "_amountWei",
 				"type": "uint256"
 			}
 		],
@@ -289,6 +303,65 @@ const abi = [
 			}
 		],
 		"name": "VoteGiven",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"name": "optionTitle",
+				"type": "string"
+			},
+			{
+				"indexed": false,
+				"name": "optionDescription",
+				"type": "string"
+			},
+			{
+				"indexed": false,
+				"name": "optionAmountEther",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"name": "optionAvailability",
+				"type": "int256"
+			},
+			{
+				"indexed": false,
+				"name": "id",
+				"type": "uint256"
+			}
+		],
+		"name": "CreatedBackingOption",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"name": "requestTitle",
+				"type": "string"
+			},
+			{
+				"indexed": false,
+				"name": "requestDescription",
+				"type": "string"
+			},
+			{
+				"indexed": false,
+				"name": "valideUntil",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"name": "amount",
+				"type": "uint256"
+			}
+		],
+		"name": "CreatedRequest",
 		"type": "event"
 	},
 	{
