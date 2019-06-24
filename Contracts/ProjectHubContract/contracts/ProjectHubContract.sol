@@ -26,6 +26,15 @@ contract ProjectHubContract{
         uint fundingCloseDate;
     }
 
+    event CreatedProject(
+        address owner,
+        address payable projectAdress,
+        string projectName,
+        string projectDescription,
+        uint goal,
+        uint fundingCloseDate
+    );
+
 
     /**
     * @notice This function add a new projectContract to the ProjectHubContract. The caller address becomes
@@ -38,7 +47,7 @@ contract ProjectHubContract{
     * @return Returns true when the new ProjectContract was successfully created
     */
     function addNewProject(string memory projectName, string memory projectDescription, uint fundingGoal,
-                            uint fundingCloseDate) public returns (bool)
+                            uint fundingCloseDate) public
     {
         require(fundingCloseDate > block.timestamp, "The given date is in the past");
         
@@ -46,7 +55,14 @@ contract ProjectHubContract{
         Project memory project = Project(msg.sender, address(projectContract), projectName, projectDescription, fundingGoal, fundingCloseDate);
         projects.push(project);
         projectsCreatedByFounder[msg.sender].push(project);
-        return true;
+        emit CreatedProject(
+            msg.sender,
+            address(projectContract),
+            projectName,
+            projectDescription,
+            fundingGoal,
+            fundingCloseDate
+        );
     }
 
     /**

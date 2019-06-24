@@ -28,7 +28,7 @@ contract("ContractHub", accounts => {
             assert.notEqual(Error, undefined, 'Error must be thrown');
         }
         
-    })
+    });
 
     it("Should have the right Backing Option ID", async () => {
         let hub = await ContractHub.deployed();
@@ -129,6 +129,16 @@ contract("ContractHub", accounts => {
         assert.equal(request[4], 3);
         assert.equal(request[5], 1);
         assert.equal(request[6], false);
+    })
+
+    it("Should get the correct investor count", async () => {
+        let hub = await ContractHub.deployed();
+        let creatorAccount = accounts[0];
+
+        let project = await hub.getProjects(0, {from: creatorAccount});
+        let projectContract = await ProjectContract.at(project[1]);
+        let investorCount  = await projectContract.getInvestorCount({from: creatorAccount});
+        assert.equal(4, investorCount);
     })
 
     it("Should pay the Creator", async () => {
