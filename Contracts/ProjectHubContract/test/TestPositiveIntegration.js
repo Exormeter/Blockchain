@@ -28,7 +28,7 @@ contract("ContractHub", accounts => {
             assert.notEqual(Error, undefined, 'Error must be thrown');
         }
         
-    })
+    });
 
     it("Should have the right Backing Option ID", async () => {
         let hub = await ContractHub.deployed();
