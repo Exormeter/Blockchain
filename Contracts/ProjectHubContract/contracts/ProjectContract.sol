@@ -19,6 +19,7 @@ contract ProjectContract is Ownable{
     uint backerOptionsID = 1;
     bool wasFirstRequestGiven = false;
     bool backingAddingPeriodeIsOver = false;
+    bool fundingGoalWasReached = false;
     uint fundingGoal;
     uint fundingClosingDate;
     Request currentRequest;
@@ -64,6 +65,21 @@ contract ProjectContract is Ownable{
         int numberRejectedVotes
     );
 
+    event CreatedBackingOption(
+        string optionTitle,
+        string optionDescription,
+        uint optionAmountEther,
+        int optionAvailability,
+        uint id
+    );
+
+    event CreatedRequest(
+        string requestTitle,
+        string requestDescription,
+        uint valideUntil,
+        uint amount
+    );
+
     /**
     * @notice Contrutor of the new ProjectContract, usually called by the ProjectContractHub. Creates the new ProjectContract
     * and sets the caller of the addNewProject() function in the ProjectContractHub as the owner of this new ProjectContract.
@@ -97,10 +113,18 @@ contract ProjectContract is Ownable{
     uint _optionAmountWei, int _optionAvailability) public onlyOwner
     {
         require(!backingAddingPeriodeIsOver, "The periode of adding backing options to the contract is over");
-        BackingOption memory backingOption = BackingOption(_optionTitle, _optionDescription, _optionAmountWei,
-            _optionAvailability, backerOptionsID);
-        backingOptions.push(backingOption);
+        uint newBackingOptionID = backerOptionsID;
         backerOptionsID++;
+        BackingOption memory backingOption = BackingOption(_optionTitle, _optionDescription, _optionAmountWei,
+            _optionAvailability, newBackingOptionID);
+        backingOptions.push(backingOption);
+        emit CreatedBackingOption(
+            _optionTitle,
+            _optionDescription,
+            _optionAmountWei,
+            _optionAvailability,
+            newBackingOptionID
+        );
     }
 
     /**
@@ -170,8 +194,12 @@ contract ProjectContract is Ownable{
         require(block.timestamp < fundingClosingDate, "The funding is closed, date is reached");
 
         Investors[msg.sender] = Investor(msg.sender, backingOptionID, Vote.NoVoteGiven, 1);
+        investorAddresses.push(msg.sender);
         projectHub.addProjectToInvestor(msg.sender, address(this), owner, projectTitle, projectDescription, fundingGoal, fundingClosingDate);
         backingOptions[optionIndex].optionAvailability--;
+        if(fundingGoal > address(this).balance){
+            fundingGoalWasReached = true;
+        }
     }
 
     /**
@@ -191,10 +219,10 @@ contract ProjectContract is Ownable{
     * @param _requestTitle Title of the new request
     * @param _requestDescription Description of the new request
     * @param _valideUntil Date till which the request is valide, in seconds since 1970
-    * @param _amount The amount the owner requested in Wei
+    * @param _amountWei The amount the owner requested in Wei
     */
     function addRequest(string memory _requestTitle, string memory _requestDescription,
-    uint256 _valideUntil, uint _amount) public onlyOwner
+    uint256 _valideUntil, uint _amountWei) public onlyOwner
     {
         require(_valideUntil > block.timestamp, "The given date is in the past");
 
@@ -204,11 +232,19 @@ contract ProjectContract is Ownable{
             require(currentRequest.valideUntil < block.timestamp, "Current Request is still valide");
         }
         wasFirstRequestGiven = true;
-        currentRequest = Request(_requestTitle, _requestDescription, _valideUntil, _amount, 0, 0, false);
+        currentRequest = Request(_requestTitle, _requestDescription, _valideUntil, _amountWei, 0, 0, false);
         for(uint i = 0; i<investorAddresses.length; i++){
             Investors[investorAddresses[i]].currentVote = Vote.NoVoteGiven;
         }
+
+        emit CreatedRequest(
+            _requestTitle,
+            _requestDescription,
+            _valideUntil,
+            _amountWei
+        );
     }
+
 
     /**
     * @notice The function allows the investors to vote on the current request. If the caller of this
@@ -261,7 +297,7 @@ contract ProjectContract is Ownable{
     */
     function requestPayout() public onlyOwner
     {
-        require(((currentRequest.numberAcceptedVotes / 2) > int256 (investorAddresses.length)), "Majority was not reached");
+        require(((currentRequest.numberAcceptedVotes) > int256 (investorAddresses.length / 2)), "Majority was not reached");
 
         require(!currentRequest.wasPayed, "Request was already payed out");
         
@@ -276,7 +312,7 @@ contract ProjectContract is Ownable{
     */
     function requestPayback() public
     {
-        require(fundingGoal > address(this).balance, "The funding goal was reached");
+        require(!fundingGoalWasReached, "The funding goal was reached");
 
         require(block.timestamp > fundingClosingDate, "The funding periode is not over jet");
 

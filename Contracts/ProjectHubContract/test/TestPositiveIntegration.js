@@ -131,6 +131,16 @@ contract("ContractHub", accounts => {
         assert.equal(request[6], false);
     })
 
+    it("Should get the correct investor count", async () => {
+        let hub = await ContractHub.deployed();
+        let creatorAccount = accounts[0];
+
+        let project = await hub.getProjects(0, {from: creatorAccount});
+        let projectContract = await ProjectContract.at(project[1]);
+        let investorCount  = await projectContract.getInvestorCount({from: creatorAccount});
+        assert.equal(4, investorCount);
+    })
+
     it("Should pay the Creator", async () => {
         let hub = await ContractHub.deployed();
         let creatorAccount = accounts[0];
