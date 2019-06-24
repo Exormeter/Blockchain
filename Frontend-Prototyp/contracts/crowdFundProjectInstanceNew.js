@@ -278,6 +278,23 @@ const abi = [
 		"anonymous": false,
 		"inputs": [
 			{
+				"indexed": false,
+				"name": "numberAcceptedVotes",
+				"type": "int256"
+			},
+			{
+				"indexed": false,
+				"name": "numberRejectedVotes",
+				"type": "int256"
+			}
+		],
+		"name": "VoteGiven",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
 				"indexed": true,
 				"name": "previousOwner",
 				"type": "address"

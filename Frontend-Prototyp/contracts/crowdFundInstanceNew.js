@@ -1,8 +1,47 @@
 /* eslint-disable */
 import web3 from './web3';
 
-const address = '0x0ffb9e1c4ec16377f692a69babf011166f7f7fed';
+const address = '0x14a9d0ceee2ac3132830daf7a0ecb90cfa203240';
 const abi = [
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "projectIndex",
+				"type": "uint256"
+			}
+		],
+		"name": "getProjects",
+		"outputs": [
+			{
+				"name": "owner",
+				"type": "address"
+			},
+			{
+				"name": "projectAdress",
+				"type": "address"
+			},
+			{
+				"name": "projectName",
+				"type": "string"
+			},
+			{
+				"name": "projectDescription",
+				"type": "string"
+			},
+			{
+				"name": "goal",
+				"type": "uint256"
+			},
+			{
+				"name": "fundigCloseDate",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
 	{
 		"constant": false,
 		"inputs": [
@@ -32,6 +71,87 @@ const abi = [
 		],
 		"payable": false,
 		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "getProjectCount",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "getProjectCountForInvestor",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "projectIndex",
+				"type": "uint256"
+			}
+		],
+		"name": "getProjectByInvestorForIndex",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address"
+			},
+			{
+				"name": "",
+				"type": "address"
+			},
+			{
+				"name": "",
+				"type": "string"
+			},
+			{
+				"name": "",
+				"type": "string"
+			},
+			{
+				"name": "",
+				"type": "uint256"
+			},
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "getProjectCountForFounder",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
 		"type": "function"
 	},
 	{
@@ -104,126 +224,6 @@ const abi = [
 			},
 			{
 				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "projectIndex",
-				"type": "uint256"
-			}
-		],
-		"name": "getProjectByInvestorForIndex",
-		"outputs": [
-			{
-				"name": "",
-				"type": "address"
-			},
-			{
-				"name": "",
-				"type": "address"
-			},
-			{
-				"name": "",
-				"type": "string"
-			},
-			{
-				"name": "",
-				"type": "string"
-			},
-			{
-				"name": "",
-				"type": "uint256"
-			},
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "getProjectCount",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "getProjectCountForFounder",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "getProjectCountForInvestor",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "projectIndex",
-				"type": "uint256"
-			}
-		],
-		"name": "getProjects",
-		"outputs": [
-			{
-				"name": "owner",
-				"type": "address"
-			},
-			{
-				"name": "projectAdress",
-				"type": "address"
-			},
-			{
-				"name": "projectName",
-				"type": "string"
-			},
-			{
-				"name": "projectDescription",
-				"type": "string"
-			},
-			{
-				"name": "goal",
-				"type": "uint256"
-			},
-			{
-				"name": "fundigCloseDate",
 				"type": "uint256"
 			}
 		],

@@ -158,8 +158,8 @@
                 <div>
                   <div class="headline">{{ option[0] }}</div>
                   <div>{{ option[1] }}</div>
-                  <div>Kosten: <span>{{ option[2] }} Wei</span></div>
-                  <div>Verfügbare Anzahl: <span>{{ option[3] }}</span></div>
+                  <div><b>Kosten: </b> <span>{{ option[2] }} Wei</span></div>
+                  <div><b>Verfügbare Anzahl: </b> <span>{{ option[3] }}</span></div>
                   <v-btn
                     color="blue darken-1"
                     flat
@@ -341,19 +341,17 @@
                       {{ project.projectTitle }}
                     </div>
                     <br/>
-                    <span>{{ project.projectDesc.substring(0, 100) }}</span>
-                    <span v-if="project.projectDesc.length > 100">
+                    <span>{{ project.projectDesc }}</span>
+                    <!--<span v-if="project.projectDesc.length > 100">
                       ... <a @click="projectData[index].dialog = true">[Show full]</a>
-                    </span>
+                    </span>-->
                     <br/><br/>
                     <small>Up Until: <b>{{ new Date(project.deadline) }}</b></small>
                     <br/><br/>
-                    <small>Goal of <b>{{ project.goalAmount / 10**18 }} ETH </b></small>
+                    <small>Anzahl Investoren: <b>{{ project.investorCount }}</b></small>
                     <small v-if="project.currentState == 2">wasn't achieved before deadline</small>
                     <small v-if="project.currentState == 3">has been achieved</small>
-                    <br/><br/>
-                    <small>Anzahl Investoren: <b>{{ project.investorCount }}</b></small>
-                  </div>
+                    </div>
                 </v-card-title>
                 <!--  v-if="project.currentState == 0 " #&& account != project.projectStarter-->
 
@@ -564,6 +562,7 @@ export default {
       const projectInst = crowdfundProject(contract);
       projectInst.methods.getInvestorCount().call().then((investorCount) => {
         projectInfo.investorCount = investorCount;
+        console.log(investorCount);
         console.log(projectInfo);
         this.projectData.push(projectInfo);
       });
@@ -638,7 +637,15 @@ export default {
       }).then((status) => {
 
       });
+    },
+    currentConversionRate() {
+    var self=this;
+    this.$http.get('https://api.coinmarketcap.com/v1/ticker/ethereum/').then(function(response){
+      if(response.status == "200"){
+          console.log(response);
+        }
+      });
     }
-  },
+  }
 };
 </script>
