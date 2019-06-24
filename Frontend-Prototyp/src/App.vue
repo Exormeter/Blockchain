@@ -59,8 +59,6 @@
                         v-model="newObject.duration">
                       </v-text-field>
                     </v-flex>
-                    </v-flex>
-
                   </v-layout>
                 </v-container>
               </v-card-text>
@@ -164,8 +162,9 @@
                     color="blue darken-1"
                     flat
                     @click="addInvestor(activeIndex, index, option[2])"
-                    :disabled="option[3] == 0 || account == project.projectStarter "
                   >
+                  
+                    <!---":disabled="option[3] == 0 || account == project.projectStarter -->
                   Wählen
                   </v-btn>
                 </div>
@@ -370,7 +369,7 @@
                 </v-flex>
 
                 <v-flex
-                  v-if="project.currentState == 3 "
+                  v-if="project.currentState == 1 "
                   class="d-flex ml-3" xs12 sm6 md3>
                   <v-btn
                     class="mt-3"
@@ -409,7 +408,7 @@
                 </v-flex>
 
                 <v-flex
-                  v-if="project.currentState == 3 && account == project.projectStarter"
+                  v-if="project.currentState == 1 && account == project.projectStarter"
                   class="d-flex ml-3" xs12 sm6 md3>
                   <v-btn
                     class="mt-3"
@@ -515,9 +514,8 @@ export default {
     },
     startProject() {
       this.newObject.isLoading = true;
-      var today = new Date();
       var goalDate = new Date();
-      goalDate.setDate(today.getDate()+parseInt(this.newObject.duration));
+      goalDate.setMinutes(goalDate.getMinutes()+parseFloat(this.newObject.duration)*24*60);
       crowdfundInstance.methods.addNewProject(
         this.newObject.title,
         this.newObject.description,
@@ -568,12 +566,14 @@ export default {
     },
     addRequest(projectIndex, title, description, date, amount) {
       this.newObject.isLoading = true;
+      var goalDate = new Date();
+      goalDate.setMinutes(goalDate.getMinutes()+parseFloat(this.newObject.validUntil)*24*60);
       const projectInst = crowdfundProject(this.projectData[projectIndex].contract);
       projectInst.methods.addRequest(
         this.newObject.title,
         this.newObject.description,
-        new Date().getTime() + (this.newObject.validUntil*86400),
-        this.newObject.amount
+        goalDate.getTime(),
+        web3.utils.toWei(this.newObject.amount, 'ether'),
       ).send({
         from: this.account,
       }).then((status) => {
