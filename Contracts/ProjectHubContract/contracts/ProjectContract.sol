@@ -55,9 +55,17 @@ contract ProjectContract is Ownable{
     }
 
     enum Vote{
-        Accepted,
-        Rejected,
-        NoVoteGiven
+        ACCEPTED,
+        REJECTED,
+        NOVOTEGIVEN
+    }
+
+    enum ContractState{
+        INITIALIZED,
+        ACTIVE,
+        FUNDINGGOALREACHED,
+        DEADLINEREACHED,
+        DEADLINEREACHEDREFUND
     }
 
     event VoteGiven(
@@ -98,6 +106,33 @@ contract ProjectContract is Ownable{
         fundingGoal = _fundingGoal;
         fundingClosingDate = _fundingCloseDate;
         projectHub = _projectHub;
+    }
+
+    /**
+    * @notice Returns the State of the Contract. The Contract can be in one of five States:
+    * 1. The Contract was initilized and the creator can add backing option -> INITILIZED
+    * 2. The Contract is open and investors can invest. The goal was not reached jet and there is still time to the deadline -> ACTIVE
+    * 3. The funding Goal was reached, but there is still time till the deadline -> FUNDINGGOALREACHED
+    * 4. The deadline has ended and the funding goal was reached -> DEADLINEREACHED
+    * 5. The deadline has ended and the funding goal was not reached -> DEADLINEREACHEDREFUND
+    */
+    function getContractState() public view returns (ContractState)
+    {
+        if(!backingAddingPeriodeIsOver){
+            return ContractState.INITIALIZED;
+        }
+        else if((fundingClosingDate > block.timestamp) && !fundingGoalWasReached){
+            return ContractState.ACTIVE;
+        }
+        else if((fundingClosingDate > block.timestamp) && fundingGoalWasReached){
+            return ContractState.FUNDINGGOALREACHED;
+        }
+        else if((fundingClosingDate < block.timestamp && fundingGoalWasReached)){
+            return ContractState.DEADLINEREACHED;
+        }
+        else{
+            return ContractState.DEADLINEREACHEDREFUND;
+        }
     }
 
     /**
@@ -193,7 +228,7 @@ contract ProjectContract is Ownable{
 
         require(block.timestamp < fundingClosingDate, "The funding is closed, date is reached");
 
-        Investors[msg.sender] = Investor(msg.sender, backingOptionID, Vote.NoVoteGiven, 1);
+        Investors[msg.sender] = Investor(msg.sender, backingOptionID, Vote.NOVOTEGIVEN, 1);
         investorAddresses.push(msg.sender);
         projectHub.addProjectToInvestor(msg.sender, address(this), owner, projectTitle, projectDescription, fundingGoal, fundingClosingDate);
         backingOptions[optionIndex].optionAvailability--;
@@ -234,7 +269,7 @@ contract ProjectContract is Ownable{
         wasFirstRequestGiven = true;
         currentRequest = Request(_requestTitle, _requestDescription, _valideUntil, _amountWei, 0, 0, false);
         for(uint i = 0; i<investorAddresses.length; i++){
-            Investors[investorAddresses[i]].currentVote = Vote.NoVoteGiven;
+            Investors[investorAddresses[i]].currentVote = Vote.NOVOTEGIVEN;
         }
 
         emit CreatedRequest(
@@ -257,14 +292,14 @@ contract ProjectContract is Ownable{
         
         require(Investors[msg.sender].investorExists != 0, "Sender address is not investor");
 
-        require(Investors[msg.sender].currentVote == Vote.NoVoteGiven, "Investor has already voted");
+        require(Investors[msg.sender].currentVote == Vote.NOVOTEGIVEN, "Investor has already voted");
 
         if(isAccepted){
-            Investors[msg.sender].currentVote = Vote.Accepted;
+            Investors[msg.sender].currentVote = Vote.ACCEPTED;
             currentRequest.numberAcceptedVotes++;
         }
         else{
-            Investors[msg.sender].currentVote = Vote.Rejected;
+            Investors[msg.sender].currentVote = Vote.REJECTED;
             currentRequest.numberRejectedVotes++;
         }
         emit VoteGiven(currentRequest.numberAcceptedVotes, currentRequest.numberRejectedVotes);
