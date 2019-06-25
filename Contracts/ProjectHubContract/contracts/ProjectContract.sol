@@ -90,10 +90,6 @@ contract ProjectContract is Ownable{
         uint amount
     );
 
-    // event debug(
-    //     uint number
-    // );
-
     /**
     * @notice Contrutor of the new ProjectContract, usually called by the ProjectContractHub. Creates the new ProjectContract
     * and sets the caller of the addNewProject() function in the ProjectContractHub as the owner of this new ProjectContract.
@@ -255,6 +251,7 @@ contract ProjectContract is Ownable{
         }
     }
 
+
     /**
     * @notice This function return the number of investors of the ProjectContract
     * @return Number of investors
@@ -262,6 +259,16 @@ contract ProjectContract is Ownable{
     function getInvestorCount() public view returns (uint)
     {
         return investorAddresses.length;
+    }
+
+    /**
+    * @notice This function retuns the peek amount of funding that is or was
+    * stored in the contract.
+    * @return Peek funding in the contract
+    */
+    function getPeekBalance() public view returns (uint)
+    {
+        return maxFunding;
     }
 
     /**
@@ -326,6 +333,18 @@ contract ProjectContract is Ownable{
     }
 
     /**
+    * @notice This function will tell if the investor has voted for the current request.
+    * It returns
+    * 0 (ACCEPTED) if the investor has accepted the current request,
+    * 1 (REJECTED) if the investor has rejected the current request,
+    * 2 (NOVOTEGIVEN) if the investor has not voted jet.
+    */
+    function hasInvestorVotedForCurrentRequest() public view returns (Vote)
+    {
+        return Investors[msg.sender].currentVote;
+    }
+
+    /**
     * @notice This function return the current request, throws an exception if no
     * request is currently available, because no request was requested.
     * @return Title of the request
@@ -382,9 +401,17 @@ contract ProjectContract is Ownable{
 
     }
 
-    function requestRefundRemainingFunds() public returns (uint)
+    /**
+    * @notice This function allows for the payback of the remaining funds on the contract to
+    * the investors after the project has ended. The payback is proprtional to the amount of
+    * ether the investor has paid into the contract.
+    * @dev Since Solidity doesn't suppoert floating numbers, a small error is expected.
+    * The worst case error is 9 Wei, which should be marginal. The precision needed to
+    * minimize the error.
+    */
+    function requestRefundRemainingFunds() public
     {
-        //require(projectClosingDate < block.timestamp, "Project is not finished jet");
+        require(projectClosingDate < block.timestamp, "Project is not finished jet");
         require(fundingGoalWasReached, "The goal was not reached in time, use request a complete payback");
 
         uint remainingFunds = address(this).balance;

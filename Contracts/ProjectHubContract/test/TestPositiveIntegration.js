@@ -124,6 +124,24 @@ contract("ContractHub positive", accounts => {
         assert.equal(request[4], 3);
         assert.equal(request[5], 1);
         assert.equal(request[6], false);
+    });
+
+    it("Should should tell if a investor has voted jet", async () => {
+        let hub = await ContractHub.deployed();
+        let creatorAccount = accounts[0];
+        let project = await hub.getProjects(0, {from: creatorAccount});
+        let projectContract = await ProjectContract.at(project[1]);
+        
+        let investorAccountOne = accounts[1];
+        let investorAccountFour = accounts[4];
+
+        let voteOne = await projectContract.hasInvestorVotedForCurrentRequest({from: investorAccountOne});
+        let voteFour = await projectContract.hasInvestorVotedForCurrentRequest({from: investorAccountFour});
+
+        assert.equal(0, voteOne);
+        assert.equal(1, voteFour);
+
+
     })
 
     it("Should get the correct investor count", async () => {
