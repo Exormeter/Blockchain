@@ -121,17 +121,25 @@ contract ProjectContract is Ownable{
         if(!backingAddingPeriodeIsOver){
             return ContractState.INITIALIZED;
         }
-        else if((fundingClosingDate > block.timestamp) && !fundingGoalWasReached){
-            return ContractState.ACTIVE;
+
+        //Deadline noch nicht abeglaufen
+        else if(fundingClosingDate > block.timestamp){
+            if(!fundingGoalWasReached){
+                return ContractState.ACTIVE;
+            }
+            else{
+                return ContractState.FUNDINGGOALREACHED;
+            }
         }
-        else if((fundingClosingDate > block.timestamp) && fundingGoalWasReached){
-            return ContractState.FUNDINGGOALREACHED;
-        }
-        else if((fundingClosingDate < block.timestamp && fundingGoalWasReached)){
-            return ContractState.DEADLINEREACHED;
-        }
+
+        //Deadline abgelaufen
         else{
-            return ContractState.DEADLINEREACHEDREFUND;
+            if(fundingGoalWasReached){
+                return ContractState.DEADLINEREACHED;
+            }
+            else{
+                return ContractState.DEADLINEREACHEDREFUND;
+            }
         }
     }
 
@@ -232,7 +240,7 @@ contract ProjectContract is Ownable{
         investorAddresses.push(msg.sender);
         projectHub.addProjectToInvestor(msg.sender, address(this), owner, projectTitle, projectDescription, fundingGoal, fundingClosingDate);
         backingOptions[optionIndex].optionAvailability--;
-        if(fundingGoal > address(this).balance){
+        if(fundingGoal < address(this).balance){
             fundingGoalWasReached = true;
         }
     }

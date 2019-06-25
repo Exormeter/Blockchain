@@ -17,19 +17,6 @@ contract("ContractHub", accounts => {
         assert.equal("TestProject", project[2]);
     });
 
-    it("Should not be able to return a request at this point", async () => {
-        let hub = await ContractHub.deployed();
-        let creatorAccount = accounts[0];
-        let project = await hub.getProjects(0, {from: creatorAccount});
-        try{
-            await project.getCurrentRequest();
-        }
-        catch(Error){
-            assert.notEqual(Error, undefined, 'Error must be thrown');
-        }
-        
-    });
-
     it("Should have the right Backing Option ID", async () => {
         let hub = await ContractHub.deployed();
         let creatorAccount = accounts[0];
@@ -40,7 +27,9 @@ contract("ContractHub", accounts => {
         projectContract.addBackingOption("TestOption", "TestOptionDescription", 500, 400, {from: creatorAccount});
         projectContract.addBackingOption("TestOption", "TestOptionDescription", 500, 400, {from: creatorAccount});
         let backingOption = await projectContract.getBackingOption(1, {from: investorAccountOne});
+        let state  = await projectContract.getContractState({from: investorAccountOne});
 
+        assert.equal(0, state);
         assert.equal("TestOption", backingOption[0]);
         assert.equal("TestOptionDescription", backingOption[1]);
         assert.equal(500, backingOption[2]);
@@ -56,8 +45,11 @@ contract("ContractHub", accounts => {
         let project = await hub.getProjects(0, {from: creatorAccount});
         let projectContract = await ProjectContract.at(project[1]);
         await projectContract.closeAddingBackingOptionPeriode({from: creatorAccount})
+        let state  = await projectContract.getContractState({from: investorAccountOne});
         await projectContract.addInvestor(1, {from: investorAccountOne, value: 500});
+        
 
+        assert.equal(1, state);
         let currentContractBalance = await web3.eth.getBalance(project[1]);
 
         assert.equal(currentContractBalance, 500);
@@ -75,6 +67,8 @@ contract("ContractHub", accounts => {
         timestamp = Math.floor(timestamp/1000);
         timestamp += 86400;
         await projectContract.addRequest("TestRequest", "TestRequestDescription", timestamp, 1000, {from: creatorAccount});
+        let state  = await projectContract.getContractState({from: creatorAccount});
+
         try{
         await projectContract.addRequest("TestRequest1", "TestRequestDescription1", timestamp, 1000, {from: creatorAccount});
         }
@@ -83,7 +77,7 @@ contract("ContractHub", accounts => {
         }
         
         let request = await projectContract.getCurrentRequest();
-
+        assert.equal(2, state);
         assert.equal(request[0], "TestRequest");
         assert.equal(request[1], "TestRequestDescription");
         assert.equal(request[2], timestamp);
