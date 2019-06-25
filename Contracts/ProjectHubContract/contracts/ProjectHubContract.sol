@@ -24,6 +24,7 @@ contract ProjectHubContract{
         string projectDescription;
         uint goal;
         uint fundingCloseDate;
+        uint projectClosingDate;
     }
 
     event CreatedProject(
@@ -32,7 +33,8 @@ contract ProjectHubContract{
         string projectName,
         string projectDescription,
         uint goal,
-        uint fundingCloseDate
+        uint fundingCloseDate,
+        uint projectClosingDate
     );
 
 
@@ -47,12 +49,14 @@ contract ProjectHubContract{
     * @return Returns true when the new ProjectContract was successfully created
     */
     function addNewProject(string memory projectName, string memory projectDescription, uint fundingGoal,
-                            uint fundingCloseDate) public
+                            uint fundingCloseDate, uint projectClosingDate) public
     {
         require(fundingCloseDate > block.timestamp, "The given date is in the past");
         
-        ProjectContract projectContract = new ProjectContract(msg.sender, projectName, projectDescription, fundingGoal, fundingCloseDate, this);
-        Project memory project = Project(msg.sender, address(projectContract), projectName, projectDescription, fundingGoal, fundingCloseDate);
+        ProjectContract projectContract = new ProjectContract(msg.sender, projectName, projectDescription,
+                                                                fundingGoal, fundingCloseDate, projectClosingDate, this);
+        Project memory project = Project(msg.sender, address(projectContract), projectName, projectDescription, fundingGoal,
+                                            fundingCloseDate, projectClosingDate);
         projects.push(project);
         projectsCreatedByFounder[msg.sender].push(project);
         emit CreatedProject(
@@ -61,7 +65,8 @@ contract ProjectHubContract{
             projectName,
             projectDescription,
             fundingGoal,
-            fundingCloseDate
+            fundingCloseDate,
+            projectClosingDate
         );
     }
 
@@ -91,7 +96,8 @@ contract ProjectHubContract{
                                                                 string memory projectName,
                                                                 string memory projectDescription,
                                                                 uint goal,
-                                                                uint fundigCloseDate)
+                                                                uint fundigCloseDate,
+                                                                uint projectClosingDate)
     {
         require(projectIndex < projects.length, "Index is out of bounds");
 
@@ -100,7 +106,8 @@ contract ProjectHubContract{
                 projects[projectIndex].projectName,
                 projects[projectIndex].projectDescription,
                 projects[projectIndex].goal,
-                projects[projectIndex].fundingCloseDate);
+                projects[projectIndex].fundingCloseDate,
+                projects[projectIndex].projectClosingDate);
     }
 
     /**
@@ -125,7 +132,8 @@ contract ProjectHubContract{
     * @return Funding goal
     * @return Funding closeing Date
     */
-    function getProjectByFounderForIndex(uint projectIndex) public view returns (address, address, string memory, string memory, uint, uint)
+    function getProjectByFounderForIndex(uint projectIndex) public view returns (address, address, string memory,
+                                                                                    string memory, uint, uint, uint)
     {
         require(projectIndex < projectsCreatedByFounder[msg.sender].length, "Index is out of bounds");
 
@@ -134,7 +142,8 @@ contract ProjectHubContract{
                 projectsCreatedByFounder[msg.sender][projectIndex].projectName,
                 projectsCreatedByFounder[msg.sender][projectIndex].projectDescription,
                 projectsCreatedByFounder[msg.sender][projectIndex].goal,
-                projectsCreatedByFounder[msg.sender][projectIndex].fundingCloseDate);
+                projectsCreatedByFounder[msg.sender][projectIndex].fundingCloseDate,
+                projectsCreatedByFounder[msg.sender][projectIndex].projectClosingDate);
     }
 
     /**
@@ -159,7 +168,8 @@ contract ProjectHubContract{
     * @return Funding goal
     * @return Funding closeing Date
     */
-    function getProjectByInvestorForIndex(uint projectIndex) public view returns (address, address, string memory, string memory, uint, uint)
+    function getProjectByInvestorForIndex(uint projectIndex) public view returns (address, address, string memory,
+                                                                                    string memory, uint, uint, uint)
     {
         require(projectIndex < projectsBackedByInvestor[msg.sender].length, "Index is out of bounds");
 
@@ -168,7 +178,8 @@ contract ProjectHubContract{
                 projectsBackedByInvestor[msg.sender][projectIndex].projectName,
                 projectsBackedByInvestor[msg.sender][projectIndex].projectDescription,
                 projectsBackedByInvestor[msg.sender][projectIndex].goal,
-                projectsBackedByInvestor[msg.sender][projectIndex].fundingCloseDate);
+                projectsBackedByInvestor[msg.sender][projectIndex].fundingCloseDate,
+                projectsBackedByInvestor[msg.sender][projectIndex].projectClosingDate);
     }
 
     /**
@@ -183,9 +194,9 @@ contract ProjectHubContract{
     * @param _fundingCloseDate The date until the funding closes
     */
     function addProjectToInvestor(address investor, address payable _projectAddress, address _owner,
-                    string memory _projectName, string memory _projectDescription, uint _goal, uint _fundingCloseDate) public
+                    string memory _projectName, string memory _projectDescription, uint _goal, uint _fundingCloseDate, uint _projectClosingDate) public
     {
-        projectsBackedByInvestor[investor].push(Project(_owner, _projectAddress, _projectName, _projectDescription, _goal, _fundingCloseDate));
+        projectsBackedByInvestor[investor].push(Project(_owner, _projectAddress, _projectName, _projectDescription, _goal, _fundingCloseDate, _projectClosingDate));
     }
 }
 

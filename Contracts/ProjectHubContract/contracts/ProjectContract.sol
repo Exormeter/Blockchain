@@ -21,7 +21,9 @@ contract ProjectContract is Ownable{
     bool backingAddingPeriodeIsOver = false;
     bool fundingGoalWasReached = false;
     uint fundingGoal;
+    uint maxFunding = 0;
     uint fundingClosingDate;
+    uint projectClosingDate;
     Request currentRequest;
     ProjectHubContract projectHub;
     BackingOption[] backingOptions;
@@ -88,6 +90,10 @@ contract ProjectContract is Ownable{
         uint amount
     );
 
+    // event debug(
+    //     uint number
+    // );
+
     /**
     * @notice Contrutor of the new ProjectContract, usually called by the ProjectContractHub. Creates the new ProjectContract
     * and sets the caller of the addNewProject() function in the ProjectContractHub as the owner of this new ProjectContract.
@@ -98,13 +104,15 @@ contract ProjectContract is Ownable{
     * @param _fundingCloseDate Date where the funding goal need to be met
     */
     constructor(address _owner, string memory _projectTitle, string memory _projectDescription, uint _fundingGoal,
-                uint _fundingCloseDate, ProjectHubContract _projectHub) public
+                uint _fundingCloseDate, uint _projectClosingDate, ProjectHubContract _projectHub) public
     {
+        require(_fundingCloseDate < _projectClosingDate, "The project closing date musst be farther then the funding clsoing date");
         owner = _owner;
         projectTitle = _projectTitle;
         projectDescription = _projectDescription;
         fundingGoal = _fundingGoal;
         fundingClosingDate = _fundingCloseDate;
+        projectClosingDate = _projectClosingDate;
         projectHub = _projectHub;
     }
 
@@ -238,8 +246,10 @@ contract ProjectContract is Ownable{
 
         Investors[msg.sender] = Investor(msg.sender, backingOptionID, Vote.NOVOTEGIVEN, 1);
         investorAddresses.push(msg.sender);
-        projectHub.addProjectToInvestor(msg.sender, address(this), owner, projectTitle, projectDescription, fundingGoal, fundingClosingDate);
+        projectHub.addProjectToInvestor(msg.sender, address(this), owner, projectTitle, projectDescription, fundingGoal,
+                                            fundingClosingDate, projectClosingDate);
         backingOptions[optionIndex].optionAvailability--;
+        maxFunding += msg.value;
         if(fundingGoal < address(this).balance){
             fundingGoalWasReached = true;
         }
@@ -270,6 +280,8 @@ contract ProjectContract is Ownable{
         require(_valideUntil > block.timestamp, "The given date is in the past");
 
         require(fundingGoal < address(this).balance, "Funding Goal was not reached yet");
+
+        require(projectClosingDate > block.timestamp, "Project has ended");
 
         if(wasFirstRequestGiven){
             require(currentRequest.valideUntil < block.timestamp, "Current Request is still valide");
@@ -340,9 +352,11 @@ contract ProjectContract is Ownable{
     */
     function requestPayout() public onlyOwner
     {
-        require(((currentRequest.numberAcceptedVotes) > int256 (investorAddresses.length / 2)), "Majority was not reached");
+        require(((currentRequest.numberAcceptedVotes) >= int256 (investorAddresses.length / 2)), "Majority was not reached");
 
         require(!currentRequest.wasPayed, "Request was already payed out");
+
+        require(projectClosingDate > block.timestamp, "Project has ended");
         
         msg.sender.transfer(currentRequest.amount);
         currentRequest.wasPayed = true;
@@ -366,6 +380,27 @@ contract ProjectContract is Ownable{
             investorAddress.transfer(backingAmount);
         }
 
+    }
+
+    function requestRefundRemainingFunds() public returns (uint)
+    {
+        //require(projectClosingDate < block.timestamp, "Project is not finished jet");
+        require(fundingGoalWasReached, "The goal was not reached in time, use request a complete payback");
+
+        uint remainingFunds = address(this).balance;
+        uint precision = 1;
+        while(remainingFunds / precision != 0){
+            precision = precision * 10;
+        }
+        precision = precision / 10;
+        for(uint i = 0; i<investorAddresses.length; i++){
+            uint choosenBackingOptionIndex = Investors[investorAddresses[i]].choosenBackingOptionID - 1;
+            address payable investorAddress = investorAddresses[i];
+            uint backingAmount = backingOptions[choosenBackingOptionIndex].optionAmountEther;
+            uint percentage = ((backingAmount * precision) / maxFunding);
+            uint paybackAmount = ((remainingFunds / precision) * percentage);
+            investorAddress.transfer(paybackAmount);
+        }
     }
 
     function () external payable {

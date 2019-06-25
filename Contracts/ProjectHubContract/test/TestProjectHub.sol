@@ -24,9 +24,10 @@ contract TestProjectHub{
     function testAddProject() public{
 
         ProjectHubContract hub = new ProjectHubContract();
-        uint currentTime = block.timestamp;
-        currentTime = currentTime + 1000000;
-        hub.addNewProject("Test", "TestDescription", 100, currentTime);
+        uint fundingClosingDate = block.timestamp;
+        fundingClosingDate = fundingClosingDate + 1000000;
+        uint projectClosingDate = fundingClosingDate + 2000000;
+        hub.addNewProject("Test", "TestDescription", 100, fundingClosingDate, projectClosingDate);
 
         Assert.equal(hub.getProjectCount(), 1, "Projects should be 1");
     }
@@ -38,10 +39,11 @@ contract TestProjectHub{
         string memory _projectDescription;
 
         ProjectHubContract hub = new ProjectHubContract();
-        uint currentTime = block.timestamp;
-        currentTime = currentTime + 1000000;
-        hub.addNewProject("Test", "TestDescription", 100, currentTime);
-        (_owner, _projectAdress, _projectName, _projectDescription,,) = hub.getProjects(0);
+        uint fundingClosingDate = block.timestamp;
+        fundingClosingDate = fundingClosingDate + 1000000;
+        uint projectClosingDate = fundingClosingDate + 2000000;
+        hub.addNewProject("Test", "TestDescription", 100, fundingClosingDate, projectClosingDate);
+        (_owner, _projectAdress, _projectName, _projectDescription,,,) = hub.getProjects(0);
 
 
         Assert.equal(_projectName, "Test", "Name should be test");
@@ -54,10 +56,11 @@ contract TestProjectHub{
         string memory _projectDescription;
 
         ProjectHubContract hub = new ProjectHubContract();
-        uint currentTime = block.timestamp;
-        currentTime = currentTime + 1000000;
-        hub.addNewProject("Test", "TestDescription", 100, currentTime);
-        (_owner, _projectAddress, _projectName, _projectDescription,,) = hub.getProjects(0);
+        uint fundingClosingDate = block.timestamp;
+        fundingClosingDate = fundingClosingDate + 1000000;
+        uint projectClosingDate = fundingClosingDate + 2000000;
+        hub.addNewProject("Test", "TestDescription", 100, fundingClosingDate, projectClosingDate);
+        (_owner, _projectAddress, _projectName, _projectDescription,,,) = hub.getProjects(0);
 
         ProjectContract projectContract = ProjectContract(_projectAddress);
         Assert.equal(projectContract.getBackingOptionsCount(),0, "Name should be test");
@@ -70,11 +73,12 @@ contract TestProjectHub{
         string memory _projectDescription;
 
         ProjectHubContract hub = new ProjectHubContract();
-        uint currentTime = block.timestamp;
-        currentTime = currentTime + 1000000;
-        hub.addNewProject("Test", "TestDescription", 100, currentTime);
+        uint fundingClosingDate = block.timestamp;
+        fundingClosingDate = fundingClosingDate + 1000000;
+        uint projectClosingDate = fundingClosingDate + 2000000;
+        hub.addNewProject("Test", "TestDescription", 100, fundingClosingDate, projectClosingDate);
 
-        (_owner, _projectAddress, _projectName, _projectDescription,,) = hub.getProjects(0);
+        (_owner, _projectAddress, _projectName, _projectDescription,,,) = hub.getProjects(0);
 
         ProjectContract projectContract = ProjectContract(_projectAddress);
         projectContract.addBackingOption("Option1", "Option1", 10, 10);

@@ -2,16 +2,17 @@ const ContractHub = artifacts.require("ProjectHubContract");
 const ProjectContract = artifacts.require("ProjectContract");
 
 
-contract("ContractHub", accounts => {
+contract("ContractHub positive", accounts => {
 
     it("Should return the right Contract Name", async () => {
         let hub = await ContractHub.deployed();
         let creatorAccount = accounts[0];
         let date = new Date();
-        let timestamp = date.getTime();
-        timestamp = Math.floor(timestamp/1000);
-        timestamp += 86400;
-        hub.addNewProject("TestProject", "TestDescription", 100, timestamp, {from: creatorAccount});
+        let fundingClosingDate = date.getTime();
+        fundingClosingDate = Math.floor(fundingClosingDate/1000);
+        fundingClosingDate += 86400;
+        projectClosingDate = fundingClosingDate + 86400;
+        hub.addNewProject("TestProject", "TestDescription", 100, fundingClosingDate, projectClosingDate, {from: creatorAccount});
         let project = await hub.getProjects(0, {from: creatorAccount});
 
         assert.equal("TestProject", project[2]);
@@ -44,7 +45,7 @@ contract("ContractHub", accounts => {
 
         let project = await hub.getProjects(0, {from: creatorAccount});
         let projectContract = await ProjectContract.at(project[1]);
-        await projectContract.closeAddingBackingOptionPeriode({from: creatorAccount})
+        await projectContract.closeAddingBackingOptionPeriode({from: creatorAccount});
         let state  = await projectContract.getContractState({from: investorAccountOne});
         await projectContract.addInvestor(1, {from: investorAccountOne, value: 500});
         
@@ -63,14 +64,14 @@ contract("ContractHub", accounts => {
         let project = await hub.getProjects(0, {from: creatorAccount});
         let projectContract = await ProjectContract.at(project[1]);
         let date = new Date();
-        let timestamp = date.getTime();
-        timestamp = Math.floor(timestamp/1000);
-        timestamp += 86400;
-        await projectContract.addRequest("TestRequest", "TestRequestDescription", timestamp, 1000, {from: creatorAccount});
+        let fundingClosingDate = date.getTime();
+        fundingClosingDate = Math.floor(fundingClosingDate/1000);
+        fundingClosingDate += 86400;
+        await projectContract.addRequest("TestRequest", "TestRequestDescription", fundingClosingDate, 1000, {from: creatorAccount});
         let state  = await projectContract.getContractState({from: creatorAccount});
 
         try{
-        await projectContract.addRequest("TestRequest1", "TestRequestDescription1", timestamp, 1000, {from: creatorAccount});
+        await projectContract.addRequest("TestRequest1", "TestRequestDescription1", fundingClosingDate, 1000, {from: creatorAccount});
         }
         catch(Error){
             assert.notEqual(Error, undefined, 'Error must be thrown');
@@ -80,7 +81,7 @@ contract("ContractHub", accounts => {
         assert.equal(2, state);
         assert.equal(request[0], "TestRequest");
         assert.equal(request[1], "TestRequestDescription");
-        assert.equal(request[2], timestamp);
+        assert.equal(request[2], fundingClosingDate);
         assert.equal(request[3], 1000);
         assert.equal(request[4], 0);
         assert.equal(request[5], 0);
@@ -100,9 +101,9 @@ contract("ContractHub", accounts => {
         let projectContract = await ProjectContract.at(project[1]);
 
 
-        await projectContract.addInvestor(0, {from: investorAccountTwo, value: 500});
-        await projectContract.addInvestor(0, {from: investorAccountThree, value: 500});
-        await projectContract.addInvestor(0, {from: investorAccountFour, value: 500});
+        await projectContract.addInvestor(1, {from: investorAccountTwo, value: 500});
+        await projectContract.addInvestor(1, {from: investorAccountThree, value: 500});
+        await projectContract.addInvestor(1, {from: investorAccountFour, value: 500});
         await projectContract.voteForCurrentRequest(true, {from: investorAccountOne});
         await projectContract.voteForCurrentRequest(true, {from: investorAccountTwo});
         await projectContract.voteForCurrentRequest(true, {from: investorAccountThree});

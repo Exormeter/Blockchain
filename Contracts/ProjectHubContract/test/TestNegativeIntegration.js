@@ -2,17 +2,18 @@ const ContractHub = artifacts.require("ProjectHubContract");
 const ProjectContract = artifacts.require("ProjectContract");
 
 
-contract("ContractHub", accounts => {
+contract("ContractHub negative", accounts => {
 
 
     it("Should not be able to return a request at this point", async () => {
         let hub = await ContractHub.deployed();
         let creatorAccount = accounts[0];
         let date = new Date();
-        let timestamp = date.getTime();
-        timestamp = Math.floor(timestamp/1000);
-        timestamp += 86400;
-        await hub.addNewProject("TestProject", "TestDescription", 1000, timestamp, {from: creatorAccount});
+        let fundingClosingDate = date.getTime();
+        fundingClosingDate = Math.floor(fundingClosingDate/1000);
+        fundingClosingDate += 86400;
+        projectClosingDate = fundingClosingDate + 86400;
+        await hub.addNewProject("TestProject", "TestDescription", 1000, fundingClosingDate, projectClosingDate, {from: creatorAccount});
         let project = await hub.getProjects(0, {from: creatorAccount});
         try{
             await project.getCurrentRequest();
@@ -114,7 +115,7 @@ contract("ContractHub", accounts => {
         let project = await hub.getProjects(0, {from: creatorAccount});
         let projectContract = await ProjectContract.at(project[1]);
         try{
-            await projectContract.addRequest("TestRequest", "TestRequestDescription", timestamp, 1000, {from: creatorAccount});
+            await projectContract.addRequest("TestRequest", "TestRequestDescription", fundingClosingDate, 1000, {from: creatorAccount});
         }
         catch(Error){
             assert.notEqual(Error, undefined, "Request are only possible after the goal was reached");
