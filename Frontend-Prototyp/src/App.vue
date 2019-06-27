@@ -194,7 +194,6 @@
 
         <v-layout row justify-center>
           <v-dialog v-model="viewRequestDialog" max-width="600px" persistent>
-
             <v-card>
               <v-card-title class="headline" primary-title>
                 <span>Aktuelle Anfrage</span>
@@ -204,7 +203,7 @@
                   <div class="headline">{{ currentRequest[0] }}</div>
                   <div>{{ currentRequest[1] }}</div>
                   <div><b>Kosten: </b><span>{{ currentRequest[3] / 10**18 }} ETH</span></div>
-                  <div><b>Laufzeit bis: </b><span>{{ new Date(parseInt(currentRequest[2]*1000)) }}</span></div>
+                  <div><b>Laufzeit bis: </b><span>{{ new Date(parseInt(currentRequest[2])) }}</span></div>
                   <div><b>Anzahl Stimmen: </b><span class="blue--text"> {{currentRequest['numberAcceptedVotes']}} </span> | <span class="red--text"> {{currentRequest['numberRejectedVotes']}} </span></div>
                   <v-btn
                     v-if="this.projectData[activeIndex] != account"
@@ -223,12 +222,28 @@
                   Ablehnen
                   </v-btn>
                   <v-btn
-                    v-if="this.projectData[activeIndex] == account"
+                    v-if="this.projectData[activeIndex] != account"
                     color="blue darken-1"
                     flat
                     @click="requestPayout(activeIndex)"
                   >
                   Auszahlen
+                  </v-btn>
+                  <v-btn
+                    v-if="this.projectData[activeIndex] != account"
+                    color="blue darken-1"
+                    flat
+                    @click="requestRefundRemainingFunds(activeIndex)"
+                  >
+                  Partiell 
+                  </v-btn>
+                  <v-btn
+                    v-if="this.projectData[activeIndex] != account"
+                    color="blue darken-1"
+                    flat
+                    @click="requestPayback(activeIndex)"
+                  >
+                  Refund 
                   </v-btn>
                 </div>
               </v-card-text>
@@ -341,14 +356,14 @@
                     </div>
                     <span
                       v-if="project.projectStarter == account" class="green--text">
-                        Projektstarter
+                        Projektgründer
                     </span>
                     <br/>
                     <span>{{ project.projectDesc }}</span>
                     <br/><br/>
-                    <small>Funding-Laufzeit bis: <b>{{ new Date(project.fundingDeadline*1000).toLocaleString() }}</b></small>
+                    <small>Funding-Laufzeit bis: <b>{{ new Date(project.fundingDeadline).toLocaleString() }}</b></small>
                     <br/>
-                    <small>Projekt-Laufzeit bis: <b>{{ new Date(project.projectDeadline*1000).toLocaleString() }}</b></small>
+                    <small>Projekt-Laufzeit bis: <b>{{ new Date(project.projectDeadline).toLocaleString() }}</b></small>
                     <br/><br/>
                     <small>Anzahl Investoren: <b>{{ project.investorCount }}</b></small>
                     </div>
@@ -477,8 +492,8 @@ export default {
         { color: 'blue-grey lighten-3', text: "Initialisierung"},
         { color: 'primary', text: 'Laufend' },
         { color: 'green', text: "Ziel erreicht"},
-        { color: 'warning  lighten-3', text: 'Abgelaufen' },
         { color: 'success  lighten-3', text: 'Abgeschlossen' },
+        { color: 'warning  lighten-3', text: 'Abgelaufen' },
       ],
       projectData: [],
       newObject: { isLoading: false },
@@ -508,8 +523,8 @@ export default {
         projectInfo.projectTitle = projectData.projectName;
         projectInfo.projectDesc = projectData.projectDescription;
         projectInfo.projectStarter = projectData.owner;
-        projectInfo.fundingDeadline = new Date(parseInt(projectData.fundigCloseDate));
-        projectInfo.projectDeadline = new Date(parseInt(projectData.projectClosingDate));
+        projectInfo.fundingDeadline = new Date(parseInt(projectData.fundigCloseDate)*1000);
+        projectInfo.projectDeadline = new Date(parseInt(projectData.projectClosingDate)*1000);
         projectInfo.goalAmount = projectData.goal;
         projectInfo.currentAmount = 0;
         projectInfo.isLoading = false;
@@ -538,8 +553,8 @@ export default {
         this.newObject.title,
         this.newObject.description,
         web3.utils.toWei(this.newObject.amountGoal, 'ether'),
-        (fundingDate.getTime()/1000),
-        (goalDate.getTime()/1000)
+        (fundingDate.getTime()/1000).toFixed(0),
+        (goalDate.getTime()/1000).toFixed(0)
       ).send({
         from: this.account
         }).then((isCreated) => {
@@ -603,6 +618,7 @@ export default {
       });
     },
     getCurrentRequest(projectIndex) {
+      console.log(this.projectData[projectIndex].contract);
       const projectInst = crowdfundProject(this.projectData[projectIndex].contract);
       projectInst.methods.getCurrentRequest().call().then((request) => {
         this.currentRequest = request;
@@ -649,6 +665,15 @@ export default {
         console.log(status);
       });
     },
+    requestRefundRemainingFunds(projectIndex) {
+      const projectInst = crowdfundProject(this.projectData[projectIndex].contract);
+      projectInst.methods.requestRefundRemainingFunds(
+      ).send({
+        from: this.account,
+      }).then((status) => {
+        console.log(status);
+      });
+    },
     closeAddingBackingOptionPeriode(projectIndex) {
       const projectInst = crowdfundProject(this.projectData[projectIndex].contract);
       projectInst.methods.closeAddingBackingOptionPeriode(
@@ -672,6 +697,7 @@ export default {
         projectInfo.currentState = state;
         this.projectData.push(projectInfo);        
         this.projectData.sort((a, b) => (a.index > b.index) ? 1 : -1 );
+        console.log(projectInfo);
       });
     }
   },
