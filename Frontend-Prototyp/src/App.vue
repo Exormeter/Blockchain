@@ -317,31 +317,12 @@
         <h1 class="display-1 font-weight-bold mb-3">
           Projekte
         </h1>
+        <div class="search-wrapper">
+          <input type="text" v-model="search" placeholder="Search title.."/>
+          <label>Search title:</label>
+        </div>
         <v-layout row wrap>
-          <v-flex v-for="(project, index) in projectData" :key="index" xs12 sm6 md4>
-            <v-dialog
-              v-model="project.dialog"
-              width="800"
-            >
-              <v-card>
-                <v-card-title class="headline font-weight-bold">
-                  {{ project.projectTitle }}
-                </v-card-title>
-                <v-card-text>
-                  {{ project.projectDesc }}
-                </v-card-text>
-                <v-card-actions>
-                  <v-spacer></v-spacer>
-                  <v-btn
-                    color="blue darken-1"
-                    flat="flat"
-                    @click="projectData[index].dialog = false"
-                  >
-                    Close
-                  </v-btn>
-                </v-card-actions>
-              </v-card>
-            </v-dialog>
+          <v-flex v-for="(project, index) in filteredProjects" :key="index" xs12 sm6 md4>
             <v-hover>
               <v-card
                 slot-scope="{ hover }"
@@ -360,9 +341,6 @@
                     </div>
                     <br/>
                     <span>{{ project.projectDesc }}</span>
-                    <!--<span v-if="project.projectDesc.length > 100">
-                      ... <a @click="projectData[index].dialog = true">[Show full]</a>
-                    </span>-->
                     <br/><br/>
                     <small>Funding-Laufzeit bis: <b>{{ new Date(project.fundingDeadline).toLocaleString() }}</b></small>
                     <br/>
@@ -483,6 +461,7 @@ export default {
   name: 'App',
   data() {
     return {
+      search: '',
       startProjectDialog: false,
       addBackingOptionDialog: false,
       addRequestDialog: false,
@@ -500,7 +479,7 @@ export default {
       projectData: [],
       newObject: { isLoading: false },
       currentOptions: [],
-      currentRequest: {},
+      currentRequest: {}
     };
   },
   mounted() {
@@ -693,6 +672,50 @@ export default {
         this.projectData.push(projectInfo);
       });
     }
+  },
+  computed: {  
+    filteredProjects() {
+      return this.projectData.filter(project => {
+        console.log(project);
+        return project.projectTitle.toLowerCase().includes(this.search.toLowerCase())
+      })
+    }
   }
 };
 </script>
+
+
+<style>
+div#app .search-wrapper {
+  position: relative;
+}
+div#app .search-wrapper label {
+  position: absolute;
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.5);
+  top: 8px;
+  left: 12px;
+  z-index: -1;
+  transition: .15s all ease-in-out;
+}
+div#app .search-wrapper input {
+  padding: 4px 12px;
+  color: rgba(0, 0, 0, 0.7);
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  transition: .15s all ease-in-out;
+  background: white;
+}
+div#app .search-wrapper input:focus {
+  outline: none;
+  transform: scale(1.05);
+}
+div#app .search-wrapper input:focus + label {
+  font-size: 10px;
+  transform: translateY(-24px) translateX(-12px);
+}
+div#app .search-wrapper input::-webkit-input-placeholder {
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.5);
+  font-weight: 100;
+}
+</style>
