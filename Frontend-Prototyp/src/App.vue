@@ -204,7 +204,7 @@
                   <div class="headline">{{ currentRequest[0] }}</div>
                   <div>{{ currentRequest[1] }}</div>
                   <div><b>Kosten: </b><span>{{ currentRequest[3] / 10**18 }} ETH</span></div>
-                  <div><b>Laufzeit bis: </b><span>{{ new Date(parseInt(currentRequest[2])) }}</span></div>
+                  <div><b>Laufzeit bis: </b><span>{{ new Date(parseInt(currentRequest[2]*1000)) }}</span></div>
                   <div><b>Anzahl Stimmen: </b><span class="blue--text"> {{currentRequest['numberAcceptedVotes']}} </span> | <span class="red--text"> {{currentRequest['numberRejectedVotes']}} </span></div>
                   <v-btn
                     v-if="this.projectData[activeIndex] != account"
@@ -342,9 +342,9 @@
                     <br/>
                     <span>{{ project.projectDesc }}</span>
                     <br/><br/>
-                    <small>Funding-Laufzeit bis: <b>{{ new Date(project.fundingDeadline).toLocaleString() }}</b></small>
+                    <small>Funding-Laufzeit bis: <b>{{ new Date(project.fundingDeadline*1000).toLocaleString() }}</b></small>
                     <br/>
-                    <small>Projekt-Laufzeit bis: <b>{{ new Date(project.projectDeadline).toLocaleString() }}</b></small>
+                    <small>Projekt-Laufzeit bis: <b>{{ new Date(project.projectDeadline*1000).toLocaleString() }}</b></small>
                     <br/><br/>
                     <small>Anzahl Investoren: <b>{{ project.investorCount }}</b></small>
                     </div>
@@ -534,8 +534,8 @@ export default {
         this.newObject.title,
         this.newObject.description,
         web3.utils.toWei(this.newObject.amountGoal, 'ether'),
-        fundingDate.getTime(),
-        goalDate.getTime()
+        (fundingDate.getTime()/1000),
+        (goalDate.getTime()/1000)
       ).send({
         from: this.account
         }).then((isCreated) => {
