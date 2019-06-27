@@ -163,7 +163,7 @@
                 <div>
                   <div class="headline">{{ option[0] }}</div>
                   <div>{{ option[1] }}</div>
-                  <div><b>Kosten: </b> <span>{{ option[2] }} Wei</span></div>
+                  <div><b>Kosten: </b> <span>{{ option[2] / 10**18 }} ETH</span></div>
                   <div><b>Verfügbare Anzahl: </b> <span>{{ option[3] }}</span></div>
                   <v-btn
                     color="blue darken-1"
@@ -203,7 +203,7 @@
                 <div>
                   <div class="headline">{{ currentRequest[0] }}</div>
                   <div>{{ currentRequest[1] }}</div>
-                  <div><b>Kosten: </b><span>{{ currentRequest[3] }} Wei</span></div>
+                  <div><b>Kosten: </b><span>{{ currentRequest[3] / 10**18 }} ETH</span></div>
                   <div><b>Laufzeit bis: </b><span>{{ new Date(parseInt(currentRequest[2])) }}</span></div>
                   <div><b>Anzahl Stimmen: </b><span class="blue--text"> {{currentRequest['numberAcceptedVotes']}} </span> | <span class="red--text"> {{currentRequest['numberRejectedVotes']}} </span></div>
                   <v-btn
