@@ -3,6 +3,15 @@ import web3 from './web3';
 
 const abi = [
 	{
+		"constant": false,
+		"inputs": [],
+		"name": "requestRefundRemainingFunds",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
 		"constant": true,
 		"inputs": [],
 		"name": "getBackingOptionsCount",
@@ -10,6 +19,20 @@ const abi = [
 			{
 				"name": "",
 				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "hasInvestorVotedForCurrentRequest",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint8"
 			}
 		],
 		"payable": false,
@@ -73,6 +96,20 @@ const abi = [
 			{
 				"name": "",
 				"type": "uint8"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "getPeekBalance",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
 			}
 		],
 		"payable": false,
@@ -272,6 +309,10 @@ const abi = [
 			},
 			{
 				"name": "_fundingCloseDate",
+				"type": "uint256"
+			},
+			{
+				"name": "_projectClosingDate",
 				"type": "uint256"
 			},
 			{

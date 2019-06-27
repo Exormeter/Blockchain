@@ -43,7 +43,7 @@
                         v-model="newObject.description">
                       </v-textarea>
                     </v-flex>
-                    <v-flex xs12 sm6>
+                    <v-flex xs12>
                       <v-text-field
                         label="Projektziel (ETH)"
                         type="number"
@@ -54,7 +54,14 @@
                     </v-flex>
                     <v-flex xs12 sm6>
                       <v-text-field
-                        label="Laufzeit (in Tagen)"
+                        label="Funding-Laufzeit (in Tagen)"
+                        type="number"
+                        v-model="newObject.fundingDuration">
+                      </v-text-field>
+                    </v-flex>
+                    <v-flex xs12 sm6>
+                      <v-text-field
+                        label="Projekt-Laufzeit (in Tagen)"
                         type="number"
                         v-model="newObject.duration">
                       </v-text-field>
@@ -162,9 +169,9 @@
                     color="blue darken-1"
                     flat
                     @click="addInvestor(activeIndex, index, option[2])"
+                    :disabled="option[3] == 0 || account == projectData[activeIndex].projectStarter || projectData[activeIndex].currentState == 0"
+                    :loading="newObject.isLoading"
                   >
-                  
-                    <!---":disabled="option[3] == 0 || account == project.projectStarter -->
                   Wählen
                   </v-btn>
                 </div>
@@ -357,17 +364,16 @@
                       ... <a @click="projectData[index].dialog = true">[Show full]</a>
                     </span>-->
                     <br/><br/>
-                    <small>Up Until: <b>{{ new Date(project.deadline) }}</b></small>
+                    <small>Funding-Laufzeit bis: <b>{{ new Date(project.fundingDeadline).toLocaleString() }}</b></small>
+                    <br/>
+                    <small>Projekt-Laufzeit bis: <b>{{ new Date(project.projectDeadline).toLocaleString() }}</b></small>
                     <br/><br/>
                     <small>Anzahl Investoren: <b>{{ project.investorCount }}</b></small>
-                    <small v-if="project.currentState == 2">wasn't achieved before deadline</small>
-                    <small v-if="project.currentState == 3">has been achieved</small>
                     </div>
                 </v-card-title>
-                <!--  v-if="project.currentState == 0 " #&& account != project.projectStarter-->
 
                 <v-flex
-                  v-if="project.currentState == 1 "
+                  v-if="project.currentState == 1 || project.currentState == 0 || project.currentState == 2"
                   class="d-flex ml-3" xs12 sm6 md3>
                   <v-btn
                     class="mt-3"
@@ -380,7 +386,7 @@
                 </v-flex>
 
                 <v-flex
-                  v-if="project.currentState == 1 "
+                  v-if="project.currentState == 3 "
                   class="d-flex ml-3" xs12 sm6 md3>
                   <v-btn
                     class="mt-3"
@@ -389,6 +395,19 @@
                     :loading="project.isLoading"
                   >
                   Show Request
+                  </v-btn>
+                </v-flex>
+
+                <v-flex
+                  v-if="project.currentState == 3 && account == project.projectStarter"
+                  class="d-flex ml-3" xs12 sm6 md3>
+                  <v-btn
+                    class="mt-3"
+                    color="light-blue darken-1 white--text"
+                    @click="addRequestDialog = true; activeIndex = index;"
+                    :loading="project.isLoading"
+                  >
+                    Add Request
                   </v-btn>
                 </v-flex>
 
@@ -416,23 +435,10 @@
                   >
                   Close
                   </v-btn>
-                </v-flex>
+                </v-flex>               
 
                 <v-flex
-                  v-if="project.currentState == 1 && account == project.projectStarter"
-                  class="d-flex ml-3" xs12 sm6 md3>
-                  <v-btn
-                    class="mt-3"
-                    color="light-blue darken-1 white--text"
-                    @click="addRequestDialog = true; activeIndex = index;"
-                    :loading="project.isLoading"
-                  >
-                    Add Request
-                  </v-btn>
-                </v-flex>
-
-                <v-flex
-                  v-if="project.currentState == 1 "
+                  v-if="project.currentState == 4 "
                   class="d-flex ml-3" xs12 sm6 md3>
                   <v-btn
                     class="mt-3"
@@ -487,9 +493,9 @@ export default {
       stateMap: [
         { color: 'blue-grey lighten-3', text: "Initialisierung"},
         { color: 'primary', text: 'Laufend' },
-        { color: 'green lighten-3', text: "Ziel erreicht"},
-        { color: 'warning', text: 'Abgelaufen' },
-        { color: 'success', text: 'Abgeschlossen' },
+        { color: 'green', text: "Ziel erreicht"},
+        { color: 'warning  lighten-3', text: 'Abgelaufen' },
+        { color: 'success  lighten-3', text: 'Abgeschlossen' },
       ],
       projectData: [],
       newObject: { isLoading: false },
@@ -506,6 +512,7 @@ export default {
   },
   methods: {
     getProjects() {
+      this.projectData = [];
       crowdfundInstance.methods.getProjectCount().call().then((projectCount) => {
         for (var i = 0; i < projectCount; i++){
           this.getProject(i);
@@ -514,16 +521,18 @@ export default {
     },
     getProject(projectIndex) {
       crowdfundInstance.methods.getProjects(projectIndex).call().then(async (projectData) => {
+        console.log(projectData);
         const projectInfo = {}
-        projectInfo.projectTitle = projectData[2];
-        projectInfo.projectDesc = projectData[3];
-        projectInfo.projectStarter = projectData[0];
-        projectInfo.deadline = new Date(parseInt(projectData[5]));
-        projectInfo.goalAmount = projectData[4];
+        projectInfo.projectTitle = projectData.projectName;
+        projectInfo.projectDesc = projectData.projectDescription;
+        projectInfo.projectStarter = projectData.owner;
+        projectInfo.fundingDeadline = new Date(parseInt(projectData.fundigCloseDate));
+        projectInfo.projectDeadline = new Date(parseInt(projectData.projectClosingDate));
+        projectInfo.goalAmount = projectData.goal;
         projectInfo.currentAmount = 0;
         projectInfo.isLoading = false;
-        projectInfo.contract = projectData[1];
-        this.getBalance(projectInfo, projectData[1]);
+        projectInfo.contract = projectData.projectAdress;
+        this.getBalance(projectInfo, projectData.projectAdress);
       });
     },
     async getBalance(projectInfo, contract) {
@@ -538,19 +547,22 @@ export default {
     },
     startProject() {
       this.newObject.isLoading = true;
+      var fundingDate = new Date();
+      fundingDate.setMinutes(fundingDate.getMinutes()+parseFloat(this.newObject.fundingDuration)*24*60);
       var goalDate = new Date();
       goalDate.setMinutes(goalDate.getMinutes()+parseFloat(this.newObject.duration)*24*60);
       crowdfundInstance.methods.addNewProject(
         this.newObject.title,
         this.newObject.description,
         web3.utils.toWei(this.newObject.amountGoal, 'ether'),
+        fundingDate.getTime(),
         goalDate.getTime()
       ).send({
         from: this.account
         }).then((isCreated) => {
-        console.log(isCreated)
         this.startProjectDialog = false;
         this.newObject = { isLoading: false };
+        this.getProjects();
       });
 
     },
@@ -573,6 +585,9 @@ export default {
       this.currentOptions = [];
       const projectInst = crowdfundProject(this.projectData[projectIndex].contract);
       projectInst.methods.getBackingOptionsCount().call().then((backingOptionCount) => {
+        if(backingOptionCount == 0){
+          alert("Noch keine Backing-Optionen verfügbar.")
+        }
         for (var i = 0; i < backingOptionCount; i++){
           projectInst.methods.getBackingOption(i).call().then((backingOption) => {
             this.currentOptions.push(backingOption);
@@ -624,6 +639,7 @@ export default {
       });
     },
     addInvestor(projectIndex, optionId, optionValue) {
+      this.newObject.isLoading = true;
       const projectInst = crowdfundProject(this.projectData[projectIndex].contract);
       projectInst.methods.addInvestor(
         optionId,
@@ -631,7 +647,7 @@ export default {
         from: this.account,
         value: optionValue,
       }).then((status) => {
-        console.log(status);
+        this.newObject.isLoading = false;
       });
     },
     requestPayback(projectIndex) {
@@ -658,7 +674,7 @@ export default {
       ).send({
         from: this.account,
       }).then((status) => {
-
+        this.getProjects();
       });
     },
     currentConversionRate() {

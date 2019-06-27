@@ -1,47 +1,8 @@
 /* eslint-disable */
 import web3 from './web3';
 
-const address = '0xeb0c6a438ce4aefd7891212d20ca9af1bf938a95';
+const address = '0xc2fd7b062bc53d08c1760220b70d61a4b2b42058';
 const abi = [
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "projectIndex",
-				"type": "uint256"
-			}
-		],
-		"name": "getProjects",
-		"outputs": [
-			{
-				"name": "owner",
-				"type": "address"
-			},
-			{
-				"name": "projectAdress",
-				"type": "address"
-			},
-			{
-				"name": "projectName",
-				"type": "string"
-			},
-			{
-				"name": "projectDescription",
-				"type": "string"
-			},
-			{
-				"name": "goal",
-				"type": "uint256"
-			},
-			{
-				"name": "fundigCloseDate",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
 	{
 		"constant": false,
 		"inputs": [
@@ -60,6 +21,10 @@ const abi = [
 			{
 				"name": "fundingCloseDate",
 				"type": "uint256"
+			},
+			{
+				"name": "projectClosingDate",
+				"type": "uint256"
 			}
 		],
 		"name": "addNewProject",
@@ -69,24 +34,123 @@ const abi = [
 		"type": "function"
 	},
 	{
-		"constant": true,
-		"inputs": [],
-		"name": "getProjectCount",
-		"outputs": [
+		"constant": false,
+		"inputs": [
 			{
-				"name": "",
+				"name": "investor",
+				"type": "address"
+			},
+			{
+				"name": "_projectAddress",
+				"type": "address"
+			},
+			{
+				"name": "_owner",
+				"type": "address"
+			},
+			{
+				"name": "_projectName",
+				"type": "string"
+			},
+			{
+				"name": "_projectDescription",
+				"type": "string"
+			},
+			{
+				"name": "_goal",
+				"type": "uint256"
+			},
+			{
+				"name": "_fundingCloseDate",
+				"type": "uint256"
+			},
+			{
+				"name": "_projectClosingDate",
 				"type": "uint256"
 			}
 		],
+		"name": "addProjectToInvestor",
+		"outputs": [],
 		"payable": false,
-		"stateMutability": "view",
+		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"name": "owner",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"name": "projectAdress",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"name": "projectName",
+				"type": "string"
+			},
+			{
+				"indexed": false,
+				"name": "projectDescription",
+				"type": "string"
+			},
+			{
+				"indexed": false,
+				"name": "goal",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"name": "fundingCloseDate",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"name": "projectClosingDate",
+				"type": "uint256"
+			}
+		],
+		"name": "CreatedProject",
+		"type": "event"
+	},
+	{
 		"constant": true,
-		"inputs": [],
-		"name": "getProjectCountForInvestor",
+		"inputs": [
+			{
+				"name": "projectIndex",
+				"type": "uint256"
+			}
+		],
+		"name": "getProjectByFounderForIndex",
 		"outputs": [
+			{
+				"name": "",
+				"type": "address"
+			},
+			{
+				"name": "",
+				"type": "address"
+			},
+			{
+				"name": "",
+				"type": "string"
+			},
+			{
+				"name": "",
+				"type": "string"
+			},
+			{
+				"name": "",
+				"type": "uint256"
+			},
+			{
+				"name": "",
+				"type": "uint256"
+			},
 			{
 				"name": "",
 				"type": "uint256"
@@ -129,6 +193,24 @@ const abi = [
 			{
 				"name": "",
 				"type": "uint256"
+			},
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "getProjectCount",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
 			}
 		],
 		"payable": false,
@@ -150,73 +232,10 @@ const abi = [
 		"type": "function"
 	},
 	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "investor",
-				"type": "address"
-			},
-			{
-				"name": "_projectAddress",
-				"type": "address"
-			},
-			{
-				"name": "_owner",
-				"type": "address"
-			},
-			{
-				"name": "_projectName",
-				"type": "string"
-			},
-			{
-				"name": "_projectDescription",
-				"type": "string"
-			},
-			{
-				"name": "_goal",
-				"type": "uint256"
-			},
-			{
-				"name": "_fundingCloseDate",
-				"type": "uint256"
-			}
-		],
-		"name": "addProjectToInvestor",
-		"outputs": [],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
 		"constant": true,
-		"inputs": [
-			{
-				"name": "projectIndex",
-				"type": "uint256"
-			}
-		],
-		"name": "getProjectByFounderForIndex",
+		"inputs": [],
+		"name": "getProjectCountForInvestor",
 		"outputs": [
-			{
-				"name": "",
-				"type": "address"
-			},
-			{
-				"name": "",
-				"type": "address"
-			},
-			{
-				"name": "",
-				"type": "string"
-			},
-			{
-				"name": "",
-				"type": "string"
-			},
-			{
-				"name": "",
-				"type": "uint256"
-			},
 			{
 				"name": "",
 				"type": "uint256"
@@ -227,41 +246,47 @@ const abi = [
 		"type": "function"
 	},
 	{
-		"anonymous": false,
+		"constant": true,
 		"inputs": [
 			{
-				"indexed": false,
+				"name": "projectIndex",
+				"type": "uint256"
+			}
+		],
+		"name": "getProjects",
+		"outputs": [
+			{
 				"name": "owner",
 				"type": "address"
 			},
 			{
-				"indexed": false,
 				"name": "projectAdress",
 				"type": "address"
 			},
 			{
-				"indexed": false,
 				"name": "projectName",
 				"type": "string"
 			},
 			{
-				"indexed": false,
 				"name": "projectDescription",
 				"type": "string"
 			},
 			{
-				"indexed": false,
 				"name": "goal",
 				"type": "uint256"
 			},
 			{
-				"indexed": false,
-				"name": "fundingCloseDate",
+				"name": "fundigCloseDate",
+				"type": "uint256"
+			},
+			{
+				"name": "projectClosingDate",
 				"type": "uint256"
 			}
 		],
-		"name": "CreatedProject",
-		"type": "event"
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
 	}
 ];
 
