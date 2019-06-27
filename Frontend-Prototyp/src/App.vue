@@ -356,7 +356,7 @@
                   <v-btn
                     class="mt-3"
                     color="light-blue darken-1 white--text"
-                    @click="getBackingOptions(index); activeIndex = index;"
+                    @click="getBackingOptions(project.index); activeIndex = project.index;"
                     :loading="project.isLoading"
                   >
                   View
@@ -369,7 +369,7 @@
                   <v-btn
                     class="mt-3"
                     color="light-blue darken-1 white--text"
-                    @click="getCurrentRequest(index); activeIndex = index;"
+                    @click="getCurrentRequest(project.index); activeIndex = project.index;"
                     :loading="project.isLoading"
                   >
                   Show Request
@@ -382,7 +382,7 @@
                   <v-btn
                     class="mt-3"
                     color="light-blue darken-1 white--text"
-                    @click="addRequestDialog = true; activeIndex = index;"
+                    @click="addRequestDialog = true; activeIndex = project.index;"
                     :loading="project.isLoading"
                   >
                     Add Request
@@ -395,7 +395,7 @@
                   <v-btn
                     class="mt-3"
                     color="light-blue darken-1 white--text"
-                    @click="addBackingOptionDialog = true; activeIndex = index;"
+                    @click="addBackingOptionDialog = true; activeIndex = project.index;"
                     :loading="project.isLoading"
                   >
                     Add Option
@@ -408,7 +408,7 @@
                   <v-btn
                     class="mt-3"
                     color="light-blue darken-1 white--text"
-                    @click="closeAddingBackingOptionPeriode(index); activeIndex = index;"
+                    @click="closeAddingBackingOptionPeriode(project.index); activeIndex = project.index;"
                     :loading="project.isLoading"
                   >
                   Close
@@ -421,7 +421,7 @@
                   <v-btn
                     class="mt-3"
                     color="light-blue darken-1 white--text"
-                    @click="requestPayback(index); activeIndex = index;"
+                    @click="requestPayback(project.index); activeIndex = project.index;"
                     :loading="project.isLoading"
                   >
                   Refund
@@ -500,7 +500,6 @@ export default {
     },
     getProject(projectIndex) {
       crowdfundInstance.methods.getProjects(projectIndex).call().then(async (projectData) => {
-        console.log(projectData);
         const projectInfo = {}
         projectInfo.projectTitle = projectData.projectName;
         projectInfo.projectDesc = projectData.projectDescription;
@@ -511,6 +510,7 @@ export default {
         projectInfo.currentAmount = 0;
         projectInfo.isLoading = false;
         projectInfo.contract = projectData.projectAdress;
+        projectInfo.index = projectIndex;
         this.getBalance(projectInfo, projectData.projectAdress);
       });
     },
@@ -556,11 +556,11 @@ export default {
       ).send({
         from: this.account,
       }).then((data) => {
-        console.log(data);
         this.newObject = { isLoading: false };
       });
     },
     getBackingOptions(projectIndex) {
+      console.log(this.projectData[projectIndex]);
       this.currentOptions = [];
       const projectInst = crowdfundProject(this.projectData[projectIndex].contract);
       projectInst.methods.getBackingOptionsCount().call().then((backingOptionCount) => {
@@ -595,7 +595,6 @@ export default {
       ).send({
         from: this.account,
       }).then((status) => {
-        console.log(status);
         this.addRequestDialog = false;
       });
     },
@@ -604,7 +603,6 @@ export default {
       projectInst.methods.getCurrentRequest().call().then((request) => {
         this.currentRequest = request;
         this.viewRequestDialog = true;
-        console.log(request);
       });
     },
     voteForCurrentRequest(projectIndex, vote) {
@@ -668,15 +666,14 @@ export default {
       const projectInst = crowdfundProject(contract);
       projectInst.methods.getContractState().call().then((state) => {
         projectInfo.currentState = state;
-        console.log(projectInfo);
-        this.projectData.push(projectInfo);
+        this.projectData.push(projectInfo);        
+        this.projectData.sort((a, b) => (a.index > b.index) ? 1 : -1 );
       });
     }
   },
   computed: {  
     filteredProjects() {
       return this.projectData.filter(project => {
-        console.log(project);
         return project.projectTitle.toLowerCase().includes(this.search.toLowerCase())
       })
     }
