@@ -618,11 +618,12 @@ export default {
       });
     },
     getCurrentRequest(projectIndex) {
-      console.log(this.projectData[projectIndex].contract);
       const projectInst = crowdfundProject(this.projectData[projectIndex].contract);
       projectInst.methods.getCurrentRequest().call().then((request) => {
         this.currentRequest = request;
         this.viewRequestDialog = true;
+      }).catch((err) => {
+        alert("Keine Auszahlungs-Anfragen vorhanden.")    
       });
     },
     voteForCurrentRequest(projectIndex, vote) {
