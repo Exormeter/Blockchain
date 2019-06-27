@@ -196,9 +196,11 @@
                 <div>
                   <div class="headline">{{ currentRequest[0] }}</div>
                   <div>{{ currentRequest[1] }}</div>
-                  <div>Kosten: <span>{{ currentRequest[3] }}</span></div>
-                  <div>Laufzeit bis: <span>{{ new Date(currentRequest[2]) }}</span></div>
+                  <div><b>Kosten: </b><span>{{ currentRequest[3] }} Wei</span></div>
+                  <div><b>Laufzeit bis: </b><span>{{ new Date(parseInt(currentRequest[2])) }}</span></div>
+                  <div><b>Anzahl Stimmen: </b><span class="blue--text"> {{currentRequest['numberAcceptedVotes']}} </span> | <span class="red--text"> {{currentRequest['numberRejectedVotes']}} </span></div>
                   <v-btn
+                    v-if="this.projectData[activeIndex] != account"
                     color="blue darken-1"
                     flat
                     @click="voteForCurrentRequest(activeIndex, true)"
@@ -206,11 +208,20 @@
                   Akzeptieren
                   </v-btn>
                   <v-btn
+                    v-if="this.projectData[activeIndex] != account"
                     color="red darken-1"
                     flat
                     @click="voteForCurrentRequest(activeIndex, false)"
                   >
                   Ablehnen
+                  </v-btn>
+                  <v-btn
+                    v-if="this.projectData[activeIndex] == account"
+                    color="blue darken-1"
+                    flat
+                    @click="requestPayout(activeIndex)"
+                  >
+                  Auszahlen
                   </v-btn>
                 </div>
               </v-card-text>
@@ -419,6 +430,21 @@
                     Add Request
                   </v-btn>
                 </v-flex>
+
+                <v-flex
+                  v-if="project.currentState == 1 "
+                  class="d-flex ml-3" xs12 sm6 md3>
+                  <v-btn
+                    class="mt-3"
+                    color="light-blue darken-1 white--text"
+                    @click="requestPayback(index); activeIndex = index;"
+                    :loading="project.isLoading"
+                  >
+                  Refund
+                  </v-btn>
+                </v-flex>
+
+
                 <v-card-actions class="text-xs-center">
                   <span class="font-weight-bold" style="width: 200px;">
                     {{ project.currentAmount / 10**18 }} ETH
@@ -498,8 +524,6 @@ export default {
         projectInfo.isLoading = false;
         projectInfo.contract = projectData[1];
         this.getBalance(projectInfo, projectData[1]);
-        //this.projectData.push(projectInfo);
-        //this.getInvestorCount(projectIndex);
       });
     },
     async getBalance(projectInfo, contract) {
