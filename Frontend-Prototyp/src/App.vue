@@ -339,6 +339,10 @@
                       </v-chip>
                       {{ project.projectTitle }}
                     </div>
+                    <span
+                      v-if="project.projectStarter == account" class="green--text">
+                        Projektstarter
+                    </span>
                     <br/>
                     <span>{{ project.projectDesc }}</span>
                     <br/><br/>
@@ -714,5 +718,12 @@ div#app .search-wrapper input::-webkit-input-placeholder {
   font-size: 12px;
   color: rgba(0, 0, 0, 0.5);
   font-weight: 100;
+}
+
+.v-chip {
+  margin-right: 4px;
+  margin-top: 4px;
+  margin-bottom: 4px;
+  margin-left: 0px;
 }
 </style>
