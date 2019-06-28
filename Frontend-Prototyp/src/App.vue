@@ -359,9 +359,6 @@
                     </span>
                     <br/>
                     <span>{{ project.projectDesc }}</span>
-                    <span v-if="project.projectDesc.length > 100">
-                      ... <a @click="testDialog(project.index);">[Show full]</a>
-                    </span>
                     <br/><br/>
                     <small>Funding-Laufzeit bis: <b>{{ new Date(project.fundingDeadline).toLocaleString() }}</b></small>
                     <br/>
@@ -465,30 +462,6 @@
                 </v-card-actions>
               </v-card>
             </v-hover>
-            <v-dialog
-                v-model="filteredProjects[index].dialog"
-                width="800"
-                persistent
-              >
-              <v-card>
-                <v-card-title class="headline font-weight-bold">
-                  {{ project.projectTitle }}
-                </v-card-title>
-                <v-card-text>
-                  {{ project.projectDesc }}
-                </v-card-text>
-                <v-card-actions>
-                  <v-spacer></v-spacer>
-                  <v-btn
-                    color="blue darken-1"
-                    flat="flat"
-                    @click="filteredProjects[index].dialog = false"
-                  >
-                    Close
-                  </v-btn>
-                </v-card-actions>
-              </v-card>
-            </v-dialog>
           </v-flex>
         </v-layout>
       </v-container>
