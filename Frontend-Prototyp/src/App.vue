@@ -348,13 +348,13 @@
             :key="1"
             :label="`Backed`"
             :value="1"
-            @change="getProjectByInvestorForIndex()"
+            @change="getProjectCountForInvestor()"
           ></v-radio>
           <v-radio
             :key="2"
             :label="`Owned`"
             :value="2"
-            @change="getProjectByFounderForIndex()"
+            @change="getProjectCountForFounder()"
           ></v-radio>
         </v-radio-group>
         <v-layout row wrap>
