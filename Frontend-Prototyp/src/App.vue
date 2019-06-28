@@ -191,7 +191,6 @@
           </v-dialog>
         </v-layout>
 
-
         <v-layout row justify-center>
           <v-dialog v-model="viewRequestDialog" max-width="600px" persistent>
             <v-card>
@@ -206,7 +205,7 @@
                   <div><b>Laufzeit bis: </b><span>{{ new Date(parseInt(currentRequest[2])) }}</span></div>
                   <div><b>Anzahl Stimmen: </b><span class="blue--text"> {{currentRequest['numberAcceptedVotes']}} </span> | <span class="red--text"> {{currentRequest['numberRejectedVotes']}} </span></div>
                   <v-btn
-                    v-if="this.projectData[activeIndex] != account"
+                    v-if="!isStarter(activeIndex)"
                     color="blue darken-1"
                     flat
                     @click="voteForCurrentRequest(activeIndex, true)"
@@ -214,7 +213,7 @@
                   Akzeptieren
                   </v-btn>
                   <v-btn
-                    v-if="this.projectData[activeIndex] != account"
+                    v-if="!isStarter(activeIndex)"
                     color="red darken-1"
                     flat
                     @click="voteForCurrentRequest(activeIndex, false)"
@@ -222,7 +221,7 @@
                   Ablehnen
                   </v-btn>
                   <v-btn
-                    v-if="this.projectData[activeIndex] != account"
+                    v-if="isStarter(activeIndex)"
                     color="blue darken-1"
                     flat
                     @click="requestPayout(activeIndex)"
@@ -230,7 +229,7 @@
                   Auszahlen
                   </v-btn>
                   <v-btn
-                    v-if="this.projectData[activeIndex] != account"
+                    v-if="!isStarter(activeIndex)"
                     color="blue darken-1"
                     flat
                     @click="requestRefundRemainingFunds(activeIndex)"
@@ -238,7 +237,7 @@
                   Partiell 
                   </v-btn>
                   <v-btn
-                    v-if="this.projectData[activeIndex] != account"
+                    v-if="!isStarter(activeIndex)"
                     color="blue darken-1"
                     flat
                     @click="requestPayback(activeIndex)"
@@ -360,6 +359,9 @@
                     </span>
                     <br/>
                     <span>{{ project.projectDesc }}</span>
+                    <span v-if="project.projectDesc.length > 100">
+                      ... <a @click="testDialog(project.index);">[Show full]</a>
+                    </span>
                     <br/><br/>
                     <small>Funding-Laufzeit bis: <b>{{ new Date(project.fundingDeadline).toLocaleString() }}</b></small>
                     <br/>
@@ -463,6 +465,30 @@
                 </v-card-actions>
               </v-card>
             </v-hover>
+            <v-dialog
+                v-model="filteredProjects[index].dialog"
+                width="800"
+                persistent
+              >
+              <v-card>
+                <v-card-title class="headline font-weight-bold">
+                  {{ project.projectTitle }}
+                </v-card-title>
+                <v-card-text>
+                  {{ project.projectDesc }}
+                </v-card-text>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn
+                    color="blue darken-1"
+                    flat="flat"
+                    @click="filteredProjects[index].dialog = false"
+                  >
+                    Close
+                  </v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
           </v-flex>
         </v-layout>
       </v-container>
@@ -700,6 +726,17 @@ export default {
         this.projectData.sort((a, b) => (a.index > b.index) ? 1 : -1 );
         console.log(projectInfo);
       });
+    },
+    testDialog(index) {
+      this.filteredProjects[index].dialog = true;
+      console.log(index+": "+this.filteredProjects[index].dialog);
+    },
+    isStarter(projectIndex) {
+      if(this.projectData[projectIndex] != undefined){
+        return (this.projectData[projectIndex].projectStarter == this.account);
+      } else {
+        return false; 
+      }
     }
   },
   computed: {  
