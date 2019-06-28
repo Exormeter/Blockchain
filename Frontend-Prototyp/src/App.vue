@@ -160,6 +160,7 @@
                 <span>Verfügbare Backing-Optionen</span>
               </v-card-title>
               <v-card-text class="pt-0" v-for="(option, index) in currentOptions" :key="index">
+                <v-divider></v-divider>
                 <div>
                   <div class="headline">{{ option[0] }}</div>
                   <div>{{ option[1] }}</div>
@@ -194,10 +195,11 @@
         <v-layout row justify-center>
           <v-dialog v-model="viewRequestDialog" max-width="600px" persistent>
             <v-card>
-              <v-card-title class="headline" primary-title>
-                <span>Aktuelle Anfrage</span>
+              <v-card-title primary-title>
+                <span  class="headline">Aktuelle Anfrage -</span><span style="margin-top:3px; margin-left:5px; font-weight:bold;">Noch verfügbare ETH: {{ remainingFunds / 10**18 }} ETH</span>
               </v-card-title>
               <v-card-text class="pt-0">
+                <v-divider></v-divider>
                 <div>
                   <div class="headline">{{ currentRequest.requestTitle }}</div>
                   <div>{{ currentRequest.requestDescription }}</div>
@@ -487,6 +489,7 @@ export default {
       viewRequestDialog: false,
       activeIndex: null,
       account: null,
+      remainingFunds: 0,
       stateMap: [
         { color: 'blue-grey lighten-3', text: "Initialisierung"},
         { color: 'primary', text: 'Laufend' },
@@ -629,6 +632,7 @@ export default {
       projectInst.methods.getCurrentRequest().call().then((request) => {
         console.log(request);
         this.currentRequest = request;
+        this.remainingFunds = this.projectData[projectIndex].currentAmount;
         this.viewRequestDialog = true;
       }).catch((err) => {
         alert("Keine Auszahlungs-Anfragen vorhanden.")    
