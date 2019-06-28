@@ -713,6 +713,32 @@ export default {
         console.log(projectInfo);
       });
     },
+    getProjectCountForFounder() {
+      this.projectData = [];
+      crowdfundInstance.methods.getProjectCountForFounder().call().then((projectCount) => {       
+        console.log(projectCount);
+        for (var i = 0; i < projectCount; i++){
+          this.getProjectByFounderForIndex(i);
+        }
+	    });
+    },
+    getProjectByFounderForIndex(projectIndex) {
+      crowdfundInstance.methods.getProjects(projectIndex).call().then(async (projectData) => {
+        const projectInfo = {}
+        projectInfo.projectTitle = projectData.projectName;
+        projectInfo.projectDesc = projectData.projectDescription;
+        projectInfo.projectStarter = projectData.owner;
+        projectInfo.fundingDeadline = new Date(parseInt(projectData.fundigCloseDate)*1000);
+        projectInfo.projectDeadline = new Date(parseInt(projectData.projectClosingDate)*1000);
+        projectInfo.goalAmount = projectData.goal;
+        projectInfo.currentAmount = 0;
+        projectInfo.peekBalance = 0;
+        projectInfo.isLoading = false;
+        projectInfo.contract = projectData.projectAdress;
+        projectInfo.index = projectIndex;
+        this.getBalance(projectInfo, projectData.projectAdress);
+      });
+    },
     isStarter(projectIndex) {
       if(this.projectData[projectIndex] != undefined){
         return (this.projectData[projectIndex].projectStarter == this.account);
