@@ -199,11 +199,11 @@
               </v-card-title>
               <v-card-text class="pt-0">
                 <div>
-                  <div class="headline">{{ currentRequest[0] }}</div>
-                  <div>{{ currentRequest[1] }}</div>
-                  <div><b>Kosten: </b><span>{{ currentRequest[3] / 10**18 }} ETH</span></div>
-                  <div><b>Laufzeit bis: </b><span>{{ new Date(parseInt(currentRequest[2])) }}</span></div>
-                  <div><b>Anzahl Stimmen: </b><span class="blue--text"> {{currentRequest['numberAcceptedVotes']}} </span> | <span class="red--text"> {{currentRequest['numberRejectedVotes']}} </span></div>
+                  <div class="headline">{{ currentRequest.requestTitle }}</div>
+                  <div>{{ currentRequest.requestDescription }}</div>
+                  <div><b>Kosten: </b><span>{{ currentRequest.amount / 10**18 }} ETH</span></div>
+                  <div><b>Laufzeit bis: </b><span>{{ new Date(parseInt(currentRequest.valideUntil)) }}</span></div>
+                  <div><b>Anzahl Stimmen: </b><span class="blue--text"> {{currentRequest.numberAcceptedVotes}} </span> | <span class="red--text"> {{currentRequest.numberRejectedVotes}} </span></div>
                   <v-btn
                     v-if="!isStarter(activeIndex)"
                     color="blue darken-1"
@@ -221,7 +221,7 @@
                   Ablehnen
                   </v-btn>
                   <v-btn
-                    v-if="isStarter(activeIndex)"
+                    v-if="isStarter(activeIndex) && isFinished(currentRequest.valideUntil)"
                     color="blue darken-1"
                     flat
                     @click="requestPayout(activeIndex)"
@@ -619,6 +619,7 @@ export default {
     getCurrentRequest(projectIndex) {
       const projectInst = crowdfundProject(this.projectData[projectIndex].contract);
       projectInst.methods.getCurrentRequest().call().then((request) => {
+        console.log(request);
         this.currentRequest = request;
         this.viewRequestDialog = true;
       }).catch((err) => {
@@ -700,16 +701,15 @@ export default {
         console.log(projectInfo);
       });
     },
-    testDialog(index) {
-      this.filteredProjects[index].dialog = true;
-      console.log(index+": "+this.filteredProjects[index].dialog);
-    },
     isStarter(projectIndex) {
       if(this.projectData[projectIndex] != undefined){
         return (this.projectData[projectIndex].projectStarter == this.account);
       } else {
         return false; 
       }
+    }, 
+    isFinished(requestDeadline){
+      return (new Date().getTime() < new Date(parseInt(requestDeadline)*1000))
     }
   },
   computed: {  
