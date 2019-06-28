@@ -542,6 +542,7 @@ export default {
     },
     getProject(projectIndex) {
       crowdfundInstance.methods.getProjects(projectIndex).call().then(async (projectData) => {
+        console.log(projectData);
         const projectInfo = {}
         projectInfo.projectTitle = projectData.projectName;
         projectInfo.projectDesc = projectData.projectDescription;
@@ -610,7 +611,6 @@ export default {
       });
     },
     getBackingOptions(projectIndex) {
-      console.log(this.projectData[projectIndex]);
       this.currentOptions = [];
       const projectInst = crowdfundProject(this.projectData[projectIndex].contract);
       projectInst.methods.getBackingOptionsCount().call().then((backingOptionCount) => {
@@ -651,7 +651,6 @@ export default {
     getCurrentRequest(projectIndex) {
       const projectInst = crowdfundProject(this.projectData[projectIndex].contract);
       projectInst.methods.getCurrentRequest().call().then((request) => {
-        console.log(request);
         this.currentRequest = request;
         this.remainingFunds = this.projectData[projectIndex].currentAmount;
         this.viewRequestDialog = true;
@@ -731,59 +730,66 @@ export default {
         projectInfo.currentState = state;
         this.projectData.push(projectInfo);        
         this.projectData.sort((a, b) => (a.index > b.index) ? 1 : -1 );
-        console.log(projectInfo);
       });
     },
     getProjectCountForFounder() {
       this.projectData = [];
-      crowdfundInstance.methods.getProjectCountForFounder().call().then((projectCount) => {       
-        console.log(projectCount);
-        for (var i = 0; i < projectCount; i++){
-          this.getProjectByFounderForIndex(i);
-        }
+      crowdfundInstance.methods.getProjectCountForFounder().call({
+        from: this.account
+        }).then((projectCount) => {      
+          for (var i = 0; i < projectCount; i++){
+            this.getProjectByFounderForIndex(i);
+          }
 	    });
     },
     getProjectByFounderForIndex(projectIndex) {
-      crowdfundInstance.methods.getProjects(projectIndex).call().then(async (projectData) => {
-        const projectInfo = {}
-        projectInfo.projectTitle = projectData.projectName;
-        projectInfo.projectDesc = projectData.projectDescription;
-        projectInfo.projectStarter = projectData.owner;
-        projectInfo.fundingDeadline = new Date(parseInt(projectData.fundigCloseDate)*1000);
-        projectInfo.projectDeadline = new Date(parseInt(projectData.projectClosingDate)*1000);
-        projectInfo.goalAmount = projectData.goal;
-        projectInfo.currentAmount = 0;
-        projectInfo.peekBalance = 0;
-        projectInfo.isLoading = false;
-        projectInfo.contract = projectData.projectAdress;
-        projectInfo.index = projectIndex;
-        this.getBalance(projectInfo, projectData.projectAdress);
+      crowdfundInstance.methods.getProjectByFounderForIndex(projectIndex).call({
+        from: this.account
+        }).then(
+        async (projectData) => {       
+          const projectInfo = {}
+          projectInfo.projectTitle = projectData[2]
+          projectInfo.projectDesc = projectData[3];
+          projectInfo.projectStarter = projectData[0];
+          projectInfo.fundingDeadline = new Date(parseInt(projectData[5])*1000);
+          projectInfo.projectDeadline = new Date(parseInt(projectData[6])*1000);
+          projectInfo.goalAmount = projectData[4];
+          projectInfo.currentAmount = 0;
+          projectInfo.peekBalance = 0;
+          projectInfo.isLoading = false;
+          projectInfo.contract = projectData[1];
+          projectInfo.index = projectIndex;
+          this.getBalance(projectInfo, projectData[1]);
       });
     },
     getProjectCountForInvestor() {
       this.projectData = [];
-      crowdfundInstance.methods.getProjectCountForInvestor().call().then((projectCount) => {       
-        console.log(projectCount);
-        for (var i = 0; i < projectCount; i++){
-          this.getProjectByInvestorForIndex(i);
-        }
+      crowdfundInstance.methods.getProjectCountForInvestor().call({
+        from: this.account
+        }).then((projectCount) => {      
+          for (var i = 0; i < projectCount; i++){
+            this.getProjectByInvestorForIndex(i);
+          }
 	    });
     },
     getProjectByInvestorForIndex(projectIndex) {
-      crowdfundInstance.methods.getProjectByInvestorForIndex(projectIndex).call().then(async (projectData) => {
-        const projectInfo = {}
-        projectInfo.projectTitle = projectData.projectName;
-        projectInfo.projectDesc = projectData.projectDescription;
-        projectInfo.projectStarter = projectData.owner;
-        projectInfo.fundingDeadline = new Date(parseInt(projectData.fundigCloseDate)*1000);
-        projectInfo.projectDeadline = new Date(parseInt(projectData.projectClosingDate)*1000);
-        projectInfo.goalAmount = projectData.goal;
-        projectInfo.currentAmount = 0;
-        projectInfo.peekBalance = 0;
-        projectInfo.isLoading = false;
-        projectInfo.contract = projectData.projectAdress;
-        projectInfo.index = projectIndex;
-        this.getBalance(projectInfo, projectData.projectAdress);
+      crowdfundInstance.methods.getProjectByInvestorForIndex(projectIndex).call({
+        from: this.account
+        }).then(
+        async (projectData) => {    
+          const projectInfo = {}
+          projectInfo.projectTitle = projectData[2]
+          projectInfo.projectDesc = projectData[3];
+          projectInfo.projectStarter = projectData[0];
+          projectInfo.fundingDeadline = new Date(parseInt(projectData[5])*1000);
+          projectInfo.projectDeadline = new Date(parseInt(projectData[6])*1000);
+          projectInfo.goalAmount = projectData[4];
+          projectInfo.currentAmount = 0;
+          projectInfo.peekBalance = 0;
+          projectInfo.isLoading = false;
+          projectInfo.contract = projectData[1];
+          projectInfo.index = projectIndex;
+          this.getBalance(projectInfo, projectData[1]);
       });
     },
     isStarter(projectIndex) {
