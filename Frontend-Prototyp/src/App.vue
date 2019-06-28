@@ -449,12 +449,12 @@
 
                 <v-card-actions class="text-xs-center">
                   <span class="font-weight-bold" style="width: 200px;">
-                    {{ project.currentAmount / 10**18 }} ETH
+                    {{ project.peekBalance / 10**18 }} ETH
                   </span>
                   <v-progress-linear
                     height="10"
                     :color="stateMap[project.currentState].color"
-                    :value="(project.currentAmount / project.goalAmount) * 100"
+                    :value="(project.peekBalance / project.goalAmount) * 100"
                   ></v-progress-linear>
                   <span class="font-weight-bold" style="width: 200px;">
                     {{ project.goalAmount / 10**18 }} ETH
@@ -526,6 +526,7 @@ export default {
         projectInfo.projectDeadline = new Date(parseInt(projectData.projectClosingDate)*1000);
         projectInfo.goalAmount = projectData.goal;
         projectInfo.currentAmount = 0;
+        projectInfo.peekBalance = 0;
         projectInfo.isLoading = false;
         projectInfo.contract = projectData.projectAdress;
         projectInfo.index = projectIndex;
@@ -536,11 +537,18 @@ export default {
       try {
         var balance = await web3.eth.getBalance(contract);
         projectInfo.currentAmount = balance;
-        this.getInvestorCount(projectInfo, contract);
+        this.getPeekBalance(projectInfo, contract);
       } catch (err) {
         projectInfo.currentAmount = 0;
-        this.getInvestorCount(projectInfo, contract);
+        this.getPeekBalance(projectInfo, contract);
       }
+    },
+    getPeekBalance(projectInfo, contract) {
+      const projectInst = crowdfundProject(contract);
+      projectInst.methods.getPeekBalance().call().then((peekBalance) => {
+        projectInfo.peekBalance = peekBalance; 
+        this.getInvestorCount(projectInfo, contract);
+      });
     },
     startProject() {
       this.newObject.isLoading = true;
