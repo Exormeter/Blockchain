@@ -207,23 +207,25 @@
                   <div><b>Laufzeit bis: </b><span>{{ new Date(parseInt(currentRequest.valideUntil)) }}</span></div>
                   <div><b>Anzahl Stimmen: </b><span class="blue--text"> {{currentRequest.numberAcceptedVotes}} </span> | <span class="red--text"> {{currentRequest.numberRejectedVotes}} </span></div>
                   <v-btn
-                    v-if="!isStarter(activeIndex)"
+                    v-if="!isStarter(activeIndex) && isInvestor(activeIndex)"
                     color="blue darken-1"
                     flat
                     @click="voteForCurrentRequest(activeIndex, true)"
+                    :disabled="currentRequest.voteStatus != 2"
                   >
                   Akzeptieren
                   </v-btn>
                   <v-btn
-                    v-if="!isStarter(activeIndex)"
+                    v-if="!isStarter(activeIndex) && isInvestor(activeIndex)"
                     color="red darken-1"
                     flat
                     @click="voteForCurrentRequest(activeIndex, false)"
+                    :disabled="currentRequest.voteStatus != 2"
                   >
                   Ablehnen
                   </v-btn>
                   <v-btn
-                    v-if="isStarter(activeIndex) && isFinished(currentRequest.valideUntil)"
+                    v-if="isStarter(activeIndex) && isRequestFinished(currentRequest.valideUntil)"
                     color="blue darken-1"
                     flat
                     @click="requestPayout(activeIndex)"
@@ -231,7 +233,7 @@
                   Auszahlen
                   </v-btn>
                   <v-btn
-                    v-if="!isStarter(activeIndex)"
+                    v-if="!isStarter(activeIndex) && isProjectFinished(activeIndex) && isInvestor(activeIndex)"
                     color="blue darken-1"
                     flat
                     @click="requestRefundRemainingFunds(activeIndex)"
@@ -239,7 +241,7 @@
                   Partiell 
                   </v-btn>
                   <v-btn
-                    v-if="!isStarter(activeIndex)"
+                    v-if="!isStarter(activeIndex) && isFailed(activeIndex) && isInvestor(activeIndex)"
                     color="blue darken-1"
                     flat
                     @click="requestPayback(activeIndex)"
@@ -542,7 +544,6 @@ export default {
     },
     getProject(projectIndex) {
       crowdfundInstance.methods.getProjects(projectIndex).call().then(async (projectData) => {
-        console.log(projectData);
         const projectInfo = {}
         projectInfo.projectTitle = projectData.projectName;
         projectInfo.projectDesc = projectData.projectDescription;
@@ -653,8 +654,10 @@ export default {
       projectInst.methods.getCurrentRequest().call().then((request) => {
         this.currentRequest = request;
         this.remainingFunds = this.projectData[projectIndex].currentAmount;
-        this.viewRequestDialog = true;
+        this.hasInvestorVotedForCurrentRequest(projectIndex);
+        //this.viewRequestDialog = true;
       }).catch((err) => {
+        console.log(err);
         alert("Keine Auszahlungs-Anfragen vorhanden.")    
       });
     },
@@ -792,6 +795,16 @@ export default {
           this.getBalance(projectInfo, projectData[1]);
       });
     },
+    hasInvestorVotedForCurrentRequest(projectIndex) {
+      const projectInst = crowdfundProject(this.projectData[projectIndex].contract);
+      projectInst.methods.hasInvestorVotedForCurrentRequest().call({
+        from: this.account
+        }).then(
+        async (voteStatus) => {
+          this.currentRequest.voteStatus = voteStatus;
+          this.viewRequestDialog = true;
+      });
+    },
     isStarter(projectIndex) {
       if(this.projectData[projectIndex] != undefined){
         return (this.projectData[projectIndex].projectStarter == this.account);
@@ -799,8 +812,32 @@ export default {
         return false; 
       }
     }, 
-    isFinished(requestDeadline){
-      return (new Date().getTime() < new Date(parseInt(requestDeadline)*1000))
+    isRequestFinished(requestDeadline){
+      return (new Date().getTime() > new Date(parseInt(requestDeadline)));
+    },
+    isProjectFinished(projectIndex){
+      if(this.projectData[projectIndex] != undefined){
+        return (new Date().getTime() > this.projectData[projectIndex].projectDeadline);
+      } else {
+        return false; 
+      }
+    },
+    isFailed(projectIndex){
+      if(this.projectData[projectIndex] != undefined){
+        return (this.projectData[projectIndex].currentState == 4)
+      } else {
+        return false; 
+      }
+    },
+    isSuccessful(projectIndex){  
+      if(this.projectData[projectIndex] != undefined){
+        return (this.projectData[projectIndex].currentState == 3)
+      } else {
+        return false; 
+      }
+    },
+    isInvestor(projectIndex){
+      return true;
     }
   },
   computed: {  
