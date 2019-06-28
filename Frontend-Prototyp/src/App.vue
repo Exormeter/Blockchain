@@ -164,7 +164,7 @@
                 <div>
                   <div class="headline">{{ option[0] }}</div>
                   <div>{{ option[1] }}</div>
-                  <div><b>Kosten: </b> <span>{{ option[2] / 10**18 }} ETH</span></div>
+                  <div><b>Kosten: </b> <span>{{ option[2] / 10**18 }} ETH (${{(exchangeRate * option[2] / 10**18).toFixed(2) }})</span></div>
                   <div><b>Verfügbare Anzahl: </b> <span>{{ option[3] }}</span></div>
                   <v-btn
                     color="blue darken-1"
@@ -203,7 +203,7 @@
                 <div>
                   <div class="headline">{{ currentRequest.requestTitle }}</div>
                   <div>{{ currentRequest.requestDescription }}</div>
-                  <div><b>Kosten: </b><span>{{ currentRequest.amount / 10**18 }} ETH</span></div>
+                  <div><b>Kosten: </b><span>{{ currentRequest.amount / 10**18 }} ETH (${{(exchangeRate * currentRequest.amount / 10**18).toFixed(2)}})</span></div>
                   <div><b>Laufzeit bis: </b><span>{{ new Date(parseInt(currentRequest.valideUntil)) }}</span></div>
                   <div><b>Anzahl Stimmen: </b><span class="blue--text"> {{currentRequest.numberAcceptedVotes}} </span> | <span class="red--text"> {{currentRequest.numberRejectedVotes}} </span></div>
                   <v-btn
@@ -498,6 +498,7 @@
 import crowdfundInstance from '../contracts/crowdFundInstanceNew';
 import crowdfundProject from '../contracts/crowdFundProjectInstanceNew';
 import web3 from '../contracts/web3';
+import axios from "axios";
 
 export default {
   name: 'App',
@@ -513,6 +514,7 @@ export default {
       account: null,
       remainingFunds: 0,
       filterValue: 0,
+      exchangeRate: 0,
       stateMap: [
         { color: 'blue-grey lighten-3', text: "Initialisierung"},
         { color: 'primary', text: 'Laufend' },
@@ -530,6 +532,7 @@ export default {
     // this code snippet takes the account (wallet) that is currently active
     web3.eth.getAccounts().then((accounts) => {
       [this.account] = accounts;
+      this.currentConversionRate();
       this.getProjects();
     });
   },
@@ -720,12 +723,12 @@ export default {
       });
     },
     currentConversionRate() {
-    var self=this;
-    this.$http.get('https://api.coinmarketcap.com/v1/ticker/ethereum/').then(function(response){
-      if(response.status == "200"){
-          console.log(response);
-        }
-      });
+      var self = this;
+      axios.get('https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=USD').then(function(response){
+        if(response.status == "200"){
+            self.exchangeRate = response.data.USD;
+          } 
+        });
     },
     getContractState(projectInfo, contract) {
       const projectInst = crowdfundProject(contract);
