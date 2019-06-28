@@ -337,6 +337,26 @@
           <input type="text" v-model="search" placeholder="Search title.."/>
           <label>Search title:</label>
         </div>
+        <v-radio-group v-model="filterValue" row>
+          <v-radio
+            :key="0"
+            :label="`All`"
+            :value="0"
+            @change="getProjects()"
+          ></v-radio>
+          <v-radio
+            :key="1"
+            :label="`Backed`"
+            :value="1"
+            @change="getProjectByInvestorForIndex()"
+          ></v-radio>
+          <v-radio
+            :key="2"
+            :label="`Owned`"
+            :value="2"
+            @change="getProjectByFounderForIndex()"
+          ></v-radio>
+        </v-radio-group>
         <v-layout row wrap>
           <v-flex v-for="(project, index) in filteredProjects" :key="index" xs12 sm6 md4>
             <v-hover>
@@ -490,6 +510,7 @@ export default {
       activeIndex: null,
       account: null,
       remainingFunds: 0,
+      filterValue: 0,
       stateMap: [
         { color: 'blue-grey lighten-3', text: "Initialisierung"},
         { color: 'primary', text: 'Laufend' },
