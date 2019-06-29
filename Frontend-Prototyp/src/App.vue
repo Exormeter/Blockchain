@@ -53,20 +53,9 @@
                       </v-text-field>
                     </v-flex>
                     <v-flex xs12 sm6>
-                      <v-text-field
-                        label="Funding-Laufzeit (in Tagen)"
-                        type="number"
-                        v-model="newObject.fundingDuration">
-                      </v-text-field>
-                    </v-flex>
-                    <v-flex xs12 sm6>
-                      <v-text-field
-                        label="Projekt-Laufzeit (in Tagen)"
-                        type="number"
-                        v-model="newObject.duration">
-                      </v-text-field>
-                    </v-flex>
-                    <v-flex xs12 sm6>
+                      <v-subheader>
+                        Funding-Laufzeit Ende
+                      </v-subheader>
                       <v-menu
                         ref="dateMenu1"
                         v-model="dateMenu1"
@@ -83,7 +72,7 @@
                           <v-text-field
                             v-model="dateFormatted1"
                             label="Date"
-                            hint="MM/DD/YYYY format"
+                            hint="DD/MM/YYYY format"
                             persistent-hint
                             prepend-icon="event"
                             @blur="date1 = parseDate(dateFormatted1)"
@@ -118,11 +107,15 @@
                           v-if="timeMenu1"
                           v-model="time1"
                           full-width
+                          format="24hr"
                           @click:minute="$refs.timeMenu1.save(time1)"
                         ></v-time-picker>
                       </v-menu>
                     </v-flex>
                     <v-flex xs12 sm6>
+                      <v-subheader>
+                        Projekt-Laufzeit Ende
+                      </v-subheader>
                       <v-menu
                         ref="dateMenu2"
                         v-model="dateMenu2"
@@ -139,7 +132,7 @@
                           <v-text-field
                             v-model="dateFormatted2"
                             label="Date"
-                            hint="MM/DD/YYYY format"
+                            hint="DD/MM/YYYY format"
                             persistent-hint
                             prepend-icon="event"
                             @blur="date2 = parseDate(dateFormatted2)"
@@ -174,6 +167,7 @@
                           v-if="timeMenu2"
                           v-model="time2"
                           full-width
+                          format="24hr"
                           @click:minute="$refs.timeMenu2.save(time2)"
                         ></v-time-picker>
                       </v-menu>
@@ -704,10 +698,16 @@ export default {
     },
     startProject() {
       this.newObject.isLoading = true;
-      var fundingDate = new Date();
-      fundingDate.setMinutes(fundingDate.getMinutes()+parseFloat(this.newObject.fundingDuration)*24*60);
-      var goalDate = new Date();
-      goalDate.setMinutes(goalDate.getMinutes()+parseFloat(this.newObject.duration)*24*60);
+
+      var fundingDate = new Date(this.date1);
+      var fundingTime = this.time1.split(":");
+      fundingDate.setHours(fundingTime[0], fundingTime[1]);
+
+      var goalDate = new Date(this.date2);
+      var goalTime = this.time2.split(":");
+      goalDate.setHours(goalTime[0], goalTime[1]);
+
+
       crowdfundInstance.methods.addNewProject(
         this.newObject.title,
         this.newObject.description,
@@ -967,13 +967,13 @@ export default {
 
         const [year, month, day] = date.split('-')
         return `${month}/${day}/${year}`
-    },
-    parseDate (date) {
-      if (!date) return null
+      },
+      parseDate (date) {
+        if (!date) return null
 
-      const [month, day, year] = date.split('/')
-      return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
-    }
+        const [month, day, year] = date.split('/')
+        return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
+      }
   },
   computed: {  
     filteredProjects() {
