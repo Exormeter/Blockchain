@@ -171,7 +171,7 @@
                     color="blue darken-1"
                     flat
                     @click="addInvestor(activeIndex, index, option[2])"
-                    :disabled="option[3] == 0 || isStarter(activeIndex) || getProjectState(activeIndex) == 0"
+                    :disabled="option[3] == 0 || isStarter() || getProjectState() == 0"
                     :loading="newObject.isLoading"
                   >
                   Wählen
@@ -208,7 +208,7 @@
                   <div><b>Laufzeit bis: </b><span>{{ new Date(parseInt(currentRequest.valideUntil)) }}</span></div>
                   <div><b>Anzahl Stimmen: </b><span class="blue--text"> {{currentRequest.numberAcceptedVotes}} </span> | <span class="red--text"> {{currentRequest.numberRejectedVotes}} </span></div>
                   <v-btn
-                    v-if="!isStarter(activeIndex) && isInvestor(activeIndex)"
+                    v-if="!isStarter() && isInvestor()"
                     color="blue darken-1"
                     flat
                     @click="voteForCurrentRequest(activeIndex, true)"
@@ -217,7 +217,7 @@
                   Akzeptieren
                   </v-btn>
                   <v-btn
-                    v-if="!isStarter(activeIndex) && isInvestor(activeIndex)"
+                    v-if="!isStarter() && isInvestor()"
                     color="red darken-1"
                     flat
                     @click="voteForCurrentRequest(activeIndex, false)"
@@ -226,7 +226,7 @@
                   Ablehnen
                   </v-btn>
                   <v-btn
-                    v-if="isStarter(activeIndex) && isRequestFinished(currentRequest.valideUntil)"
+                    v-if="isStarter() && isRequestFinished(currentRequest.valideUntil)"
                     color="blue darken-1"
                     flat
                     @click="requestPayout(activeIndex)"
@@ -234,7 +234,7 @@
                   Auszahlen
                   </v-btn>
                   <v-btn
-                    v-if="!isStarter(activeIndex) && isProjectFinished(activeIndex) && isInvestor(activeIndex)"
+                    v-if="!isStarter() && isProjectFinished() && isInvestor()"
                     color="blue darken-1"
                     flat
                     @click="requestRefundRemainingFunds(activeIndex)"
@@ -242,7 +242,7 @@
                   Partiell 
                   </v-btn>
                   <v-btn
-                    v-if="!isStarter(activeIndex) && isFailed(activeIndex) && isInvestor(activeIndex)"
+                    v-if="!isStarter() && getProjectState() == 4 && isInvestor()"
                     color="blue darken-1"
                     flat
                     @click="requestPayback(activeIndex)"
@@ -821,7 +821,8 @@ export default {
           this.viewRequestDialog = true;
       });
     },
-    isStarter(projectIndex) {
+    isStarter() {
+      var projectIndex = this.activeIndex;
       if(this.projectData[projectIndex] != undefined){
         return (this.projectData[projectIndex].projectStarter == this.account);
       } else {
@@ -831,31 +832,20 @@ export default {
     isRequestFinished(requestDeadline){
       return (new Date().getTime() > new Date(parseInt(requestDeadline)));
     },
-    isProjectFinished(projectIndex){
+    isProjectFinished(){
+      var projectIndex = this.activeIndex;
       if(this.projectData[projectIndex] != undefined){
         return (new Date().getTime() > this.projectData[projectIndex].projectDeadline);
       } else {
         return false; 
       }
     },
-    isFailed(projectIndex){
-      if(this.projectData[projectIndex] != undefined){
-        return (this.projectData[projectIndex].currentState == 4)
-      } else {
-        return false; 
-      }
-    },
-    isSuccessful(projectIndex){  
-      if(this.projectData[projectIndex] != undefined){
-        return (this.projectData[projectIndex].currentState == 3)
-      } else {
-        return false; 
-      }
-    },
-    isInvestor(projectIndex){
+    isInvestor(){
+      var projectIndex = this.activeIndex;
       return true;
     },
-    getProjectState(projectIndex){
+    getProjectState(){
+      var projectIndex = this.activeIndex;
       if(this.projectData[projectIndex] != undefined){
         return this.projectData[projectIndex].currentState
       } else {
