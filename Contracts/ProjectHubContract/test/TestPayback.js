@@ -6,7 +6,7 @@ function Sleep(milliseconds) {
 }
 
 
-contract("Payback remaining", accounts => {
+contract("Payback", accounts => {
 
     it("Pay the remaining funds back", async () => {
         let hub = await ContractHub.deployed();
@@ -23,9 +23,9 @@ contract("Payback remaining", accounts => {
 
         fundingClosingDate = Math.floor(fundingClosingDate/1000);
         fundingClosingDate += 5;
-        projectClosingDate = (fundingClosingDate + 5);
+        projectClosingDate = (fundingClosingDate + 150);
 
-        await hub.addNewProject("TestProject", "TestDescription", 1000000, fundingClosingDate, projectClosingDate, {from: creatorAccount});
+        await hub.addNewProject("TestProject", "TestDescription", 100000000, fundingClosingDate, projectClosingDate, {from: creatorAccount});
         let project = await hub.getProjects(0, {from: creatorAccount});
         let projectContract = await ProjectContract.at(project[1]);
         await projectContract.addBackingOption("TestOption", "TestOptionDescription", 500000, 4, {from: creatorAccount});
@@ -35,17 +35,9 @@ contract("Payback remaining", accounts => {
         await projectContract.addInvestor(1, {from: investorAccountTwo, value: 500000});
         await projectContract.addInvestor(1, {from: investorAccountThree, value: 500000});
 
-        await projectContract.addRequest("TestRequest", "TestRequestDescription", fundingClosingDate, 1200000, {from: creatorAccount});
+        await Sleep(7000);
 
-        await projectContract.voteForCurrentRequest(true, {from: investorAccountOne});
-        await projectContract.voteForCurrentRequest(true, {from: investorAccountTwo});
-        await projectContract.voteForCurrentRequest(true, {from: investorAccountThree});
-
-        await projectContract.requestPayout({from: creatorAccount});
-
-        await Sleep(12000);
-
-        await projectContract.requestRefundRemainingFunds({from: creatorAccount});
+        await projectContract.requestPayback({from: creatorAccount});
 
         let investorAccountOneBalanceAfter = await web3.eth.getBalance(investorAccountOne);
         let investorAccountTwoBalanceAfter = await web3.eth.getBalance(investorAccountTwo);
@@ -60,8 +52,8 @@ contract("Payback remaining", accounts => {
         differanceThree = differanceThree.slice(-6);
 
 
-        assert.equal(differanceOne, '599999');
-        assert.equal(differanceTwo, '599999');
-        assert.equal(differanceThree, '599999');
+        assert.equal(differanceOne, '000000');
+        assert.equal(differanceTwo, '000000');
+        assert.equal(differanceThree, '000000');
     });
 });

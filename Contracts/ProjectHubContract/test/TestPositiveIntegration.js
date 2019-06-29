@@ -12,10 +12,15 @@ contract("ContractHub positive", accounts => {
         fundingClosingDate = Math.floor(fundingClosingDate/1000);
         fundingClosingDate += 86400;
         projectClosingDate = fundingClosingDate + 86400;
-        hub.addNewProject("TestProject", "TestDescription", 100, fundingClosingDate, projectClosingDate, {from: creatorAccount});
+        await hub.addNewProject("TestProject", "TestDescription", 100, fundingClosingDate, projectClosingDate, {from: creatorAccount});
+        await hub.addNewProject("TestProjectTest", "TestDescription", 100, fundingClosingDate, projectClosingDate, {from: creatorAccount});
         let project = await hub.getProjects(0, {from: creatorAccount});
+        let creatorProjectCount = await hub.getProjectCountForFounder({from: creatorAccount});
+        let founderProject = await hub.getProjectByFounderForIndex(1, {from: creatorAccount});
 
+        assert.equal("TestProjectTest", founderProject[2]);
         assert.equal("TestProject", project[2]);
+        assert.equal(2, creatorProjectCount);
     });
 
     it("Should have the right Backing Option ID", async () => {
@@ -125,6 +130,21 @@ contract("ContractHub positive", accounts => {
         assert.equal(request[5], 1);
         assert.equal(request[6], false);
     });
+
+    it("should return the correct number for investors in project", async () => {
+        let hub = await ContractHub.deployed();
+        let creatorAccount = accounts[0];
+        let investorAccountOne = accounts[1];
+
+        let invesorCount = await hub.getProjectCountForInvestor({from: investorAccountOne});
+
+        let investorProject = await hub.getProjectByInvestorForIndex(0, {from: investorAccountOne});
+
+        assert.equal(1, invesorCount);
+        assert.equal("TestProject", investorProject[2]);
+        
+
+    })
 
     it("Should should tell if a investor has voted jet", async () => {
         let hub = await ContractHub.deployed();
