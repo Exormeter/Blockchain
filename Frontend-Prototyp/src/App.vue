@@ -53,19 +53,125 @@
                       </v-text-field>
                     </v-flex>
                     <v-flex xs12 sm6>
-                      <v-text-field
-                        label="Funding-Laufzeit (in Tagen)"
-                        type="number"
-                        v-model="newObject.fundingDuration">
-                      </v-text-field>
+                      <v-subheader>
+                        Funding-Laufzeit Ende
+                      </v-subheader>
+                      <v-menu
+                        ref="dateMenu1"
+                        v-model="dateMenu1"
+                        :close-on-content-click="false"
+                        :nudge-right="40"
+                        lazy
+                        transition="scale-transition"
+                        offset-y
+                        full-width
+                        max-width="290px"
+                        min-width="290px"
+                      >
+                        <template v-slot:activator="{ on }">
+                          <v-text-field
+                            v-model="dateFormatted1"
+                            label="Date"
+                            hint="DD/MM/YYYY format"
+                            persistent-hint
+                            prepend-icon="event"
+                            @blur="date1 = parseDate(dateFormatted1)"
+                            v-on="on"
+                          ></v-text-field>
+                        </template>
+                        <v-date-picker v-model="date1" no-title @input="dateMenu1 = false"></v-date-picker>
+                      </v-menu>
+                      <v-menu
+                        ref="timeMenu1"
+                        v-model="timeMenu1"
+                        :close-on-content-click="false"
+                        :nudge-right="40"
+                        :return-value.sync="time1"
+                        lazy
+                        transition="scale-transition"
+                        offset-y
+                        full-width
+                        max-width="290px"
+                        min-width="290px"
+                      >
+                        <template v-slot:activator="{ on }">
+                          <v-text-field
+                            v-model="time1"
+                            label="Picker in timeMenu1"
+                            prepend-icon="access_time"
+                            readonly
+                            v-on="on"
+                          ></v-text-field>
+                        </template>
+                        <v-time-picker
+                          v-if="timeMenu1"
+                          v-model="time1"
+                          full-width
+                          format="24hr"
+                          @click:minute="$refs.timeMenu1.save(time1)"
+                        ></v-time-picker>
+                      </v-menu>
                     </v-flex>
                     <v-flex xs12 sm6>
-                      <v-text-field
-                        label="Projekt-Laufzeit (in Tagen)"
-                        type="number"
-                        v-model="newObject.duration">
-                      </v-text-field>
-                    </v-flex>
+                      <v-subheader>
+                        Projekt-Laufzeit Ende
+                      </v-subheader>
+                      <v-menu
+                        ref="dateMenu2"
+                        v-model="dateMenu2"
+                        :close-on-content-click="false"
+                        :nudge-right="40"
+                        lazy
+                        transition="scale-transition"
+                        offset-y
+                        full-width
+                        max-width="290px"
+                        min-width="290px"
+                      >
+                        <template v-slot:activator="{ on }">
+                          <v-text-field
+                            v-model="dateFormatted2"
+                            label="Date"
+                            hint="DD/MM/YYYY format"
+                            persistent-hint
+                            prepend-icon="event"
+                            @blur="date2 = parseDate(dateFormatted2)"
+                            v-on="on"
+                          ></v-text-field>
+                        </template>
+                        <v-date-picker v-model="date2" no-title @input="dateMenu2 = false"></v-date-picker>
+                      </v-menu>
+                      <v-menu
+                        ref="timeMenu2"
+                        v-model="timeMenu2"
+                        :close-on-content-click="false"
+                        :nudge-right="40"
+                        :return-value.sync="time2"
+                        lazy
+                        transition="scale-transition"
+                        offset-y
+                        full-width
+                        max-width="290px"
+                        min-width="290px"
+                      >
+                        <template v-slot:activator="{ on }">
+                          <v-text-field
+                            v-model="time2"
+                            label="Picker in timeMenu2"
+                            prepend-icon="access_time"
+                            readonly
+                            v-on="on"
+                          ></v-text-field>
+                        </template>
+                        <v-time-picker
+                          v-if="timeMenu2"
+                          v-model="time2"
+                          full-width
+                          format="24hr"
+                          @click:minute="$refs.timeMenu2.save(time2)"
+                        ></v-time-picker>
+                      </v-menu>
+                    </v-flex>                                
                   </v-layout>
                 </v-container>
               </v-card-text>
@@ -160,16 +266,17 @@
                 <span>Verfügbare Backing-Optionen</span>
               </v-card-title>
               <v-card-text class="pt-0" v-for="(option, index) in currentOptions" :key="index">
+                <v-divider></v-divider>
                 <div>
                   <div class="headline">{{ option[0] }}</div>
                   <div>{{ option[1] }}</div>
-                  <div><b>Kosten: </b> <span>{{ option[2] }} Wei</span></div>
+                  <div><b>Kosten: </b> <span>{{ option[2] / 10**18 }} ETH (${{(exchangeRate * option[2] / 10**18).toFixed(2) }})</span></div>
                   <div><b>Verfügbare Anzahl: </b> <span>{{ option[3] }}</span></div>
                   <v-btn
                     color="blue darken-1"
                     flat
                     @click="addInvestor(activeIndex, index, option[2])"
-                    :disabled="option[3] == 0 || account == projectData[activeIndex].projectStarter || projectData[activeIndex].currentState == 0"
+                    :disabled="option[3] == 0 || isStarter() || getProjectState() == 0"
                     :loading="newObject.isLoading"
                   >
                   Wählen
@@ -191,44 +298,61 @@
           </v-dialog>
         </v-layout>
 
-
         <v-layout row justify-center>
           <v-dialog v-model="viewRequestDialog" max-width="600px" persistent>
-
             <v-card>
-              <v-card-title class="headline" primary-title>
-                <span>Aktuelle Anfrage</span>
+              <v-card-title primary-title>
+                <span  class="headline">Aktuelle Anfrage -</span><span style="margin-top:3px; margin-left:5px; font-weight:bold;">Noch verfügbare ETH: {{ remainingFunds / 10**18 }} ETH</span>
               </v-card-title>
               <v-card-text class="pt-0">
+                <v-divider></v-divider>
                 <div>
-                  <div class="headline">{{ currentRequest[0] }}</div>
-                  <div>{{ currentRequest[1] }}</div>
-                  <div><b>Kosten: </b><span>{{ currentRequest[3] }} Wei</span></div>
-                  <div><b>Laufzeit bis: </b><span>{{ new Date(parseInt(currentRequest[2])) }}</span></div>
-                  <div><b>Anzahl Stimmen: </b><span class="blue--text"> {{currentRequest['numberAcceptedVotes']}} </span> | <span class="red--text"> {{currentRequest['numberRejectedVotes']}} </span></div>
+                  <div class="headline">{{ currentRequest.requestTitle }}</div>
+                  <div>{{ currentRequest.requestDescription }}</div>
+                  <div><b>Kosten: </b><span>{{ currentRequest.amount / 10**18 }} ETH (${{(exchangeRate * currentRequest.amount / 10**18).toFixed(2)}})</span></div>
+                  <div><b>Laufzeit bis: </b><span>{{ new Date(parseInt(currentRequest.valideUntil)) }}</span></div>
+                  <div><b>Anzahl Stimmen: </b><span class="blue--text"> {{currentRequest.numberAcceptedVotes}} </span> | <span class="red--text"> {{currentRequest.numberRejectedVotes}} </span></div>
                   <v-btn
-                    v-if="this.projectData[activeIndex] != account"
+                    v-if="!isStarter() && isInvestor()"
                     color="blue darken-1"
                     flat
                     @click="voteForCurrentRequest(activeIndex, true)"
+                    :disabled="currentRequest.voteStatus != 2"
                   >
                   Akzeptieren
                   </v-btn>
                   <v-btn
-                    v-if="this.projectData[activeIndex] != account"
+                    v-if="!isStarter() && isInvestor()"
                     color="red darken-1"
                     flat
                     @click="voteForCurrentRequest(activeIndex, false)"
+                    :disabled="currentRequest.voteStatus != 2"
                   >
                   Ablehnen
                   </v-btn>
                   <v-btn
-                    v-if="this.projectData[activeIndex] == account"
+                    v-if="isStarter() && isRequestFinished(currentRequest.valideUntil)"
                     color="blue darken-1"
                     flat
                     @click="requestPayout(activeIndex)"
                   >
                   Auszahlen
+                  </v-btn>
+                  <v-btn
+                    v-if="!isStarter() && isProjectFinished() && isInvestor()"
+                    color="blue darken-1"
+                    flat
+                    @click="requestRefundRemainingFunds(activeIndex)"
+                  >
+                  Partiell 
+                  </v-btn>
+                  <v-btn
+                    v-if="!isStarter() && getProjectState() == 4 && isInvestor()"
+                    color="blue darken-1"
+                    flat
+                    @click="requestPayback(activeIndex)"
+                  >
+                  Refund 
                   </v-btn>
                 </div>
               </v-card-text>
@@ -317,31 +441,32 @@
         <h1 class="display-1 font-weight-bold mb-3">
           Projekte
         </h1>
+        <div class="search-wrapper">
+          <input type="text" v-model="search" placeholder="Search title.."/>
+          <label>Search title:</label>
+        </div>
+        <v-radio-group v-model="filterValue" row>
+          <v-radio
+            :key="0"
+            :label="`All`"
+            :value="0"
+            @change="getProjects()"
+          ></v-radio>
+          <v-radio
+            :key="1"
+            :label="`Backed`"
+            :value="1"
+            @change="getProjectCountForInvestor()"
+          ></v-radio>
+          <v-radio
+            :key="2"
+            :label="`Owned`"
+            :value="2"
+            @change="getProjectCountForFounder()"
+          ></v-radio>
+        </v-radio-group>
         <v-layout row wrap>
-          <v-flex v-for="(project, index) in projectData" :key="index" xs12 sm6 md4>
-            <v-dialog
-              v-model="project.dialog"
-              width="800"
-            >
-              <v-card>
-                <v-card-title class="headline font-weight-bold">
-                  {{ project.projectTitle }}
-                </v-card-title>
-                <v-card-text>
-                  {{ project.projectDesc }}
-                </v-card-text>
-                <v-card-actions>
-                  <v-spacer></v-spacer>
-                  <v-btn
-                    color="blue darken-1"
-                    flat="flat"
-                    @click="projectData[index].dialog = false"
-                  >
-                    Close
-                  </v-btn>
-                </v-card-actions>
-              </v-card>
-            </v-dialog>
+          <v-flex v-for="(project, index) in filteredProjects" :key="index" xs12 sm6 md4>
             <v-hover>
               <v-card
                 slot-scope="{ hover }"
@@ -358,11 +483,12 @@
                       </v-chip>
                       {{ project.projectTitle }}
                     </div>
+                    <span
+                      v-if="project.projectStarter == account" class="green--text">
+                        Projektgründer
+                    </span>
                     <br/>
                     <span>{{ project.projectDesc }}</span>
-                    <!--<span v-if="project.projectDesc.length > 100">
-                      ... <a @click="projectData[index].dialog = true">[Show full]</a>
-                    </span>-->
                     <br/><br/>
                     <small>Funding-Laufzeit bis: <b>{{ new Date(project.fundingDeadline).toLocaleString() }}</b></small>
                     <br/>
@@ -378,7 +504,7 @@
                   <v-btn
                     class="mt-3"
                     color="light-blue darken-1 white--text"
-                    @click="getBackingOptions(index); activeIndex = index;"
+                    @click="getBackingOptions(project.index); activeIndex = project.index;"
                     :loading="project.isLoading"
                   >
                   View
@@ -391,7 +517,7 @@
                   <v-btn
                     class="mt-3"
                     color="light-blue darken-1 white--text"
-                    @click="getCurrentRequest(index); activeIndex = index;"
+                    @click="getCurrentRequest(project.index); activeIndex = project.index;"
                     :loading="project.isLoading"
                   >
                   Show Request
@@ -404,7 +530,7 @@
                   <v-btn
                     class="mt-3"
                     color="light-blue darken-1 white--text"
-                    @click="addRequestDialog = true; activeIndex = index;"
+                    @click="addRequestDialog = true; activeIndex = project.index;"
                     :loading="project.isLoading"
                   >
                     Add Request
@@ -417,7 +543,7 @@
                   <v-btn
                     class="mt-3"
                     color="light-blue darken-1 white--text"
-                    @click="addBackingOptionDialog = true; activeIndex = index;"
+                    @click="addBackingOptionDialog = true; activeIndex = project.index;"
                     :loading="project.isLoading"
                   >
                     Add Option
@@ -430,7 +556,7 @@
                   <v-btn
                     class="mt-3"
                     color="light-blue darken-1 white--text"
-                    @click="closeAddingBackingOptionPeriode(index); activeIndex = index;"
+                    @click="closeAddingBackingOptionPeriode(project.index); activeIndex = project.index;"
                     :loading="project.isLoading"
                   >
                   Close
@@ -443,7 +569,7 @@
                   <v-btn
                     class="mt-3"
                     color="light-blue darken-1 white--text"
-                    @click="requestPayback(index); activeIndex = index;"
+                    @click="requestPayback(project.index); activeIndex = project.index;"
                     :loading="project.isLoading"
                   >
                   Refund
@@ -453,12 +579,12 @@
 
                 <v-card-actions class="text-xs-center">
                   <span class="font-weight-bold" style="width: 200px;">
-                    {{ project.currentAmount / 10**18 }} ETH
+                    {{ project.peekBalance / 10**18 }} ETH
                   </span>
                   <v-progress-linear
                     height="10"
                     :color="stateMap[project.currentState].color"
-                    :value="(project.currentAmount / project.goalAmount) * 100"
+                    :value="(project.peekBalance / project.goalAmount) * 100"
                   ></v-progress-linear>
                   <span class="font-weight-bold" style="width: 200px;">
                     {{ project.goalAmount / 10**18 }} ETH
@@ -478,11 +604,13 @@
 import crowdfundInstance from '../contracts/crowdFundInstanceNew';
 import crowdfundProject from '../contracts/crowdFundProjectInstanceNew';
 import web3 from '../contracts/web3';
+import axios from "axios";
 
 export default {
   name: 'App',
   data() {
     return {
+      search: '',
       startProjectDialog: false,
       addBackingOptionDialog: false,
       addRequestDialog: false,
@@ -490,23 +618,38 @@ export default {
       viewRequestDialog: false,
       activeIndex: null,
       account: null,
+      remainingFunds: 0,
+      filterValue: 0,
+      exchangeRate: 0,
       stateMap: [
         { color: 'blue-grey lighten-3', text: "Initialisierung"},
         { color: 'primary', text: 'Laufend' },
         { color: 'green', text: "Ziel erreicht"},
-        { color: 'warning  lighten-3', text: 'Abgelaufen' },
         { color: 'success  lighten-3', text: 'Abgeschlossen' },
+        { color: 'warning  lighten-3', text: 'Abgelaufen' },
       ],
       projectData: [],
       newObject: { isLoading: false },
       currentOptions: [],
       currentRequest: {},
+      /* Date-/TimePicker */
+      date1: new Date().toISOString().substr(0, 10),
+      date2: new Date().toISOString().substr(0, 10),
+      dateFormatted1: this.formatDate(new Date().toISOString().substr(0, 10)),
+      dateFormatted2: this.formatDate(new Date().toISOString().substr(0, 10)),
+      dateMenu1: false,
+      dateMenu2: false,
+      timeMenu1: false,
+      timeMenu2: false,
+      time1 : null,
+      time2 : null,
     };
   },
   mounted() {
     // this code snippet takes the account (wallet) that is currently active
     web3.eth.getAccounts().then((accounts) => {
       [this.account] = accounts;
+      this.currentConversionRate();
       this.getProjects();
     });
   },
@@ -521,17 +664,18 @@ export default {
     },
     getProject(projectIndex) {
       crowdfundInstance.methods.getProjects(projectIndex).call().then(async (projectData) => {
-        console.log(projectData);
         const projectInfo = {}
         projectInfo.projectTitle = projectData.projectName;
         projectInfo.projectDesc = projectData.projectDescription;
         projectInfo.projectStarter = projectData.owner;
-        projectInfo.fundingDeadline = new Date(parseInt(projectData.fundigCloseDate));
-        projectInfo.projectDeadline = new Date(parseInt(projectData.projectClosingDate));
+        projectInfo.fundingDeadline = new Date(parseInt(projectData.fundigCloseDate)*1000);
+        projectInfo.projectDeadline = new Date(parseInt(projectData.projectClosingDate)*1000);
         projectInfo.goalAmount = projectData.goal;
         projectInfo.currentAmount = 0;
+        projectInfo.peekBalance = 0;
         projectInfo.isLoading = false;
         projectInfo.contract = projectData.projectAdress;
+        projectInfo.index = projectIndex;
         this.getBalance(projectInfo, projectData.projectAdress);
       });
     },
@@ -539,24 +683,37 @@ export default {
       try {
         var balance = await web3.eth.getBalance(contract);
         projectInfo.currentAmount = balance;
-        this.getInvestorCount(projectInfo, contract);
+        this.getPeekBalance(projectInfo, contract);
       } catch (err) {
         projectInfo.currentAmount = 0;
-        this.getInvestorCount(projectInfo, contract);
+        this.getPeekBalance(projectInfo, contract);
       }
+    },
+    getPeekBalance(projectInfo, contract) {
+      const projectInst = crowdfundProject(contract);
+      projectInst.methods.getPeekBalance().call().then((peekBalance) => {
+        projectInfo.peekBalance = peekBalance; 
+        this.getInvestorCount(projectInfo, contract);
+      });
     },
     startProject() {
       this.newObject.isLoading = true;
-      var fundingDate = new Date();
-      fundingDate.setMinutes(fundingDate.getMinutes()+parseFloat(this.newObject.fundingDuration)*24*60);
-      var goalDate = new Date();
-      goalDate.setMinutes(goalDate.getMinutes()+parseFloat(this.newObject.duration)*24*60);
+
+      var fundingDate = new Date(this.date1);
+      var fundingTime = this.time1.split(":");
+      fundingDate.setHours(fundingTime[0], fundingTime[1]);
+
+      var goalDate = new Date(this.date2);
+      var goalTime = this.time2.split(":");
+      goalDate.setHours(goalTime[0], goalTime[1]);
+
+
       crowdfundInstance.methods.addNewProject(
         this.newObject.title,
         this.newObject.description,
         web3.utils.toWei(this.newObject.amountGoal, 'ether'),
-        fundingDate.getTime(),
-        goalDate.getTime()
+        (fundingDate.getTime()/1000).toFixed(0),
+        (goalDate.getTime()/1000).toFixed(0)
       ).send({
         from: this.account
         }).then((isCreated) => {
@@ -577,7 +734,6 @@ export default {
       ).send({
         from: this.account,
       }).then((data) => {
-        console.log(data);
         this.newObject = { isLoading: false };
       });
     },
@@ -616,7 +772,6 @@ export default {
       ).send({
         from: this.account,
       }).then((status) => {
-        console.log(status);
         this.addRequestDialog = false;
       });
     },
@@ -624,8 +779,12 @@ export default {
       const projectInst = crowdfundProject(this.projectData[projectIndex].contract);
       projectInst.methods.getCurrentRequest().call().then((request) => {
         this.currentRequest = request;
-        this.viewRequestDialog = true;
-        console.log(request);
+        this.remainingFunds = this.projectData[projectIndex].currentAmount;
+        this.hasInvestorVotedForCurrentRequest(projectIndex);
+        //this.viewRequestDialog = true;
+      }).catch((err) => {
+        console.log(err);
+        alert("Keine Auszahlungs-Anfragen vorhanden.")    
       });
     },
     voteForCurrentRequest(projectIndex, vote) {
@@ -668,6 +827,15 @@ export default {
         console.log(status);
       });
     },
+    requestRefundRemainingFunds(projectIndex) {
+      const projectInst = crowdfundProject(this.projectData[projectIndex].contract);
+      projectInst.methods.requestRefundRemainingFunds(
+      ).send({
+        from: this.account,
+      }).then((status) => {
+        console.log(status);
+      });
+    },
     closeAddingBackingOptionPeriode(projectIndex) {
       const projectInst = crowdfundProject(this.projectData[projectIndex].contract);
       projectInst.methods.closeAddingBackingOptionPeriode(
@@ -678,21 +846,198 @@ export default {
       });
     },
     currentConversionRate() {
-    var self=this;
-    this.$http.get('https://api.coinmarketcap.com/v1/ticker/ethereum/').then(function(response){
-      if(response.status == "200"){
-          console.log(response);
-        }
-      });
+      var self = this;
+      axios.get('https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=USD').then(function(response){
+        if(response.status == "200"){
+            self.exchangeRate = response.data.USD;
+          } 
+        });
     },
     getContractState(projectInfo, contract) {
       const projectInst = crowdfundProject(contract);
       projectInst.methods.getContractState().call().then((state) => {
         projectInfo.currentState = state;
-        console.log(projectInfo);
-        this.projectData.push(projectInfo);
+        this.projectData.push(projectInfo);        
+        this.projectData.sort((a, b) => (a.index > b.index) ? 1 : -1 );
       });
+    },
+    getProjectCountForFounder() {
+      this.projectData = [];
+      crowdfundInstance.methods.getProjectCountForFounder().call({
+        from: this.account
+        }).then((projectCount) => {      
+          for (var i = 0; i < projectCount; i++){
+            this.getProjectByFounderForIndex(i);
+          }
+	    });
+    },
+    getProjectByFounderForIndex(projectIndex) {
+      crowdfundInstance.methods.getProjectByFounderForIndex(projectIndex).call({
+        from: this.account
+        }).then(
+        async (projectData) => {       
+          const projectInfo = {}
+          projectInfo.projectTitle = projectData[2]
+          projectInfo.projectDesc = projectData[3];
+          projectInfo.projectStarter = projectData[0];
+          projectInfo.fundingDeadline = new Date(parseInt(projectData[5])*1000);
+          projectInfo.projectDeadline = new Date(parseInt(projectData[6])*1000);
+          projectInfo.goalAmount = projectData[4];
+          projectInfo.currentAmount = 0;
+          projectInfo.peekBalance = 0;
+          projectInfo.isLoading = false;
+          projectInfo.contract = projectData[1];
+          projectInfo.index = projectIndex;
+          this.getBalance(projectInfo, projectData[1]);
+      });
+    },
+    getProjectCountForInvestor() {
+      this.projectData = [];
+      crowdfundInstance.methods.getProjectCountForInvestor().call({
+        from: this.account
+        }).then((projectCount) => {      
+          for (var i = 0; i < projectCount; i++){
+            this.getProjectByInvestorForIndex(i);
+          }
+	    });
+    },
+    getProjectByInvestorForIndex(projectIndex) {
+      crowdfundInstance.methods.getProjectByInvestorForIndex(projectIndex).call({
+        from: this.account
+        }).then(
+        async (projectData) => {    
+          const projectInfo = {}
+          projectInfo.projectTitle = projectData[2]
+          projectInfo.projectDesc = projectData[3];
+          projectInfo.projectStarter = projectData[0];
+          projectInfo.fundingDeadline = new Date(parseInt(projectData[5])*1000);
+          projectInfo.projectDeadline = new Date(parseInt(projectData[6])*1000);
+          projectInfo.goalAmount = projectData[4];
+          projectInfo.currentAmount = 0;
+          projectInfo.peekBalance = 0;
+          projectInfo.isLoading = false;
+          projectInfo.contract = projectData[1];
+          projectInfo.index = projectIndex;
+          this.getBalance(projectInfo, projectData[1]);
+      });
+    },
+    hasInvestorVotedForCurrentRequest(projectIndex) {
+      const projectInst = crowdfundProject(this.projectData[projectIndex].contract);
+      projectInst.methods.hasInvestorVotedForCurrentRequest().call({
+        from: this.account
+        }).then(
+        async (voteStatus) => {
+          this.currentRequest.voteStatus = voteStatus;
+          this.viewRequestDialog = true;
+      });
+    },
+    isStarter() {
+      var projectIndex = this.activeIndex;
+      if(this.projectData[projectIndex] != undefined){
+        return (this.projectData[projectIndex].projectStarter == this.account);
+      } else {
+        return false; 
+      }
+    }, 
+    isRequestFinished(requestDeadline){
+      return (new Date().getTime() > new Date(parseInt(requestDeadline)));
+    },
+    isProjectFinished(){
+      var projectIndex = this.activeIndex;
+      if(this.projectData[projectIndex] != undefined){
+        return (new Date().getTime() > this.projectData[projectIndex].projectDeadline);
+      } else {
+        return false; 
+      }
+    },
+    isInvestor(){
+      var projectIndex = this.activeIndex;
+      return true;
+    },
+    getProjectState(){
+      var projectIndex = this.activeIndex;
+      if(this.projectData[projectIndex] != undefined){
+        return this.projectData[projectIndex].currentState
+      } else {
+        return -1; 
+      }
+    },
+    formatDate (date) {
+        if (!date) return null
+
+        const [year, month, day] = date.split('-')
+        return `${month}/${day}/${year}`
+      },
+      parseDate (date) {
+        if (!date) return null
+
+        const [month, day, year] = date.split('/')
+        return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
+      }
+  },
+  computed: {  
+    filteredProjects() {
+      return this.projectData.filter(project => {
+        return project.projectTitle.toLowerCase().includes(this.search.toLowerCase())
+      })
+    },
+    computedDateFormatted1 () {
+        return this.formatDate(this.date1)
+      },
+    computedDateFormatted2 () {
+        return this.formatDate(this.date2)
+      }
+  },
+  watch: {
+      date1 (val) {
+        this.dateFormatted1 = this.formatDate(this.date1)
+      },
+      date2 (val) {
+        this.dateFormatted2 = this.formatDate(this.date2)
+      }
     }
-  }
 };
 </script>
+
+
+<style>
+div#app .search-wrapper {
+  position: relative;
+}
+div#app .search-wrapper label {
+  position: absolute;
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.5);
+  top: 8px;
+  left: 12px;
+  z-index: -1;
+  transition: .15s all ease-in-out;
+}
+div#app .search-wrapper input {
+  padding: 4px 12px;
+  color: rgba(0, 0, 0, 0.7);
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  transition: .15s all ease-in-out;
+  background: white;
+}
+div#app .search-wrapper input:focus {
+  outline: none;
+  transform: scale(1.05);
+}
+div#app .search-wrapper input:focus + label {
+  font-size: 10px;
+  transform: translateY(-24px) translateX(-12px);
+}
+div#app .search-wrapper input::-webkit-input-placeholder {
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.5);
+  font-weight: 100;
+}
+
+.v-chip {
+  margin-right: 4px;
+  margin-top: 4px;
+  margin-bottom: 4px;
+  margin-left: 0px;
+}
+</style>
