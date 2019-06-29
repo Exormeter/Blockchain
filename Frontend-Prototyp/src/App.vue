@@ -58,6 +58,7 @@
                         type="number"
                         v-model="newObject.fundingDuration">
                       </v-text-field>
+                      <!--<date-picker name="date" v-model="date" :config="options"></date-picker>-->
                     </v-flex>
                     <v-flex xs12 sm6>
                       <v-text-field
@@ -170,7 +171,7 @@
                     color="blue darken-1"
                     flat
                     @click="addInvestor(activeIndex, index, option[2])"
-                    :disabled="option[3] == 0 || account == projectData[activeIndex].projectStarter || projectData[activeIndex].currentState == 0"
+                    :disabled="option[3] == 0 || isStarter(activeIndex) || getProjectState(activeIndex) == 0"
                     :loading="newObject.isLoading"
                   >
                   Wählen
@@ -499,6 +500,9 @@ import crowdfundInstance from '../contracts/crowdFundInstanceNew';
 import crowdfundProject from '../contracts/crowdFundProjectInstanceNew';
 import web3 from '../contracts/web3';
 import axios from "axios";
+import datePicker from 'vue-bootstrap-datetimepicker';
+import 'bootstrap/dist/css/bootstrap.css';
+import 'pc-bootstrap4-datetimepicker/build/css/bootstrap-datetimepicker.css';
 
 export default {
   name: 'App',
@@ -525,7 +529,16 @@ export default {
       projectData: [],
       newObject: { isLoading: false },
       currentOptions: [],
-      currentRequest: {}
+      currentRequest: {},
+      date: new Date(),
+      options: {
+        format: 'DD/MM/YYYY h:mm:ss',
+        useCurrent: false,
+        showClear: true,
+        showClose: true,
+        sideBySide: true,
+        toolbarPlacement: 'top'
+      }   
     };
   },
   mounted() {
@@ -841,6 +854,13 @@ export default {
     },
     isInvestor(projectIndex){
       return true;
+    },
+    getProjectState(projectIndex){
+      if(this.projectData[projectIndex] != undefined){
+        return this.projectData[projectIndex].currentState
+      } else {
+        return -1; 
+      }
     }
   },
   computed: {  
@@ -849,7 +869,10 @@ export default {
         return project.projectTitle.toLowerCase().includes(this.search.toLowerCase())
       })
     }
-  }
+  },
+  components: {
+      datePicker
+    }
 };
 </script>
 
