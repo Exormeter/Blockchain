@@ -58,7 +58,6 @@
                         type="number"
                         v-model="newObject.fundingDuration">
                       </v-text-field>
-                      <!--<date-picker name="date" v-model="date" :config="options"></date-picker>-->
                     </v-flex>
                     <v-flex xs12 sm6>
                       <v-text-field
@@ -67,6 +66,118 @@
                         v-model="newObject.duration">
                       </v-text-field>
                     </v-flex>
+                    <v-flex xs12 sm6>
+                      <v-menu
+                        ref="dateMenu1"
+                        v-model="dateMenu1"
+                        :close-on-content-click="false"
+                        :nudge-right="40"
+                        lazy
+                        transition="scale-transition"
+                        offset-y
+                        full-width
+                        max-width="290px"
+                        min-width="290px"
+                      >
+                        <template v-slot:activator="{ on }">
+                          <v-text-field
+                            v-model="dateFormatted1"
+                            label="Date"
+                            hint="MM/DD/YYYY format"
+                            persistent-hint
+                            prepend-icon="event"
+                            @blur="date1 = parseDate(dateFormatted1)"
+                            v-on="on"
+                          ></v-text-field>
+                        </template>
+                        <v-date-picker v-model="date1" no-title @input="dateMenu1 = false"></v-date-picker>
+                      </v-menu>
+                      <v-menu
+                        ref="timeMenu1"
+                        v-model="timeMenu1"
+                        :close-on-content-click="false"
+                        :nudge-right="40"
+                        :return-value.sync="time1"
+                        lazy
+                        transition="scale-transition"
+                        offset-y
+                        full-width
+                        max-width="290px"
+                        min-width="290px"
+                      >
+                        <template v-slot:activator="{ on }">
+                          <v-text-field
+                            v-model="time1"
+                            label="Picker in timeMenu1"
+                            prepend-icon="access_time"
+                            readonly
+                            v-on="on"
+                          ></v-text-field>
+                        </template>
+                        <v-time-picker
+                          v-if="timeMenu1"
+                          v-model="time1"
+                          full-width
+                          @click:minute="$refs.timeMenu1.save(time1)"
+                        ></v-time-picker>
+                      </v-menu>
+                    </v-flex>
+                    <v-flex xs12 sm6>
+                      <v-menu
+                        ref="dateMenu2"
+                        v-model="dateMenu2"
+                        :close-on-content-click="false"
+                        :nudge-right="40"
+                        lazy
+                        transition="scale-transition"
+                        offset-y
+                        full-width
+                        max-width="290px"
+                        min-width="290px"
+                      >
+                        <template v-slot:activator="{ on }">
+                          <v-text-field
+                            v-model="dateFormatted2"
+                            label="Date"
+                            hint="MM/DD/YYYY format"
+                            persistent-hint
+                            prepend-icon="event"
+                            @blur="date2 = parseDate(dateFormatted2)"
+                            v-on="on"
+                          ></v-text-field>
+                        </template>
+                        <v-date-picker v-model="date2" no-title @input="dateMenu2 = false"></v-date-picker>
+                      </v-menu>
+                      <v-menu
+                        ref="timeMenu2"
+                        v-model="timeMenu2"
+                        :close-on-content-click="false"
+                        :nudge-right="40"
+                        :return-value.sync="time2"
+                        lazy
+                        transition="scale-transition"
+                        offset-y
+                        full-width
+                        max-width="290px"
+                        min-width="290px"
+                      >
+                        <template v-slot:activator="{ on }">
+                          <v-text-field
+                            v-model="time2"
+                            label="Picker in timeMenu2"
+                            prepend-icon="access_time"
+                            readonly
+                            v-on="on"
+                          ></v-text-field>
+                        </template>
+                        <v-time-picker
+                          v-if="timeMenu2"
+                          v-model="time2"
+                          full-width
+                          @click:minute="$refs.timeMenu2.save(time2)"
+                        ></v-time-picker>
+                      </v-menu>
+                    </v-flex>                                
                   </v-layout>
                 </v-container>
               </v-card-text>
@@ -500,9 +611,6 @@ import crowdfundInstance from '../contracts/crowdFundInstanceNew';
 import crowdfundProject from '../contracts/crowdFundProjectInstanceNew';
 import web3 from '../contracts/web3';
 import axios from "axios";
-import datePicker from 'vue-bootstrap-datetimepicker';
-import 'bootstrap/dist/css/bootstrap.css';
-import 'pc-bootstrap4-datetimepicker/build/css/bootstrap-datetimepicker.css';
 
 export default {
   name: 'App',
@@ -530,15 +638,17 @@ export default {
       newObject: { isLoading: false },
       currentOptions: [],
       currentRequest: {},
-      date: new Date(),
-      options: {
-        format: 'DD/MM/YYYY h:mm:ss',
-        useCurrent: false,
-        showClear: true,
-        showClose: true,
-        sideBySide: true,
-        toolbarPlacement: 'top'
-      }   
+      /* Date-/TimePicker */
+      date1: new Date().toISOString().substr(0, 10),
+      date2: new Date().toISOString().substr(0, 10),
+      dateFormatted1: this.formatDate(new Date().toISOString().substr(0, 10)),
+      dateFormatted2: this.formatDate(new Date().toISOString().substr(0, 10)),
+      dateMenu1: false,
+      dateMenu2: false,
+      timeMenu1: false,
+      timeMenu2: false,
+      time1 : null,
+      time2 : null,
     };
   },
   mounted() {
@@ -851,6 +961,18 @@ export default {
       } else {
         return -1; 
       }
+    },
+    formatDate (date) {
+        if (!date) return null
+
+        const [year, month, day] = date.split('-')
+        return `${month}/${day}/${year}`
+    },
+    parseDate (date) {
+      if (!date) return null
+
+      const [month, day, year] = date.split('/')
+      return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
     }
   },
   computed: {  
@@ -858,10 +980,21 @@ export default {
       return this.projectData.filter(project => {
         return project.projectTitle.toLowerCase().includes(this.search.toLowerCase())
       })
-    }
+    },
+    computedDateFormatted1 () {
+        return this.formatDate(this.date1)
+      },
+    computedDateFormatted2 () {
+        return this.formatDate(this.date2)
+      }
   },
-  components: {
-      datePicker
+  watch: {
+      date1 (val) {
+        this.dateFormatted1 = this.formatDate(this.date1)
+      },
+      date2 (val) {
+        this.dateFormatted2 = this.formatDate(this.date2)
+      }
     }
 };
 </script>
