@@ -286,6 +286,8 @@ contract ProjectContract is Ownable{
     {
         require(_valideUntil > block.timestamp, "The given date is in the past");
 
+        require(_valideUntil < projectClosingDate, "Request deadline is behind project deadline");
+
         require(fundingGoal < address(this).balance, "Funding Goal was not reached yet");
 
         require(projectClosingDate > block.timestamp, "Project has ended");
@@ -428,6 +430,18 @@ contract ProjectContract is Ownable{
             uint paybackAmount = ((remainingFunds / precision) * percentage);
             investorAddress.transfer(paybackAmount);
         }
+    }
+
+    /**
+    * @notice Check if caller address is investor in the project
+    * @return Returns true iof caller is investor in project
+    */
+    function isUserInvestor() public view returns (bool)
+    {
+        if(Investors[msg.sender].investorExists == 0){
+            return false;
+        }
+        return true;
     }
 
     function () external payable {
