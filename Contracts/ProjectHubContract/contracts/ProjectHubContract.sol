@@ -132,8 +132,13 @@ contract ProjectHubContract{
     * @return Funding goal
     * @return Funding closeing Date
     */
-    function getProjectByFounderForIndex(uint projectIndex) public view returns (address, address, string memory,
-                                                                                    string memory, uint, uint, uint)
+    function getProjectByFounderForIndex(uint projectIndex) public view returns (address owner,
+                                                                address payable projectAdress,
+                                                                string memory projectName,
+                                                                string memory projectDescription,
+                                                                uint goal,
+                                                                uint fundigCloseDate,
+                                                                uint projectClosingDate)
     {
         require(projectIndex < projectsCreatedByFounder[msg.sender].length, "Index is out of bounds");
 
@@ -168,8 +173,13 @@ contract ProjectHubContract{
     * @return Funding goal
     * @return Funding closeing Date
     */
-    function getProjectByInvestorForIndex(uint projectIndex) public view returns (address, address, string memory,
-                                                                                    string memory, uint, uint, uint)
+    function getProjectByInvestorForIndex(uint projectIndex) public view returns (address owner,
+                                                                address payable projectAdress,
+                                                                string memory projectName,
+                                                                string memory projectDescription,
+                                                                uint goal,
+                                                                uint fundigCloseDate,
+                                                                uint projectClosingDate)
     {
         require(projectIndex < projectsBackedByInvestor[msg.sender].length, "Index is out of bounds");
 

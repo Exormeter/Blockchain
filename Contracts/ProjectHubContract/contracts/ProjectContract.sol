@@ -222,15 +222,17 @@ contract ProjectContract is Ownable{
     function addInvestor(uint backingOptionID) public payable
     {
         require(backingAddingPeriodeIsOver, "The adding backing option periode is not over yet");
-        uint  optionIndex;
-        for (uint i = 0; i<backingOptions.length; i++){
+        uint  optionIndex = 0;
+        bool wasFound = false;
+        for (uint i = 0; i < backingOptions.length; i++){
             if(backingOptions[i].id == backingOptionID){
+                wasFound = true;
                 optionIndex = i;
                 break;
             }
         }
 
-        require(backingOptions[optionIndex].id != 0, "BackingOption was not found");
+        require(wasFound, "BackingOption was not found");
 
         require(msg.value == backingOptions[optionIndex].optionAmountEther, "Send Ether amount is not equal to backing price");
 

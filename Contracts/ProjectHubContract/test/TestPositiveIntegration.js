@@ -101,6 +101,7 @@ contract("ContractHub positive", accounts => {
         let investorAccountThree = accounts[3];
         let investorAccountFour = accounts[4];
         let investorAccountFive = accounts[5];
+        let investorAccountSix = accounts[6];
 
         let project = await hub.getProjects(0, {from: creatorAccount});
         let projectContract = await ProjectContract.at(project[1]);
@@ -109,6 +110,7 @@ contract("ContractHub positive", accounts => {
         await projectContract.addInvestor(1, {from: investorAccountTwo, value: 500});
         await projectContract.addInvestor(1, {from: investorAccountThree, value: 500});
         await projectContract.addInvestor(1, {from: investorAccountFour, value: 500});
+        await projectContract.addInvestor(2, {from: investorAccountSix, value: 500});
         await projectContract.voteForCurrentRequest(true, {from: investorAccountOne});
         await projectContract.voteForCurrentRequest(true, {from: investorAccountTwo});
         await projectContract.voteForCurrentRequest(true, {from: investorAccountThree});
@@ -171,7 +173,7 @@ contract("ContractHub positive", accounts => {
         let project = await hub.getProjects(0, {from: creatorAccount});
         let projectContract = await ProjectContract.at(project[1]);
         let investorCount  = await projectContract.getInvestorCount({from: creatorAccount});
-        assert.equal(4, investorCount);
+        assert.equal(5, investorCount);
     })
 
     it("Should pay the Creator", async () => {
