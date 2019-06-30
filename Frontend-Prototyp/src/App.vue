@@ -276,7 +276,7 @@
                     color="blue darken-1"
                     flat
                     @click="addInvestor(activeIndex, index, option[2])"
-                    :disabled="option[3] == 0 || isStarter() || getProjectState() == 0 || !isInvestor()"
+                    :disabled="option[3] == 0 || isStarter() || getProjectState() == 0 || isInvestor()"
                     :loading="newObject.isLoading"
                   >
                   Wählen
@@ -752,6 +752,7 @@ export default {
     getBackingOption(projectIndex, optionIndex) {
       const projectInst = crowdfundProject(this.projectData[projectIndex].contract);
       projectInst.methods.getBackingOption(optionIndex).call().then((backingOption) => {
+        console.log(backingOption);
         backingOption.index = optionIndex;
         this.currentOptions.push(backingOption);
         this.currentOptions.sort((a, b) => (a.index > b.index) ? 1 : -1 );       
@@ -807,7 +808,7 @@ export default {
       this.newObject.isLoading = true;
       const projectInst = crowdfundProject(this.projectData[projectIndex].contract);
       projectInst.methods.addInvestor(
-        optionId,
+        (optionId+1).toString(),
       ).send({
         from: this.account,
         value: optionValue,
