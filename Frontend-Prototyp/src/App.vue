@@ -804,10 +804,9 @@ export default {
       });
     },
     addInvestor(projectIndex, optionId, optionValue) {
-      console.log(optionId);
       this.newObject.isLoading = true;
       const projectInst = crowdfundProject(this.projectData[projectIndex].contract);
-      /*projectInst.methods.addInvestor(
+      projectInst.methods.addInvestor(
         optionId,
       ).send({
         from: this.account,
@@ -815,7 +814,7 @@ export default {
       }).then((status) => {
         this.newObject.isLoading = false;
         this.getProjects();
-      });*/
+      });
     },
     requestPayback(projectIndex) {
       const projectInst = crowdfundProject(this.projectData[projectIndex].contract);
