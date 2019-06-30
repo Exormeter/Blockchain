@@ -276,7 +276,7 @@
                     color="blue darken-1"
                     flat
                     @click="addInvestor(activeIndex, index, option[2])"
-                    :disabled="option[3] == 0 || isStarter() || getProjectState() == 0"
+                    :disabled="option[3] == 0 || isStarter() || getProjectState() == 0 || !isInvestor()"
                     :loading="newObject.isLoading"
                   >
                   Wählen
@@ -745,12 +745,18 @@ export default {
           alert("Noch keine Backing-Optionen verfügbar.")
         }
         for (var i = 0; i < backingOptionCount; i++){
-          projectInst.methods.getBackingOption(i).call().then((backingOption) => {
-            this.currentOptions.push(backingOption);
-            this.viewBackingOptionsDialog = true;
-          });
+          this.getBackingOption(projectIndex, i);
         }
       });
+    },
+    getBackingOption(projectIndex, optionIndex) {
+      const projectInst = crowdfundProject(this.projectData[projectIndex].contract);
+      projectInst.methods.getBackingOption(optionIndex).call().then((backingOption) => {
+        backingOption.index = optionIndex;
+        this.currentOptions.push(backingOption);
+        this.currentOptions.sort((a, b) => (a.index > b.index) ? 1 : -1 );       
+        this.viewBackingOptionsDialog = true;
+      });       
     },
     getInvestorCount(projectInfo, contract) {
       const projectInst = crowdfundProject(contract);
@@ -798,16 +804,18 @@ export default {
       });
     },
     addInvestor(projectIndex, optionId, optionValue) {
+      console.log(optionId);
       this.newObject.isLoading = true;
       const projectInst = crowdfundProject(this.projectData[projectIndex].contract);
-      projectInst.methods.addInvestor(
+      /*projectInst.methods.addInvestor(
         optionId,
       ).send({
         from: this.account,
         value: optionValue,
       }).then((status) => {
         this.newObject.isLoading = false;
-      });
+        this.getProjects();
+      });*/
     },
     requestPayback(projectIndex) {
       const projectInst = crowdfundProject(this.projectData[projectIndex].contract);
