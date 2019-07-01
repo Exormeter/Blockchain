@@ -339,21 +339,21 @@
                   Auszahlen
                   </v-btn>
                   <v-btn
-                    v-if="!isStarter() && isProjectFinished() && isInvestor()"
+                    v-if="!isStarter() && isProjectFinished() && !checkRefundStatus()"
                     color="blue darken-1"
                     flat
                     @click="requestRefundRemainingFunds(activeIndex)"
                   >
                   Partiell
                   </v-btn>
-                  <v-btn
-                    v-if="!isStarter() && getProjectState() == 4 && isInvestor()"
+                  <!--<v-btn
+                    v-if="!isStarter() && getProjectState() == 4 && !checkRefundStatus(activeIndex)"
                     color="blue darken-1"
                     flat
                     @click="requestPayback(activeIndex)"
                   >
                   Refund
-                  </v-btn>
+                  </v-btn>-->
                 </div>
               </v-card-text>
               <v-divider></v-divider>
@@ -617,7 +617,7 @@
                 </v-flex>
 
                 <v-flex
-                  v-if="project.currentState == 4 "
+                  v-if="project.currentState == 4 && !checkRefundStatus(project.index)"
                   class="d-flex ml-3" xs12 sm6 md3>
                   <v-btn
                     class="mt-3"
@@ -926,8 +926,8 @@ export default {
       const projectInst = crowdfundProject(contract);
       projectInst.methods.getContractState().call().then((state) => {
         projectInfo.currentState = state;
-        this.projectData.push(projectInfo);
-        this.projectData.sort((a, b) => (a.index > b.index) ? 1 : -1 );
+        projectInfo.refundStatus = true;
+        this.contractWasRefunded(projectInfo);
       });
     },
     getProjectCountForFounder() {
@@ -1052,6 +1052,34 @@ export default {
       },
     isInvestor() {
       return this.isProjectInvestor;
+    },
+    contractWasPartiallyRefunded() {
+      var projectIndex = this.activeIndex;
+      const projectInst = crowdfundProject(this.projectData[projectIndex].contract);
+      projectInst.methods.contractWasPartiallyRefunded().call({
+        from: this.account
+        }).then(
+        async (refundStatus) => {
+          this.projectData[projectIndex].refundStatus = refundStatus;
+      });
+    },
+    contractWasRefunded(projectInfo) {
+      const projectInst = crowdfundProject(projectInfo.contract);
+      projectInst.methods.contractWasRefunded().call({
+        from: this.account
+        }).then(
+        async (refundStatus) => {
+          projectInfo.refundStatus = refundStatus;
+          this.projectData.push(projectInfo);
+          this.projectData.sort((a, b) => (a.index > b.index) ? 1 : -1 );
+      });
+    },
+    checkRefundStatus(projectIndex) {
+      if(this.projectData[projectIndex] != undefined){
+        return this.projectData[projectIndex].refundStatus;
+      } else {
+        return true;
+      }
     }
   },
   computed: {
