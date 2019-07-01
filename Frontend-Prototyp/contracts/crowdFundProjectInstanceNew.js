@@ -237,23 +237,23 @@ const abi = [
 		"name": "getBackingOption",
 		"outputs": [
 			{
-				"name": "",
+				"name": "optionTitle",
 				"type": "string"
 			},
 			{
-				"name": "",
+				"name": "optionDescription",
 				"type": "string"
 			},
 			{
-				"name": "",
+				"name": "optionsAmountEther",
 				"type": "uint256"
 			},
 			{
-				"name": "",
+				"name": "optionAvailablity",
 				"type": "int256"
 			},
 			{
-				"name": "",
+				"name": "id",
 				"type": "uint256"
 			}
 		],
