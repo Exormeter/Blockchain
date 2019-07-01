@@ -72,7 +72,7 @@
                           <v-text-field
                             v-model="dateFormatted1"
                             label="Date"
-                            hint="DD/MM/YYYY format"
+                            hint="MM/DD/YYYY format"
                             persistent-hint
                             prepend-icon="event"
                             @blur="date1 = parseDate(dateFormatted1)"
@@ -132,7 +132,7 @@
                           <v-text-field
                             v-model="dateFormatted2"
                             label="Date"
-                            hint="DD/MM/YYYY format"
+                            hint="MM/DD/YYYY format"
                             persistent-hint
                             prepend-icon="event"
                             @blur="date2 = parseDate(dateFormatted2)"
@@ -276,7 +276,7 @@
                     color="blue darken-1"
                     flat
                     @click="addInvestor(activeIndex, index, option[2])"
-                    :disabled="option[3] == 0 || isStarter() || getProjectState() == 0 || isInvestor2()"
+                    :disabled="option[3] == 0 || isStarter() || getProjectState() == 0 || isInvestor()"
                     :loading="newObject.isLoading"
                   >
                   Wählen
@@ -310,10 +310,10 @@
                   <div class="headline">{{ currentRequest.requestTitle }}</div>
                   <div>{{ currentRequest.requestDescription }}</div>
                   <div><b>Kosten: </b><span>{{ currentRequest.amount / 10**18 }} ETH (${{(exchangeRate * currentRequest.amount / 10**18).toFixed(2)}})</span></div>
-                  <div><b>Laufzeit bis: </b><span>{{ new Date(parseInt(currentRequest.valideUntil)) }}</span></div>
+                  <div><b>Laufzeit bis: </b><span>{{ new Date(parseInt(currentRequest.valideUntil)*1000) }}</span></div>
                   <div><b>Anzahl Stimmen: </b><span class="blue--text"> {{currentRequest.numberAcceptedVotes}} </span> | <span class="red--text"> {{currentRequest.numberRejectedVotes}} </span></div>
                   <v-btn
-                    v-if="!isStarter() && isInvestor2()"
+                    v-if="!isStarter() && isInvestor()"
                     color="blue darken-1"
                     flat
                     @click="voteForCurrentRequest(activeIndex, true)"
@@ -322,7 +322,7 @@
                   Akzeptieren
                   </v-btn>
                   <v-btn
-                    v-if="!isStarter() && isInvestor2()"
+                    v-if="!isStarter() && isInvestor()"
                     color="red darken-1"
                     flat
                     @click="voteForCurrentRequest(activeIndex, false)"
@@ -339,7 +339,7 @@
                   Auszahlen
                   </v-btn>
                   <v-btn
-                    v-if="!isStarter() && isProjectFinished() && isInvestor2()"
+                    v-if="!isStarter() && isProjectFinished() && isInvestor()"
                     color="blue darken-1"
                     flat
                     @click="requestRefundRemainingFunds(activeIndex)"
@@ -347,7 +347,7 @@
                   Partiell
                   </v-btn>
                   <v-btn
-                    v-if="!isStarter() && getProjectState() == 4 && isInvestor2()"
+                    v-if="!isStarter() && getProjectState() == 4 && isInvestor()"
                     color="blue darken-1"
                     flat
                     @click="requestPayback(activeIndex)"
@@ -397,17 +397,70 @@
                     </v-flex>
                     <v-flex xs12 sm6>
                       <v-text-field
-                        label="Laufzeit (in Tagen)"
-                        type="number"
-                        v-model="newObject.validUntil">
-                      </v-text-field>
-                    </v-flex>
-                    <v-flex xs12 sm6>
-                      <v-text-field
                         label="Benötigte Menge"
                         type="number"
                         v-model="newObject.amount">
                       </v-text-field>
+                    </v-flex>
+                    <v-flex xs12 sm6>
+                      <v-subheader>
+                        Request-Laufzeit Ende
+                      </v-subheader>
+                      <v-menu
+                        ref="dateMenu3"
+                        v-model="dateMenu3"
+                        :close-on-content-click="false"
+                        :nudge-right="40"
+                        lazy
+                        transition="scale-transition"
+                        offset-y
+                        full-width
+                        max-width="290px"
+                        min-width="290px"
+                      >
+                        <template v-slot:activator="{ on }">
+                          <v-text-field
+                            v-model="dateFormatted3"
+                            label="Date"
+                            hint="MM/DD/YYYY format"
+                            persistent-hint
+                            prepend-icon="event"
+                            @blur="date3 = parseDate(dateFormatted3)"
+                            v-on="on"
+                          ></v-text-field>
+                        </template>
+                        <v-date-picker v-model="date3" no-title @input="dateMenu3 = false"></v-date-picker>
+                      </v-menu>
+                      <v-menu
+                        ref="timeMenu3"
+                        v-model="timeMenu3"
+                        :close-on-content-click="false"
+                        :nudge-right="40"
+                        :return-value.sync="time3"
+                        lazy
+                        transition="scale-transition"
+                        offset-y
+                        full-width
+                        max-width="290px"
+                        min-width="290px"
+                      >
+                        <template v-slot:activator="{ on }">
+                          <v-text-field
+                            v-model="time3"
+                            label="Picker in timeMenu3"
+                            prepend-icon="access_time"
+                            readonly
+                            v-on="on"
+                          ></v-text-field>
+                        </template>
+                        <v-time-picker
+                          v-if="timeMenu3"
+                          v-model="time3"
+                          full-width
+                          format="24hr"
+                          @click:minute="$refs.timeMenu3.save(time3)"
+                        ></v-time-picker>
+                      </v-menu>
                     </v-flex>
 
                   </v-layout>
@@ -635,15 +688,20 @@ export default {
       /* Date-/TimePicker */
       date1: new Date().toISOString().substr(0, 10),
       date2: new Date().toISOString().substr(0, 10),
+      date3: new Date().toISOString().substr(0, 10),
       dateFormatted1: this.formatDate(new Date().toISOString().substr(0, 10)),
       dateFormatted2: this.formatDate(new Date().toISOString().substr(0, 10)),
+      dateFormatted3: this.formatDate(new Date().toISOString().substr(0, 10)),
       dateMenu1: false,
       dateMenu2: false,
+      dateMenu3: false,
       timeMenu1: false,
       timeMenu2: false,
+      timeMenu3: false,
       time1 : null,
       time2 : null,
-      isInvestor : false
+      time3 : null,
+      isProjectInvestor : false
     };
   },
   mounted() {
@@ -770,8 +828,9 @@ export default {
     },
     addRequest(projectIndex, title, description, date, amount) {
       this.newObject.isLoading = true;
-      var goalDate = new Date();
-      goalDate.setMinutes(goalDate.getMinutes()+parseFloat(this.newObject.validUntil)*24*60);
+      var goalDate = new Date(this.date3);
+      var goalTime = this.time3.split(":");
+      goalDate.setHours(goalTime[0], goalTime[1]);
       const projectInst = crowdfundProject(this.projectData[projectIndex].contract);
       projectInst.methods.addRequest(
         this.newObject.title,
@@ -787,10 +846,10 @@ export default {
     getCurrentRequest(projectIndex) {
       const projectInst = crowdfundProject(this.projectData[projectIndex].contract);
       projectInst.methods.getCurrentRequest().call().then((request) => {
+        this.isUserInvestor();
         this.currentRequest = request;
         this.remainingFunds = this.projectData[projectIndex].currentAmount;
         this.hasInvestorVotedForCurrentRequest(projectIndex);
-        //this.viewRequestDialog = true;
       }).catch((err) => {
         console.log(err);
         alert("Keine Auszahlungs-Anfragen vorhanden.")
@@ -937,6 +996,7 @@ export default {
         from: this.account
         }).then(
         async (voteStatus) => {
+        console.log(voteStatus);
           this.currentRequest.voteStatus = voteStatus;
           this.viewRequestDialog = true;
       });
@@ -963,11 +1023,11 @@ export default {
     isUserInvestor(){
       var projectIndex = this.activeIndex;
       const projectInst = crowdfundProject(this.projectData[projectIndex].contract);
-      projectInst.methods.hasInvestorVotedForCurrentRequest().call({
+      projectInst.methods.isUserInvestor().call({
         from: this.account
         }).then(
         async (isInvestor) => {
-          this.isInvestor = (parseInt(isInvestor) == 2);
+          this.isProjectInvestor = isInvestor;
       });
     },
     getProjectState(){
@@ -990,8 +1050,8 @@ export default {
         const [month, day, year] = date.split('/')
         return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
       },
-    isInvestor2() {
-      return this.isInvestor;
+    isInvestor() {
+      return this.isProjectInvestor;
     }
   },
   computed: {
@@ -1005,6 +1065,9 @@ export default {
       },
     computedDateFormatted2 () {
         return this.formatDate(this.date2)
+      },
+    computedDateFormatted3 () {
+        return this.formatDate(this.date3)
       }
   },
   watch: {
@@ -1014,6 +1077,9 @@ export default {
       date2 (val) {
         this.dateFormatted2 = this.formatDate(this.date2)
       },
+      date3 (val) {
+        this.dateFormatted3 = this.formatDate(this.date3)
+      }
     }
 };
 </script>
