@@ -39,6 +39,8 @@ contract("Payback", accounts => {
 
         await projectContract.requestPayback({from: creatorAccount});
 
+        let wasRefunded = await projectContract.contractWasRefunded();
+
         let investorAccountOneBalanceAfter = await web3.eth.getBalance(investorAccountOne);
         let investorAccountTwoBalanceAfter = await web3.eth.getBalance(investorAccountTwo);
         let investorAccountThreeBalanceAfter = await web3.eth.getBalance(investorAccountThree);
@@ -55,5 +57,6 @@ contract("Payback", accounts => {
         assert.equal(differanceOne, '000000');
         assert.equal(differanceTwo, '000000');
         assert.equal(differanceThree, '000000');
+        assert.equal(true, wasRefunded);
     });
 });

@@ -20,6 +20,8 @@ contract ProjectContract is Ownable{
     bool wasFirstRequestGiven = false;
     bool backingAddingPeriodeIsOver = false;
     bool fundingGoalWasReached = false;
+    bool wasRefunded = false;
+    bool wasPartilyRefunded = false;
     uint fundingGoal;
     uint maxFunding = 0;
     uint fundingClosingDate;
@@ -396,13 +398,24 @@ contract ProjectContract is Ownable{
 
         require(block.timestamp > fundingClosingDate, "The funding periode is not over jet");
 
+        require(!wasRefunded, "Was already refunded");
+
         for(uint i = 0; i<investorAddresses.length; i++){
             uint choosenBackingOptionIndex = Investors[investorAddresses[i]].choosenBackingOptionID - 1;
             address payable investorAddress = investorAddresses[i];
             uint backingAmount = backingOptions[choosenBackingOptionIndex].optionAmountEther;
             investorAddress.transfer(backingAmount);
         }
+        wasRefunded = true;
+    }
 
+    /**
+    * @notice Returns true if the contract was refunded
+    * @return Boolean, true if contract was refunded
+    */
+    function contractWasRefunded() public view returns (bool)
+    {
+        return wasRefunded;
     }
 
     /**
@@ -432,6 +445,16 @@ contract ProjectContract is Ownable{
             uint paybackAmount = ((remainingFunds / precision) * percentage);
             investorAddress.transfer(paybackAmount);
         }
+        wasPartilyRefunded = true;
+    }
+
+    /**
+    * @notice Returns true if the contract was partially refunded
+    * @return Boolean, true if contract was partially refunded
+    */
+    function contractWasPartiallyRefunded() public view returns (bool)
+    {
+        return wasPartilyRefunded;
     }
 
     /**
