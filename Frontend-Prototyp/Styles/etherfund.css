@@ -1,0 +1,45 @@
+div#app .search-wrapper {
+    position: relative;
+}
+div#app .search-wrapper label {
+    position: absolute;
+    font-size: 12px;
+    color: rgba(0, 0, 0, 0.5);
+    top: 8px;
+    left: 12px;
+    z-index: -1;
+    transition: .15s all ease-in-out;
+}
+div#app .search-wrapper input {
+    padding: 4px 12px;
+    color: rgba(0, 0, 0, 0.7);
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    transition: .15s all ease-in-out;
+    background: white;
+}
+div#app .search-wrapper input:focus {
+    outline: none;
+    transform: scale(1.05);
+}
+div#app .search-wrapper input:focus + label {
+    font-size: 10px;
+    transform: translateY(-24px) translateX(-12px);
+}
+div#app .search-wrapper input::-webkit-input-placeholder {
+    font-size: 12px;
+    color: rgba(0, 0, 0, 0.5);
+    font-weight: 100;
+}
+
+.v-chip {
+    margin-right: 4px;
+    margin-top: 4px;
+    margin-bottom: 4px;
+    margin-left: 0px;
+}
+
+.remainingFunds {
+    margin-top: 3px;
+    margin-left: 5px;
+    font-weight: bold;
+}
