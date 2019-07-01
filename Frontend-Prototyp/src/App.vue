@@ -70,16 +70,16 @@
                       >
                         <template v-slot:activator="{ on }">
                           <v-text-field
-                            v-model="dateFormatted1"
+                            v-model="fundingDateFormatted"
                             label="Date"
                             hint="MM/DD/YYYY format"
                             persistent-hint
                             prepend-icon="event"
-                            @blur="date1 = parseDate(dateFormatted1)"
+                            @blur="fundingDateEnd = parseDate(fundingDateFormatted)"
                             v-on="on"
                           ></v-text-field>
                         </template>
-                        <v-date-picker v-model="date1" no-title @input="dateMenu1 = false"></v-date-picker>
+                        <v-date-picker v-model="fundingDateEnd" no-title @input="dateMenu1 = false"></v-date-picker>
                       </v-menu>
                       <v-menu
                         ref="timeMenu1"
@@ -130,16 +130,16 @@
                       >
                         <template v-slot:activator="{ on }">
                           <v-text-field
-                            v-model="dateFormatted2"
+                            v-model="projectDateFormatted"
                             label="Date"
                             hint="MM/DD/YYYY format"
                             persistent-hint
                             prepend-icon="event"
-                            @blur="date2 = parseDate(dateFormatted2)"
+                            @blur="projectDateEnd = parseDate(projectDateFormatted)"
                             v-on="on"
                           ></v-text-field>
                         </template>
-                        <v-date-picker v-model="date2" no-title @input="dateMenu2 = false"></v-date-picker>
+                        <v-date-picker v-model="projectDateEnd" no-title @input="dateMenu2 = false"></v-date-picker>
                       </v-menu>
                       <v-menu
                         ref="timeMenu2"
@@ -302,7 +302,8 @@
           <v-dialog v-model="viewRequestDialog" max-width="600px" persistent>
             <v-card>
               <v-card-title primary-title>
-                <span  class="headline">Aktuelle Anfrage -</span><span class="remainingFunds">Noch verfügbare ETH: {{ remainingFunds / 10**18 }} ETH</span>
+                <span  class="headline">Aktuelle Anfrage -</span>
+                <span class="remainingFunds">Noch verfügbare ETH: {{ remainingFunds / 10**18 }} ETH</span>
               </v-card-title>
               <v-card-text class="pt-0">
                 <v-divider></v-divider>
@@ -420,16 +421,16 @@
                       >
                         <template v-slot:activator="{ on }">
                           <v-text-field
-                            v-model="dateFormatted3"
+                            v-model="requestDateFormatted"
                             label="Date"
                             hint="MM/DD/YYYY format"
                             persistent-hint
                             prepend-icon="event"
-                            @blur="date3 = parseDate(dateFormatted3)"
+                            @blur="requestDateEnd = parseDate(requestDateFormatted)"
                             v-on="on"
                           ></v-text-field>
                         </template>
-                        <v-date-picker v-model="date3" no-title @input="dateMenu3 = false"></v-date-picker>
+                        <v-date-picker v-model="requestDateEnd" no-title @input="dateMenu3 = false"></v-date-picker>
                       </v-menu>
                       <v-menu
                         ref="timeMenu3"
@@ -664,16 +665,11 @@ export default {
   data() {
     return {
       search: '',
-      startProjectDialog: false,
-      addBackingOptionDialog: false,
-      addRequestDialog: false,
-      viewBackingOptionsDialog: false,
-      viewRequestDialog: false,
-      activeIndex: null,
-      account: null,
-      remainingFunds: 0,
       filterValue: 0,
       exchangeRate: 0,
+
+      account: null,
+      projectData: [],
       stateMap: [
         { color: 'blue-grey lighten-3', text: "Initialisierung"},
         { color: 'primary', text: 'Laufend' },
@@ -681,19 +677,30 @@ export default {
         { color: 'success  lighten-3', text: 'Abgeschlossen' },
         { color: 'warning  lighten-3', text: 'Abgelaufen' },
       ],
-      projectData: [],
+
+      /*Dialogs*/ 
+      startProjectDialog: false,
+      addBackingOptionDialog: false,
+      addRequestDialog: false,
+      viewBackingOptionsDialog: false,
+      viewRequestDialog: false,
+
+      
+      /*Dialog-Helpers*/
+      activeIndex: null,      
+      remainingFunds: 0,     
       newObject: { isLoading: false },
       currentOptions: [],
       currentRequest: {},
       isProjectInvestor : false,
-
+      
       /* Date-/TimePicker */
-      date1: new Date().toISOString().substr(0, 10),
-      date2: new Date().toISOString().substr(0, 10),
-      date3: new Date().toISOString().substr(0, 10),
-      dateFormatted1: this.formatDate(new Date().toISOString().substr(0, 10)),
-      dateFormatted2: this.formatDate(new Date().toISOString().substr(0, 10)),
-      dateFormatted3: this.formatDate(new Date().toISOString().substr(0, 10)),
+      fundingDateEnd: new Date().toISOString().substr(0, 10),
+      projectDateEnd: new Date().toISOString().substr(0, 10),
+      requestDateEnd: new Date().toISOString().substr(0, 10),
+      fundingDateFormatted: this.formatDate(new Date().toISOString().substr(0, 10)),
+      projectDateFormatted: this.formatDate(new Date().toISOString().substr(0, 10)),
+      requestDateFormatted: this.formatDate(new Date().toISOString().substr(0, 10)),
       dateMenu1: false,
       dateMenu2: false,
       dateMenu3: false,
@@ -759,11 +766,11 @@ export default {
     startProject() {
       this.newObject.isLoading = true;
 
-      var fundingDate = new Date(this.date1);
+      var fundingDate = new Date(this.fundingDateEnd);
       var fundingTime = this.time1.split(":");
       fundingDate.setHours(fundingTime[0], fundingTime[1]);
 
-      var goalDate = new Date(this.date2);
+      var goalDate = new Date(this.projectDateEnd);
       var goalTime = this.time2.split(":");
       goalDate.setHours(goalTime[0], goalTime[1]);
 
@@ -813,7 +820,6 @@ export default {
     getBackingOption(projectIndex, optionIndex) {
       const projectInst = project(this.projectData[projectIndex].contract);
       projectInst.methods.getBackingOption(optionIndex).call().then((backingOption) => {
-        console.log(backingOption);
         backingOption.index = optionIndex;
         this.currentOptions.push(backingOption);
         this.currentOptions.sort((a, b) => (a.index > b.index) ? 1 : -1 );
@@ -829,7 +835,7 @@ export default {
     },
     addRequest(projectIndex, title, description, date, amount) {
       this.newObject.isLoading = true;
-      var goalDate = new Date(this.date3);
+      var goalDate = new Date(this.requestDateEnd);
       var goalTime = this.time3.split(":");
       goalDate.setHours(goalTime[0], goalTime[1]);
       const projectInst = project(this.projectData[projectIndex].contract);
@@ -852,7 +858,6 @@ export default {
         this.remainingFunds = this.projectData[projectIndex].currentAmount;
         this.hasInvestorVotedForCurrentRequest(projectIndex);
       }).catch((err) => {
-        console.log(err);
         alert("Keine Auszahlungs-Anfragen vorhanden.")
       });
     },
@@ -997,7 +1002,6 @@ export default {
         from: this.account
         }).then(
         async (voteStatus) => {
-        console.log(voteStatus);
           this.currentRequest.voteStatus = voteStatus;
           this.viewRequestDialog = true;
       });
@@ -1011,7 +1015,6 @@ export default {
       }
     },
     isRequestFinished(requestDeadline){
-      console.log(requestDeadline);
       return (new Date().getTime() > new Date(parseInt(requestDeadline)));
     },
     isProjectFinished(){
@@ -1090,28 +1093,31 @@ export default {
         return project.projectTitle.toLowerCase().includes(this.search.toLowerCase())
       })
     },
-    computedDateFormatted1 () {
-        return this.formatDate(this.date1)
+    computedfundingDateFormatted () {
+        return this.formatDate(this.fundingDateEnd)
       },
-    computedDateFormatted2 () {
-        return this.formatDate(this.date2)
+    computedprojectDateFormatted () {
+        return this.formatDate(this.projectDateEnd)
       },
-    computedDateFormatted3 () {
-        return this.formatDate(this.date3)
+    computedrequestDateFormatted () {
+        return this.formatDate(this.requestDateEnd)
       }
   },
   watch: {
-      date1 (val) {
-        this.dateFormatted1 = this.formatDate(this.date1)
+      fundingDateEnd (val) {
+        this.fundingDateFormatted = this.formatDate(this.fundingDateEnd)
       },
-      date2 (val) {
-        this.dateFormatted2 = this.formatDate(this.date2)
+      projectDateEnd (val) {
+        this.projectDateFormatted = this.formatDate(this.projectDateEnd)
       },
-      date3 (val) {
-        this.dateFormatted3 = this.formatDate(this.date3)
+      requestDateEnd (val) {
+        this.requestDateFormatted = this.formatDate(this.requestDateEnd)
       }
     }
 };
 </script>
 
 
+<style>
+  @import '../Styles/etherfund.css';
+</style>
