@@ -72,7 +72,7 @@
                           <v-text-field
                             v-model="fundingDateFormatted"
                             label="Date"
-                            hint="MM/DD/YYYY format"
+                            hint="MM/DD/YYYY Format"
                             persistent-hint
                             prepend-icon="event"
                             @blur="fundingDateEnd = parseDate(fundingDateFormatted)"
@@ -97,7 +97,7 @@
                         <template v-slot:activator="{ on }">
                           <v-text-field
                             v-model="time1"
-                            label="Picker in timeMenu1"
+                            label="Uhrzeit"
                             prepend-icon="access_time"
                             readonly
                             v-on="on"
@@ -132,7 +132,7 @@
                           <v-text-field
                             v-model="projectDateFormatted"
                             label="Date"
-                            hint="MM/DD/YYYY format"
+                            hint="MM/DD/YYYY Format"
                             persistent-hint
                             prepend-icon="event"
                             @blur="projectDateEnd = parseDate(projectDateFormatted)"
@@ -157,7 +157,7 @@
                         <template v-slot:activator="{ on }">
                           <v-text-field
                             v-model="time2"
-                            label="Picker in timeMenu2"
+                            label="Uhrzeit"
                             prepend-icon="access_time"
                             readonly
                             v-on="on"
@@ -423,7 +423,7 @@
                           <v-text-field
                             v-model="requestDateFormatted"
                             label="Date"
-                            hint="MM/DD/YYYY format"
+                            hint="MM/DD/YYYY Format"
                             persistent-hint
                             prepend-icon="event"
                             @blur="requestDateEnd = parseDate(requestDateFormatted)"
@@ -721,6 +721,8 @@ export default {
     });
   },
   methods: {
+    /** @description Retrieves the amount of projects from the project hub and the information for each project.  
+    */  
     getProjects() {
       this.projectData = [];
       projectHub.methods.getProjectCount().call().then((projectCount) => {
@@ -729,6 +731,10 @@ export default {
         }
 	    });
     },
+
+    /** @description Retrieves a project from the project hub.  
+    * @param {number} projectIndex The index of the project. 
+    */  
     getProject(projectIndex) {
       projectHub.methods.getProjects(projectIndex).call().then(async (projectData) => {
         const projectInfo = {}
@@ -746,6 +752,11 @@ export default {
         this.getBalance(projectInfo, projectData.projectAdress);
       });
     },
+
+    /** @description Retrieves the current balance of the project.  
+    * @param {object} projectInfo The already available information of the project.  
+    * @param {string} contract The address of the project  
+    */  
     async getBalance(projectInfo, contract) {
       try {
         var balance = await web3.eth.getBalance(contract);
@@ -756,6 +767,11 @@ export default {
         this.getPeekBalance(projectInfo, contract);
       }
     },
+
+    /** @description Retrieves the maximum balance of the project. 
+    * @param {object} projectInfo The already available information of the project.  
+    * @param {string} contract The address of the project
+    */  
     getPeekBalance(projectInfo, contract) {
       const projectInst = project(contract);
       projectInst.methods.getPeekBalance().call().then((peekBalance) => {
@@ -763,6 +779,9 @@ export default {
         this.getInvestorCount(projectInfo, contract);
       });
     },
+    
+    /** @description Starts a new project at the project hub. 
+    */  
     startProject() {
       this.newObject.isLoading = true;
 
@@ -773,7 +792,6 @@ export default {
       var goalDate = new Date(this.projectDateEnd);
       var goalTime = this.time2.split(":");
       goalDate.setHours(goalTime[0], goalTime[1]);
-
 
       projectHub.methods.addNewProject(
         this.newObject.title,
@@ -790,9 +808,13 @@ export default {
       });
 
     },
-    addBackingOption(index) {
+    
+    /** @description Adds a backing option to an existing project  
+    * @param {number} projectIndex The index of the project. 
+    */  
+    addBackingOption(projectIndex) {
       this.newObject.isLoading = true;
-      const projectInst = project(this.projectData[index].contract);
+      const projectInst = project(this.projectData[projectIndex].contract);
       projectInst.methods.addBackingOption(
         this.newObject.title,
         this.newObject.description,
@@ -804,6 +826,10 @@ export default {
         this.newObject = { isLoading: false };
       });
     },
+    
+    /** @description Retrieves the amount of backing options available and iterates them.  
+    * @param {number} projectIndex The index of the project. 
+    */  
     getBackingOptions(projectIndex) {
       this.currentOptions = [];
       const projectInst = project(this.projectData[projectIndex].contract);
@@ -817,6 +843,11 @@ export default {
         this.isUserInvestor();
       });
     },
+    
+    /** @description Retrieves a specific backing option.  
+    * @param {number} projectIndex The index of the project.   
+    * @param {number} optionIndex The index of the backing option. 
+    */  
     getBackingOption(projectIndex, optionIndex) {
       const projectInst = project(this.projectData[projectIndex].contract);
       projectInst.methods.getBackingOption(optionIndex).call().then((backingOption) => {
@@ -826,6 +857,11 @@ export default {
         this.viewBackingOptionsDialog = true;
       });
     },
+    
+    /** @description Retrieves the amount of investors that a project has got.  
+    * @param {object} projectInfo The already available information of the project.  
+    * @param {string} contract The address of the project
+    */  
     getInvestorCount(projectInfo, contract) {
       const projectInst = project(contract);
       projectInst.methods.getInvestorCount().call().then((investorCount) => {
@@ -833,11 +869,21 @@ export default {
         this.getContractState(projectInfo, contract);
       });
     },
+    
+    /** @description Adds a request to a successful project, to retrieve ether from it.  
+    * @param {number} projectIndex The index of the project.   
+    * @param {string} title The title of the new request. 
+    * @param {string} description The description of the new request.   
+    * @param {date} date The ending date of the new request. 
+    * @param {number} amount The amount of ether that the owner needs for the request.  
+    */  
     addRequest(projectIndex, title, description, date, amount) {
       this.newObject.isLoading = true;
+
       var goalDate = new Date(this.requestDateEnd);
       var goalTime = this.time3.split(":");
       goalDate.setHours(goalTime[0], goalTime[1]);
+
       const projectInst = project(this.projectData[projectIndex].contract);
       projectInst.methods.addRequest(
         this.newObject.title,
@@ -850,6 +896,10 @@ export default {
         this.addRequestDialog = false;
       });
     },
+    
+    /** @description Retrieves the currently available request of a project.  
+    * @param {number} projectIndex The index of the project.  
+    */  
     getCurrentRequest(projectIndex) {
       const projectInst = project(this.projectData[projectIndex].contract);
       projectInst.methods.getCurrentRequest().call().then((request) => {
@@ -861,6 +911,11 @@ export default {
         alert("Keine Auszahlungs-Anfragen vorhanden.")
       });
     },
+    
+    /** @description Sends a vote for the currently available request of a project.  
+    * @param {number} projectIndex The index of the project.  
+    * @param {boolean} vote The vote of the user.   
+    */  
     voteForCurrentRequest(projectIndex, vote) {
       const projectInst = project(this.projectData[projectIndex].contract);
       projectInst.methods.voteForCurrentRequest(
@@ -871,6 +926,12 @@ export default {
         console.log("Vote submitted");
       });
     },
+    
+    /** @description Adds an investor to a project.  
+    * @param {number} projectIndex The index of the project.  
+    * @param {number} optionId The index of the chosen backing option.
+    * @param {number} optionValue The cost of the backing option in ether.     
+    */  
     addInvestor(projectIndex, optionId, optionValue) {
       this.newObject.isLoading = true;
       const projectInst = project(this.projectData[projectIndex].contract);
@@ -884,6 +945,10 @@ export default {
         this.getProjects();
       });
     },
+    
+    /** @description Refunds all investors after the project failed to fund.  
+    * @param {number} projectIndex The index of the project.  
+    */  
     requestPayback(projectIndex) {
       const projectInst = project(this.projectData[projectIndex].contract);
       projectInst.methods.requestPayback(
@@ -893,6 +958,10 @@ export default {
         console.log(status);
       });
     },
+    
+    /** @description Pays the amount of ether out to the owner, after the request was successful.  
+    * @param {number} projectIndex The index of the project.    
+    */  
     requestPayout(projectIndex) {
       const projectInst = project(this.projectData[projectIndex].contract);
       projectInst.methods.requestPayout(
@@ -902,6 +971,10 @@ export default {
         console.log(status);
       });
     },
+    
+    /** @description Refunds all investors partially after the project deadline is met and funds are still available.  
+    * @param {number} projectIndex The index of the project.    
+    */  
     requestRefundRemainingFunds(projectIndex) {
       const projectInst = project(this.projectData[projectIndex].contract);
       projectInst.methods.requestRefundRemainingFunds(
@@ -911,6 +984,10 @@ export default {
         console.log(status);
       });
     },
+    
+    /** @description Closes the possibility of adding backing options, so that investors can start funding.  
+    * @param {number} projectIndex The index of the project.  
+    */  
     closeAddingBackingOptionPeriode(projectIndex) {
       const projectInst = project(this.projectData[projectIndex].contract);
       projectInst.methods.closeAddingBackingOptionPeriode(
@@ -920,6 +997,9 @@ export default {
         this.getProjects();
       });
     },
+    
+    /** @description Retrieves the current ETH-USD exchange rate.   
+    */  
     currentConversionRate() {
       var self = this;
       axios.get('https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=USD').then(function(response){
@@ -928,6 +1008,11 @@ export default {
           }
         });
     },
+    
+    /** @description Retrieves the current state of a project.  
+    * @param {object} projectInfo The already available information of the project.  
+    * @param {string} contract The address of the project
+    */  
     getContractState(projectInfo, contract) {
       const projectInst = project(contract);
       projectInst.methods.getContractState().call().then((state) => {
@@ -936,6 +1021,9 @@ export default {
         this.contractWasRefunded(projectInfo);
       });
     },
+    
+    /** @description Retrieves all projects that were created by the user.   
+    */  
     getProjectCountForFounder() {
       this.projectData = [];
       projectHub.methods.getProjectCountForFounder().call({
@@ -946,6 +1034,10 @@ export default {
           }
 	    });
     },
+    
+    /** @description Retrieves a specific project that was created by the user.  
+    * @param {number} projectIndex The index of the project. 
+    */  
     getProjectByFounderForIndex(projectIndex) {
       projectHub.methods.getProjectByFounderForIndex(projectIndex).call({
         from: this.account
@@ -966,6 +1058,9 @@ export default {
           this.getBalance(projectInfo, projectData[1]);
       });
     },
+    
+    /** @description Retrieves all projects that were backed by the user.    
+    */  
     getProjectCountForInvestor() {
       this.projectData = [];
       projectHub.methods.getProjectCountForInvestor().call({
@@ -976,6 +1071,10 @@ export default {
           }
 	    });
     },
+    
+    /** @description Retrieves a specific project that was backed by the user.  
+    * @param {number} projectIndex The index of the project. 
+    */  
     getProjectByInvestorForIndex(projectIndex) {
       projectHub.methods.getProjectByInvestorForIndex(projectIndex).call({
         from: this.account
@@ -996,6 +1095,10 @@ export default {
           this.getBalance(projectInfo, projectData[1]);
       });
     },
+    
+    /** @description Checks if the user already voted for a project.  
+    * @param {number} projectIndex The index of the project.
+    */  
     hasInvestorVotedForCurrentRequest(projectIndex) {
       const projectInst = project(this.projectData[projectIndex].contract);
       projectInst.methods.hasInvestorVotedForCurrentRequest().call({
@@ -1006,6 +1109,9 @@ export default {
           this.viewRequestDialog = true;
       });
     },
+    
+    /** @description Checks if the user is the owner of a project.    
+    */  
     isStarter() {
       var projectIndex = this.activeIndex;
       if(this.projectData[projectIndex] != undefined){
@@ -1014,9 +1120,16 @@ export default {
         return false;
       }
     },
+    
+    /** @description Checks if a the request is finished.  
+    * @param {number} requestDeadline The ending date of the request. 
+    */  
     isRequestFinished(requestDeadline){
       return (new Date().getTime() > new Date(parseInt(requestDeadline)));
     },
+    
+    /** @description Checks if the project is finished.  
+    */  
     isProjectFinished(){
       var projectIndex = this.activeIndex;
       if(this.projectData[projectIndex] != undefined){
@@ -1025,6 +1138,9 @@ export default {
         return false;
       }
     },
+    
+    /** @description Checks if the user is an investor of a project.   
+    */  
     isUserInvestor(){
       var projectIndex = this.activeIndex;
       const projectInst = project(this.projectData[projectIndex].contract);
@@ -1035,6 +1151,9 @@ export default {
           this.isProjectInvestor = isInvestor;
       });
     },
+    
+    /** @description Returns the current project state.  
+    */  
     getProjectState(){
       var projectIndex = this.activeIndex;
       if(this.projectData[projectIndex] != undefined){
@@ -1043,21 +1162,37 @@ export default {
         return -1;
       }
     },
+    
+    /** @description Formats the date for the user dialog.  
+    * @param {date} date The date, which should be formatted.  
+    * @return {date} The formatted date 
+    */  
     formatDate (date) {
         if (!date) return null
 
         const [year, month, day] = date.split('-')
         return `${month}/${day}/${year}`
-      },
-      parseDate (date) {
+    },
+    
+    /** @description Parses the date to the right format for the user dialog.  
+    * @param {date} date The date, which should be formatted.  
+    * @return {date} The formatted date  
+    */  
+    parseDate (date) {
         if (!date) return null
 
         const [month, day, year] = date.split('/')
         return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
-      },
+    },
+    
+    /** @description Checks if the user is an investor.  
+    */  
     isInvestor() {
       return this.isProjectInvestor;
     },
+    
+    /** @description Checks if a contract was partially refunded.  
+    */  
     contractWasPartiallyRefunded() {
       var projectIndex = this.activeIndex;
       const projectInst = project(this.projectData[projectIndex].contract);
@@ -1068,6 +1203,10 @@ export default {
           this.projectData[projectIndex].refundStatus = refundStatus;
       });
     },
+    
+    /** @description Checks if a project was refunded after failure.  
+      * @param {object} projectInfo The already available information of the project.  
+    */  
     contractWasRefunded(projectInfo) {
       const projectInst = project(projectInfo.contract);
       projectInst.methods.contractWasRefunded().call({
@@ -1079,6 +1218,10 @@ export default {
           this.projectData.sort((a, b) => (a.index > b.index) ? 1 : -1 );
       });
     },
+    
+    /** @description Checks the refund status of a project.  
+    * @param {number} projectIndex The index of the project. 
+    */  
     checkRefundStatus(projectIndex) {
       if(this.projectData[projectIndex] != undefined){
         return this.projectData[projectIndex].refundStatus;
