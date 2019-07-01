@@ -171,7 +171,7 @@
                           @click:minute="$refs.timeMenu2.save(time2)"
                         ></v-time-picker>
                       </v-menu>
-                    </v-flex>                                
+                    </v-flex>
                   </v-layout>
                 </v-container>
               </v-card-text>
@@ -276,7 +276,7 @@
                     color="blue darken-1"
                     flat
                     @click="addInvestor(activeIndex, index, option[2])"
-                    :disabled="option[3] == 0 || isStarter() || getProjectState() == 0 || isInvestor()"
+                    :disabled="option[3] == 0 || isStarter() || getProjectState() == 0 || isInvestor2()"
                     :loading="newObject.isLoading"
                   >
                   Wählen
@@ -313,7 +313,7 @@
                   <div><b>Laufzeit bis: </b><span>{{ new Date(parseInt(currentRequest.valideUntil)) }}</span></div>
                   <div><b>Anzahl Stimmen: </b><span class="blue--text"> {{currentRequest.numberAcceptedVotes}} </span> | <span class="red--text"> {{currentRequest.numberRejectedVotes}} </span></div>
                   <v-btn
-                    v-if="!isStarter() && isInvestor()"
+                    v-if="!isStarter() && isInvestor2()"
                     color="blue darken-1"
                     flat
                     @click="voteForCurrentRequest(activeIndex, true)"
@@ -322,7 +322,7 @@
                   Akzeptieren
                   </v-btn>
                   <v-btn
-                    v-if="!isStarter() && isInvestor()"
+                    v-if="!isStarter() && isInvestor2()"
                     color="red darken-1"
                     flat
                     @click="voteForCurrentRequest(activeIndex, false)"
@@ -339,20 +339,20 @@
                   Auszahlen
                   </v-btn>
                   <v-btn
-                    v-if="!isStarter() && isProjectFinished() && isInvestor()"
+                    v-if="!isStarter() && isProjectFinished() && isInvestor2()"
                     color="blue darken-1"
                     flat
                     @click="requestRefundRemainingFunds(activeIndex)"
                   >
-                  Partiell 
+                  Partiell
                   </v-btn>
                   <v-btn
-                    v-if="!isStarter() && getProjectState() == 4 && isInvestor()"
+                    v-if="!isStarter() && getProjectState() == 4 && isInvestor2()"
                     color="blue darken-1"
                     flat
                     @click="requestPayback(activeIndex)"
                   >
-                  Refund 
+                  Refund
                   </v-btn>
                 </div>
               </v-card-text>
@@ -561,7 +561,7 @@
                   >
                   Close
                   </v-btn>
-                </v-flex>               
+                </v-flex>
 
                 <v-flex
                   v-if="project.currentState == 4 "
@@ -643,6 +643,7 @@ export default {
       timeMenu2: false,
       time1 : null,
       time2 : null,
+      isInvestor : false
     };
   },
   mounted() {
@@ -692,7 +693,7 @@ export default {
     getPeekBalance(projectInfo, contract) {
       const projectInst = crowdfundProject(contract);
       projectInst.methods.getPeekBalance().call().then((peekBalance) => {
-        projectInfo.peekBalance = peekBalance; 
+        projectInfo.peekBalance = peekBalance;
         this.getInvestorCount(projectInfo, contract);
       });
     },
@@ -747,6 +748,7 @@ export default {
         for (var i = 0; i < backingOptionCount; i++){
           this.getBackingOption(projectIndex, i);
         }
+        this.isUserInvestor();
       });
     },
     getBackingOption(projectIndex, optionIndex) {
@@ -755,9 +757,9 @@ export default {
         console.log(backingOption);
         backingOption.index = optionIndex;
         this.currentOptions.push(backingOption);
-        this.currentOptions.sort((a, b) => (a.index > b.index) ? 1 : -1 );       
+        this.currentOptions.sort((a, b) => (a.index > b.index) ? 1 : -1 );
         this.viewBackingOptionsDialog = true;
-      });       
+      });
     },
     getInvestorCount(projectInfo, contract) {
       const projectInst = crowdfundProject(contract);
@@ -774,7 +776,7 @@ export default {
       projectInst.methods.addRequest(
         this.newObject.title,
         this.newObject.description,
-        goalDate.getTime(),
+        (goalDate.getTime()/1000).toFixed(0),
         web3.utils.toWei(this.newObject.amount, 'ether'),
       ).send({
         from: this.account,
@@ -791,7 +793,7 @@ export default {
         //this.viewRequestDialog = true;
       }).catch((err) => {
         console.log(err);
-        alert("Keine Auszahlungs-Anfragen vorhanden.")    
+        alert("Keine Auszahlungs-Anfragen vorhanden.")
       });
     },
     voteForCurrentRequest(projectIndex, vote) {
@@ -858,14 +860,14 @@ export default {
       axios.get('https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=USD').then(function(response){
         if(response.status == "200"){
             self.exchangeRate = response.data.USD;
-          } 
+          }
         });
     },
     getContractState(projectInfo, contract) {
       const projectInst = crowdfundProject(contract);
       projectInst.methods.getContractState().call().then((state) => {
         projectInfo.currentState = state;
-        this.projectData.push(projectInfo);        
+        this.projectData.push(projectInfo);
         this.projectData.sort((a, b) => (a.index > b.index) ? 1 : -1 );
       });
     },
@@ -873,7 +875,7 @@ export default {
       this.projectData = [];
       crowdfundInstance.methods.getProjectCountForFounder().call({
         from: this.account
-        }).then((projectCount) => {      
+        }).then((projectCount) => {
           for (var i = 0; i < projectCount; i++){
             this.getProjectByFounderForIndex(i);
           }
@@ -883,7 +885,7 @@ export default {
       crowdfundInstance.methods.getProjectByFounderForIndex(projectIndex).call({
         from: this.account
         }).then(
-        async (projectData) => {       
+        async (projectData) => {
           const projectInfo = {}
           projectInfo.projectTitle = projectData[2]
           projectInfo.projectDesc = projectData[3];
@@ -903,7 +905,7 @@ export default {
       this.projectData = [];
       crowdfundInstance.methods.getProjectCountForInvestor().call({
         from: this.account
-        }).then((projectCount) => {      
+        }).then((projectCount) => {
           for (var i = 0; i < projectCount; i++){
             this.getProjectByInvestorForIndex(i);
           }
@@ -913,7 +915,7 @@ export default {
       crowdfundInstance.methods.getProjectByInvestorForIndex(projectIndex).call({
         from: this.account
         }).then(
-        async (projectData) => {    
+        async (projectData) => {
           const projectInfo = {}
           projectInfo.projectTitle = projectData[2]
           projectInfo.projectDesc = projectData[3];
@@ -944,9 +946,9 @@ export default {
       if(this.projectData[projectIndex] != undefined){
         return (this.projectData[projectIndex].projectStarter == this.account);
       } else {
-        return false; 
+        return false;
       }
-    }, 
+    },
     isRequestFinished(requestDeadline){
       return (new Date().getTime() > new Date(parseInt(requestDeadline)));
     },
@@ -955,19 +957,25 @@ export default {
       if(this.projectData[projectIndex] != undefined){
         return (new Date().getTime() > this.projectData[projectIndex].projectDeadline);
       } else {
-        return false; 
+        return false;
       }
     },
-    isInvestor(){
+    isUserInvestor(){
       var projectIndex = this.activeIndex;
-      return true;
+      const projectInst = crowdfundProject(this.projectData[projectIndex].contract);
+      projectInst.methods.hasInvestorVotedForCurrentRequest().call({
+        from: this.account
+        }).then(
+        async (isInvestor) => {
+          this.isInvestor = (parseInt(isInvestor) == 2);
+      });
     },
     getProjectState(){
       var projectIndex = this.activeIndex;
       if(this.projectData[projectIndex] != undefined){
         return this.projectData[projectIndex].currentState
       } else {
-        return -1; 
+        return -1;
       }
     },
     formatDate (date) {
@@ -981,9 +989,12 @@ export default {
 
         const [month, day, year] = date.split('/')
         return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
-      }
+      },
+    isInvestor2() {
+      return this.isInvestor;
+    }
   },
-  computed: {  
+  computed: {
     filteredProjects() {
       return this.projectData.filter(project => {
         return project.projectTitle.toLowerCase().includes(this.search.toLowerCase())
@@ -1002,7 +1013,7 @@ export default {
       },
       date2 (val) {
         this.dateFormatted2 = this.formatDate(this.date2)
-      }
+      },
     }
 };
 </script>
