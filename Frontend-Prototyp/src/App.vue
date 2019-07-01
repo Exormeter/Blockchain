@@ -331,7 +331,7 @@
                   Ablehnen
                   </v-btn>
                   <v-btn
-                    v-if="isStarter() && isRequestFinished(currentRequest.valideUntil)"
+                    v-if="isStarter() && isRequestFinished(parseInt(currentRequest.valideUntil)*1000)"
                     color="blue darken-1"
                     flat
                     @click="requestPayout(activeIndex)"
@@ -1010,6 +1010,7 @@ export default {
       }
     },
     isRequestFinished(requestDeadline){
+      console.log(requestDeadline);
       return (new Date().getTime() > new Date(parseInt(requestDeadline)));
     },
     isProjectFinished(){
