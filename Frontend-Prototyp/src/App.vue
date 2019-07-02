@@ -496,25 +496,25 @@
           Projekte
         </h1>
         <div class="search-wrapper">
-          <input type="text" v-model="search" placeholder="Search title.."/>
-          <label>Search title:</label>
+          <input type="text" v-model="search" placeholder="Suche.."/>
+          <label>Suche:</label>
         </div>
         <v-radio-group v-model="filterValue" row>
           <v-radio
             :key="0"
-            :label="`All`"
+            :label="`Alle`"
             :value="0"
             @change="getProjects()"
           ></v-radio>
           <v-radio
             :key="1"
-            :label="`Backed`"
+            :label="`Unterstützt`"
             :value="1"
             @change="getProjectCountForInvestor()"
           ></v-radio>
           <v-radio
             :key="2"
-            :label="`Owned`"
+            :label="`Gestartet`"
             :value="2"
             @change="getProjectCountForFounder()"
           ></v-radio>
@@ -561,7 +561,7 @@
                     @click="getBackingOptions(project.index); activeIndex = project.index;"
                     :loading="project.isLoading"
                   >
-                  View
+                  Öffnen
                   </v-btn>
                 </v-flex>
 
@@ -574,7 +574,7 @@
                     @click="getCurrentRequest(project.index); activeIndex = project.index;"
                     :loading="project.isLoading"
                   >
-                  Show Request
+                  Anfrage anzeigen
                   </v-btn>
                 </v-flex>
 
@@ -587,7 +587,7 @@
                     @click="addRequestDialog = true; activeIndex = project.index;"
                     :loading="project.isLoading"
                   >
-                    Add Request
+                    Anfrage stellen
                   </v-btn>
                 </v-flex>
 
@@ -600,7 +600,7 @@
                     @click="addBackingOptionDialog = true; activeIndex = project.index;"
                     :loading="project.isLoading"
                   >
-                    Add Option
+                    Option hinzufügen
                   </v-btn>
                 </v-flex>
 
@@ -613,7 +613,7 @@
                     @click="closeAddingBackingOptionPeriode(project.index); activeIndex = project.index;"
                     :loading="project.isLoading"
                   >
-                  Close
+                  Schließen
                   </v-btn>
                 </v-flex>
 

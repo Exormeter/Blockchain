@@ -43,3 +43,9 @@ div#app .search-wrapper input::-webkit-input-placeholder {
     margin-left: 5px;
     font-weight: bold;
 }
+
+@media (min-width: 960px) {
+    .flex.md3 {
+        display: inline !important;
+    }
+}
