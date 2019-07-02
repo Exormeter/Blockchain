@@ -277,11 +277,11 @@ Request stellen.
 ## 3.8 Mythril Formal Verifiaction
 
 The formale Verfikation durch Mythril ergab, dass der Hub eine potentelle Schwachstelle im Vertrafg darstellt, da
-hier eine DDOS Attacke möglich ist. Diese Attacke wird dadurch ermöglicht, dass jeder Nutzer über den Hub gehen muss,
+hier eine DDOS Attacke möglich ist. Diese Attacke wird dadurch ermöglicht, da jeder Nutzer über den Hub gehen muss,
 um sein Projekt finden zu können. Wird das Gas Limit für den Vertrag ausgeschöpft, können Nutzer nicht mehr auf ihre
-Projekte zugreifen. Andere Schwachstellen außer den Pramas für den Solidity Compile wurden nicht gefunden
+Projekte zugreifen. Andere Schwachstellen außer den Pragmas für den Solidity Compile wurden nicht gefunden
 
-![mythx](Diagramme/Mythx.png)
+![mythx](Diagramme/MythX.png)
 
 ## 4.1 Annahmen
     - Nicht durch den Kunden definierte spezifische Annahmen, Anforderungen und Abh‰ngigkeiten
