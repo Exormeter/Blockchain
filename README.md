@@ -250,7 +250,7 @@ dem Vertrag sogenante Backing Options hinzufügen. Wenn der Creator der Meinung 
 hinzgefügten Backing Optionen ausreichend sind, kann er diese Phase des Contracts abschließen.
 Es ist nun nicht mehr möglich, weitere Backing Options hinzuzufügen.
 
-![BackingOptionState](Diagramme/ContractBackingState.png)
+![BackingOptionState](Diagramme/BackingOptionenState.png)
 
 Ist diese Phase abgeschlossen, folgt die Investorenpahse. Hier können Investoren in den Contract 
 investieren, je nachdem welche Backing Option sie für sich auswählen. Die Investorenpahase endet, 
@@ -260,7 +260,7 @@ gewünschte Summe aufbringen konnte. Ist dies der Fall, so wechselt der Contract
 die Requestphase. Sollte das Ziel nicht erreicht werden, wird allen Investoren das eingezahlte Geld
 zurückgezahlt. 
 
-![InvestorState](Diagramme/FundingLimits.png)
+![InvestorState](Diagramme/InvestierenState.png)
 
 In der letzten Phase des Contracts kann der Creator anfangen, Request zur Auszahlung des Geldes
 zu stellen. Jeder Investor kann dabei Votesn, ob er für oder gegen die Auszahlung mit dem
@@ -270,9 +270,18 @@ Sollte wärend der Votingperiode bereits eine Mehrheit für den Request vorliege
 Creator auch vor ablauf des Zeitlimits sich den Betrag auszahlen lassen und dann einen neuen 
 Request stellen. 
 
-![RequestState](Diagramme/RequestStates.png)
+![RequestState](Diagramme/RequestState.png)
 
 # 4 Projektorganisation
+
+## 3.8 Mythril Formal Verifiaction
+
+The formale Verfikation durch Mythril ergab, dass der Hub eine potentelle Schwachstelle im Vertrafg darstellt, da
+hier eine DDOS Attacke möglich ist. Diese Attacke wird dadurch ermöglicht, dass jeder Nutzer über den Hub gehen muss,
+um sein Projekt finden zu können. Wird das Gas Limit für den Vertrag ausgeschöpft, können Nutzer nicht mehr auf ihre
+Projekte zugreifen. Andere Schwachstellen außer den Pramas für den Solidity Compile wurden nicht gefunden
+
+![mythx](Diagramme/Mythx.png)
 
 ## 4.1 Annahmen
     - Nicht durch den Kunden definierte spezifische Annahmen, Anforderungen und Abh‰ngigkeiten

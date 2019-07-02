@@ -205,7 +205,11 @@ contract ProjectContract is Ownable{
     * @return Availability of the backing option
     * @return ID of the backing option
     */
-    function getBackingOption(uint index) public view returns(string memory, string memory, uint, int, uint)
+    function getBackingOption(uint index) public view returns(string memory optionTitle,
+                                                                string memory optionDescription,
+                                                                uint optionsAmountEther,
+                                                                int optionAvailablity,
+                                                                uint id)
     {
         require(index < backingOptions.length, "The index is out of bounds");
         return (backingOptions[index].optionTitle, backingOptions[index].optionDescription,
@@ -292,7 +296,7 @@ contract ProjectContract is Ownable{
 
         require(_valideUntil < projectClosingDate, "Request deadline is behind project deadline");
 
-        require(fundingGoal < address(this).balance, "Funding Goal was not reached yet");
+        require(fundingGoalWasReached, "Funding Goal was not reached yet");
 
         require(projectClosingDate > block.timestamp, "Project has ended");
 

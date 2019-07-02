@@ -1,0 +1,1493 @@
+{
+    "compiler": {
+        "name": "solc",
+        "version": "0.5.10+commit.5a6ea5b1.Emscripten.clang"
+    },
+    "updatedAt": "2019-07-02T15:06:25.550Z",
+    "sources": {
+        "/Users/Nils/Documents/Repos/Blockchain/Contracts/ProjectHubContract/contracts/Ownable.sol": {
+            "contracts": [
+                {
+                    "contractName": "Ownable",
+                    "bytecode": "0x608060405234801561001057600080fd5b50336000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff160217905550610274806100606000396000f3fe608060405234801561001057600080fd5b50600436106100365760003560e01c80638da5cb5b1461003b578063f2fde38b14610085575b600080fd5b6100436100c9565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b6100c76004803603602081101561009b57600080fd5b81019080803573ffffffffffffffffffffffffffffffffffffffff1690602001909291905050506100ee565b005b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff161461014757600080fd5b600073ffffffffffffffffffffffffffffffffffffffff168173ffffffffffffffffffffffffffffffffffffffff16141561018157600080fd5b8073ffffffffffffffffffffffffffffffffffffffff166000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff167f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e060405160405180910390a3806000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055505056fea265627a7a723058209433bd0adcf79b9deba157f736e571950ec451700f75f3090c2fe8a065c1965a64736f6c634300050a0032",
+                    "deployedBytecode": "0x608060405234801561001057600080fd5b50600436106100365760003560e01c80638da5cb5b1461003b578063f2fde38b14610085575b600080fd5b6100436100c9565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b6100c76004803603602081101561009b57600080fd5b81019080803573ffffffffffffffffffffffffffffffffffffffff1690602001909291905050506100ee565b005b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff161461014757600080fd5b600073ffffffffffffffffffffffffffffffffffffffff168173ffffffffffffffffffffffffffffffffffffffff16141561018157600080fd5b8073ffffffffffffffffffffffffffffffffffffffff166000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff167f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e060405160405180910390a3806000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055505056fea265627a7a723058209433bd0adcf79b9deba157f736e571950ec451700f75f3090c2fe8a065c1965a64736f6c634300050a0032",
+                    "sourceMap": "213:840:0:-;;;474:56;8:9:-1;5:2;;;30:1;27;20:12;5:2;474:56:0;513:10;505:5;;:18;;;;;;;;;;;;;;;;;;213:840;;;;;;",
+                    "deployedSourceMap": "213:840:0:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;213:840:0;;;;;;;;;;;;;;;;;;;;;;;;236:20;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;863:188;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;863:188:0;;;;;;;;;;;;;;;;;;;:::i;:::-;;236:20;;;;;;;;;;;;;:::o;863:188::-;670:5;;;;;;;;;;;656:19;;:10;:19;;;648:28;;;;;;963:1;943:22;;:8;:22;;;;935:31;;;;;;1009:8;981:37;;1002:5;;;;;;;;;;;981:37;;;;;;;;;;;;1036:8;1028:5;;:16;;;;;;;;;;;;;;;;;;863:188;:::o"
+                }
+            ],
+            "ast": {
+                "absolutePath": "/Users/Nils/Documents/Repos/Blockchain/Contracts/ProjectHubContract/contracts/Ownable.sol",
+                "exportedSymbols": {
+                    "Ownable": [
+                        55
+                    ]
+                },
+                "id": 56,
+                "nodeType": "SourceUnit",
+                "nodes": [
+                    {
+                        "id": 1,
+                        "literals": [
+                            "solidity",
+                            "^",
+                            "0.5"
+                        ],
+                        "nodeType": "PragmaDirective",
+                        "src": "0:21:0"
+                    },
+                    {
+                        "baseContracts": [],
+                        "contractDependencies": [],
+                        "contractKind": "contract",
+                        "documentation": "@title Ownable\n@dev The Ownable contract has an owner address, and provides basic authorization control\nfunctions, this simplifies the implementation of \"user permissions\".",
+                        "fullyImplemented": true,
+                        "id": 55,
+                        "linearizedBaseContracts": [
+                            55
+                        ],
+                        "name": "Ownable",
+                        "nodeType": "ContractDefinition",
+                        "nodes": [
+                            {
+                                "constant": false,
+                                "id": 3,
+                                "name": "owner",
+                                "nodeType": "VariableDeclaration",
+                                "scope": 55,
+                                "src": "236:20:0",
+                                "stateVariable": true,
+                                "storageLocation": "default",
+                                "typeDescriptions": {
+                                    "typeIdentifier": "t_address",
+                                    "typeString": "address"
+                                },
+                                "typeName": {
+                                    "id": 2,
+                                    "name": "address",
+                                    "nodeType": "ElementaryTypeName",
+                                    "src": "236:7:0",
+                                    "stateMutability": "nonpayable",
+                                    "typeDescriptions": {
+                                        "typeIdentifier": "t_address",
+                                        "typeString": "address"
+                                    }
+                                },
+                                "value": null,
+                                "visibility": "public"
+                            },
+                            {
+                                "anonymous": false,
+                                "documentation": null,
+                                "id": 9,
+                                "name": "OwnershipTransferred",
+                                "nodeType": "EventDefinition",
+                                "parameters": {
+                                    "id": 8,
+                                    "nodeType": "ParameterList",
+                                    "parameters": [
+                                        {
+                                            "constant": false,
+                                            "id": 5,
+                                            "indexed": true,
+                                            "name": "previousOwner",
+                                            "nodeType": "VariableDeclaration",
+                                            "scope": 9,
+                                            "src": "290:29:0",
+                                            "stateVariable": false,
+                                            "storageLocation": "default",
+                                            "typeDescriptions": {
+                                                "typeIdentifier": "t_address",
+                                                "typeString": "address"
+                                            },
+                                            "typeName": {
+                                                "id": 4,
+                                                "name": "address",
+                                                "nodeType": "ElementaryTypeName",
+                                                "src": "290:7:0",
+                                                "stateMutability": "nonpayable",
+                                                "typeDescriptions": {
+                                                    "typeIdentifier": "t_address",
+                                                    "typeString": "address"
+                                                }
+                                            },
+                                            "value": null,
+                                            "visibility": "internal"
+                                        },
+                                        {
+                                            "constant": false,
+                                            "id": 7,
+                                            "indexed": true,
+                                            "name": "newOwner",
+                                            "nodeType": "VariableDeclaration",
+                                            "scope": 9,
+                                            "src": "321:24:0",
+                                            "stateVariable": false,
+                                            "storageLocation": "default",
+                                            "typeDescriptions": {
+                                                "typeIdentifier": "t_address",
+                                                "typeString": "address"
+                                            },
+                                            "typeName": {
+                                                "id": 6,
+                                                "name": "address",
+                                                "nodeType": "ElementaryTypeName",
+                                                "src": "321:7:0",
+                                                "stateMutability": "nonpayable",
+                                                "typeDescriptions": {
+                                                    "typeIdentifier": "t_address",
+                                                    "typeString": "address"
+                                                }
+                                            },
+                                            "value": null,
+                                            "visibility": "internal"
+                                        }
+                                    ],
+                                    "src": "289:57:0"
+                                },
+                                "src": "263:84:0"
+                            },
+                            {
+                                "body": {
+                                    "id": 17,
+                                    "nodeType": "Block",
+                                    "src": "495:35:0",
+                                    "statements": [
+                                        {
+                                            "expression": {
+                                                "argumentTypes": null,
+                                                "id": 15,
+                                                "isConstant": false,
+                                                "isLValue": false,
+                                                "isPure": false,
+                                                "lValueRequested": false,
+                                                "leftHandSide": {
+                                                    "argumentTypes": null,
+                                                    "id": 12,
+                                                    "name": "owner",
+                                                    "nodeType": "Identifier",
+                                                    "overloadedDeclarations": [],
+                                                    "referencedDeclaration": 3,
+                                                    "src": "505:5:0",
+                                                    "typeDescriptions": {
+                                                        "typeIdentifier": "t_address",
+                                                        "typeString": "address"
+                                                    }
+                                                },
+                                                "nodeType": "Assignment",
+                                                "operator": "=",
+                                                "rightHandSide": {
+                                                    "argumentTypes": null,
+                                                    "expression": {
+                                                        "argumentTypes": null,
+                                                        "id": 13,
+                                                        "name": "msg",
+                                                        "nodeType": "Identifier",
+                                                        "overloadedDeclarations": [],
+                                                        "referencedDeclaration": 70,
+                                                        "src": "513:3:0",
+                                                        "typeDescriptions": {
+                                                            "typeIdentifier": "t_magic_message",
+                                                            "typeString": "msg"
+                                                        }
+                                                    },
+                                                    "id": 14,
+                                                    "isConstant": false,
+                                                    "isLValue": false,
+                                                    "isPure": false,
+                                                    "lValueRequested": false,
+                                                    "memberName": "sender",
+                                                    "nodeType": "MemberAccess",
+                                                    "referencedDeclaration": null,
+                                                    "src": "513:10:0",
+                                                    "typeDescriptions": {
+                                                        "typeIdentifier": "t_address_payable",
+                                                        "typeString": "address payable"
+                                                    }
+                                                },
+                                                "src": "505:18:0",
+                                                "typeDescriptions": {
+                                                    "typeIdentifier": "t_address",
+                                                    "typeString": "address"
+                                                }
+                                            },
+                                            "id": 16,
+                                            "nodeType": "ExpressionStatement",
+                                            "src": "505:18:0"
+                                        }
+                                    ]
+                                },
+                                "documentation": "@dev The Ownable constructor sets the original `owner` of the contract to the sender\naccount.",
+                                "id": 18,
+                                "implemented": true,
+                                "kind": "constructor",
+                                "modifiers": [],
+                                "name": "",
+                                "nodeType": "FunctionDefinition",
+                                "parameters": {
+                                    "id": 10,
+                                    "nodeType": "ParameterList",
+                                    "parameters": [],
+                                    "src": "485:2:0"
+                                },
+                                "returnParameters": {
+                                    "id": 11,
+                                    "nodeType": "ParameterList",
+                                    "parameters": [],
+                                    "src": "495:0:0"
+                                },
+                                "scope": 55,
+                                "src": "474:56:0",
+                                "stateMutability": "nonpayable",
+                                "superFunction": null,
+                                "visibility": "public"
+                            },
+                            {
+                                "body": {
+                                    "id": 28,
+                                    "nodeType": "Block",
+                                    "src": "638:56:0",
+                                    "statements": [
+                                        {
+                                            "expression": {
+                                                "argumentTypes": null,
+                                                "arguments": [
+                                                    {
+                                                        "argumentTypes": null,
+                                                        "commonType": {
+                                                            "typeIdentifier": "t_address",
+                                                            "typeString": "address"
+                                                        },
+                                                        "id": 24,
+                                                        "isConstant": false,
+                                                        "isLValue": false,
+                                                        "isPure": false,
+                                                        "lValueRequested": false,
+                                                        "leftExpression": {
+                                                            "argumentTypes": null,
+                                                            "expression": {
+                                                                "argumentTypes": null,
+                                                                "id": 21,
+                                                                "name": "msg",
+                                                                "nodeType": "Identifier",
+                                                                "overloadedDeclarations": [],
+                                                                "referencedDeclaration": 70,
+                                                                "src": "656:3:0",
+                                                                "typeDescriptions": {
+                                                                    "typeIdentifier": "t_magic_message",
+                                                                    "typeString": "msg"
+                                                                }
+                                                            },
+                                                            "id": 22,
+                                                            "isConstant": false,
+                                                            "isLValue": false,
+                                                            "isPure": false,
+                                                            "lValueRequested": false,
+                                                            "memberName": "sender",
+                                                            "nodeType": "MemberAccess",
+                                                            "referencedDeclaration": null,
+                                                            "src": "656:10:0",
+                                                            "typeDescriptions": {
+                                                                "typeIdentifier": "t_address_payable",
+                                                                "typeString": "address payable"
+                                                            }
+                                                        },
+                                                        "nodeType": "BinaryOperation",
+                                                        "operator": "==",
+                                                        "rightExpression": {
+                                                            "argumentTypes": null,
+                                                            "id": 23,
+                                                            "name": "owner",
+                                                            "nodeType": "Identifier",
+                                                            "overloadedDeclarations": [],
+                                                            "referencedDeclaration": 3,
+                                                            "src": "670:5:0",
+                                                            "typeDescriptions": {
+                                                                "typeIdentifier": "t_address",
+                                                                "typeString": "address"
+                                                            }
+                                                        },
+                                                        "src": "656:19:0",
+                                                        "typeDescriptions": {
+                                                            "typeIdentifier": "t_bool",
+                                                            "typeString": "bool"
+                                                        }
+                                                    }
+                                                ],
+                                                "expression": {
+                                                    "argumentTypes": [
+                                                        {
+                                                            "typeIdentifier": "t_bool",
+                                                            "typeString": "bool"
+                                                        }
+                                                    ],
+                                                    "id": 20,
+                                                    "name": "require",
+                                                    "nodeType": "Identifier",
+                                                    "overloadedDeclarations": [
+                                                        73,
+                                                        74
+                                                    ],
+                                                    "referencedDeclaration": 73,
+                                                    "src": "648:7:0",
+                                                    "typeDescriptions": {
+                                                        "typeIdentifier": "t_function_require_pure$_t_bool_$returns$__$",
+                                                        "typeString": "function (bool) pure"
+                                                    }
+                                                },
+                                                "id": 25,
+                                                "isConstant": false,
+                                                "isLValue": false,
+                                                "isPure": false,
+                                                "kind": "functionCall",
+                                                "lValueRequested": false,
+                                                "names": [],
+                                                "nodeType": "FunctionCall",
+                                                "src": "648:28:0",
+                                                "typeDescriptions": {
+                                                    "typeIdentifier": "t_tuple$__$",
+                                                    "typeString": "tuple()"
+                                                }
+                                            },
+                                            "id": 26,
+                                            "nodeType": "ExpressionStatement",
+                                            "src": "648:28:0"
+                                        },
+                                        {
+                                            "id": 27,
+                                            "nodeType": "PlaceholderStatement",
+                                            "src": "686:1:0"
+                                        }
+                                    ]
+                                },
+                                "documentation": "@dev Throws if called by any account other than the owner.",
+                                "id": 29,
+                                "name": "onlyOwner",
+                                "nodeType": "ModifierDefinition",
+                                "parameters": {
+                                    "id": 19,
+                                    "nodeType": "ParameterList",
+                                    "parameters": [],
+                                    "src": "635:2:0"
+                                },
+                                "src": "617:77:0",
+                                "visibility": "internal"
+                            },
+                            {
+                                "body": {
+                                    "id": 53,
+                                    "nodeType": "Block",
+                                    "src": "925:126:0",
+                                    "statements": [
+                                        {
+                                            "expression": {
+                                                "argumentTypes": null,
+                                                "arguments": [
+                                                    {
+                                                        "argumentTypes": null,
+                                                        "commonType": {
+                                                            "typeIdentifier": "t_address",
+                                                            "typeString": "address"
+                                                        },
+                                                        "id": 41,
+                                                        "isConstant": false,
+                                                        "isLValue": false,
+                                                        "isPure": false,
+                                                        "lValueRequested": false,
+                                                        "leftExpression": {
+                                                            "argumentTypes": null,
+                                                            "id": 37,
+                                                            "name": "newOwner",
+                                                            "nodeType": "Identifier",
+                                                            "overloadedDeclarations": [],
+                                                            "referencedDeclaration": 31,
+                                                            "src": "943:8:0",
+                                                            "typeDescriptions": {
+                                                                "typeIdentifier": "t_address",
+                                                                "typeString": "address"
+                                                            }
+                                                        },
+                                                        "nodeType": "BinaryOperation",
+                                                        "operator": "!=",
+                                                        "rightExpression": {
+                                                            "argumentTypes": null,
+                                                            "arguments": [
+                                                                {
+                                                                    "argumentTypes": null,
+                                                                    "hexValue": "30",
+                                                                    "id": 39,
+                                                                    "isConstant": false,
+                                                                    "isLValue": false,
+                                                                    "isPure": true,
+                                                                    "kind": "number",
+                                                                    "lValueRequested": false,
+                                                                    "nodeType": "Literal",
+                                                                    "src": "963:1:0",
+                                                                    "subdenomination": null,
+                                                                    "typeDescriptions": {
+                                                                        "typeIdentifier": "t_rational_0_by_1",
+                                                                        "typeString": "int_const 0"
+                                                                    },
+                                                                    "value": "0"
+                                                                }
+                                                            ],
+                                                            "expression": {
+                                                                "argumentTypes": [
+                                                                    {
+                                                                        "typeIdentifier": "t_rational_0_by_1",
+                                                                        "typeString": "int_const 0"
+                                                                    }
+                                                                ],
+                                                                "id": 38,
+                                                                "isConstant": false,
+                                                                "isLValue": false,
+                                                                "isPure": true,
+                                                                "lValueRequested": false,
+                                                                "nodeType": "ElementaryTypeNameExpression",
+                                                                "src": "955:7:0",
+                                                                "typeDescriptions": {
+                                                                    "typeIdentifier": "t_type$_t_address_$",
+                                                                    "typeString": "type(address)"
+                                                                },
+                                                                "typeName": "address"
+                                                            },
+                                                            "id": 40,
+                                                            "isConstant": false,
+                                                            "isLValue": false,
+                                                            "isPure": true,
+                                                            "kind": "typeConversion",
+                                                            "lValueRequested": false,
+                                                            "names": [],
+                                                            "nodeType": "FunctionCall",
+                                                            "src": "955:10:0",
+                                                            "typeDescriptions": {
+                                                                "typeIdentifier": "t_address_payable",
+                                                                "typeString": "address payable"
+                                                            }
+                                                        },
+                                                        "src": "943:22:0",
+                                                        "typeDescriptions": {
+                                                            "typeIdentifier": "t_bool",
+                                                            "typeString": "bool"
+                                                        }
+                                                    }
+                                                ],
+                                                "expression": {
+                                                    "argumentTypes": [
+                                                        {
+                                                            "typeIdentifier": "t_bool",
+                                                            "typeString": "bool"
+                                                        }
+                                                    ],
+                                                    "id": 36,
+                                                    "name": "require",
+                                                    "nodeType": "Identifier",
+                                                    "overloadedDeclarations": [
+                                                        73,
+                                                        74
+                                                    ],
+                                                    "referencedDeclaration": 73,
+                                                    "src": "935:7:0",
+                                                    "typeDescriptions": {
+                                                        "typeIdentifier": "t_function_require_pure$_t_bool_$returns$__$",
+                                                        "typeString": "function (bool) pure"
+                                                    }
+                                                },
+                                                "id": 42,
+                                                "isConstant": false,
+                                                "isLValue": false,
+                                                "isPure": false,
+                                                "kind": "functionCall",
+                                                "lValueRequested": false,
+                                                "names": [],
+                                                "nodeType": "FunctionCall",
+                                                "src": "935:31:0",
+                                                "typeDescriptions": {
+                                                    "typeIdentifier": "t_tuple$__$",
+                                                    "typeString": "tuple()"
+                                                }
+                                            },
+                                            "id": 43,
+                                            "nodeType": "ExpressionStatement",
+                                            "src": "935:31:0"
+                                        },
+                                        {
+                                            "eventCall": {
+                                                "argumentTypes": null,
+                                                "arguments": [
+                                                    {
+                                                        "argumentTypes": null,
+                                                        "id": 45,
+                                                        "name": "owner",
+                                                        "nodeType": "Identifier",
+                                                        "overloadedDeclarations": [],
+                                                        "referencedDeclaration": 3,
+                                                        "src": "1002:5:0",
+                                                        "typeDescriptions": {
+                                                            "typeIdentifier": "t_address",
+                                                            "typeString": "address"
+                                                        }
+                                                    },
+                                                    {
+                                                        "argumentTypes": null,
+                                                        "id": 46,
+                                                        "name": "newOwner",
+                                                        "nodeType": "Identifier",
+                                                        "overloadedDeclarations": [],
+                                                        "referencedDeclaration": 31,
+                                                        "src": "1009:8:0",
+                                                        "typeDescriptions": {
+                                                            "typeIdentifier": "t_address",
+                                                            "typeString": "address"
+                                                        }
+                                                    }
+                                                ],
+                                                "expression": {
+                                                    "argumentTypes": [
+                                                        {
+                                                            "typeIdentifier": "t_address",
+                                                            "typeString": "address"
+                                                        },
+                                                        {
+                                                            "typeIdentifier": "t_address",
+                                                            "typeString": "address"
+                                                        }
+                                                    ],
+                                                    "id": 44,
+                                                    "name": "OwnershipTransferred",
+                                                    "nodeType": "Identifier",
+                                                    "overloadedDeclarations": [],
+                                                    "referencedDeclaration": 9,
+                                                    "src": "981:20:0",
+                                                    "typeDescriptions": {
+                                                        "typeIdentifier": "t_function_event_nonpayable$_t_address_$_t_address_$returns$__$",
+                                                        "typeString": "function (address,address)"
+                                                    }
+                                                },
+                                                "id": 47,
+                                                "isConstant": false,
+                                                "isLValue": false,
+                                                "isPure": false,
+                                                "kind": "functionCall",
+                                                "lValueRequested": false,
+                                                "names": [],
+                                                "nodeType": "FunctionCall",
+                                                "src": "981:37:0",
+                                                "typeDescriptions": {
+                                                    "typeIdentifier": "t_tuple$__$",
+                                                    "typeString": "tuple()"
+                                                }
+                                            },
+                                            "id": 48,
+                                            "nodeType": "EmitStatement",
+                                            "src": "976:42:0"
+                                        },
+                                        {
+                                            "expression": {
+                                                "argumentTypes": null,
+                                                "id": 51,
+                                                "isConstant": false,
+                                                "isLValue": false,
+                                                "isPure": false,
+                                                "lValueRequested": false,
+                                                "leftHandSide": {
+                                                    "argumentTypes": null,
+                                                    "id": 49,
+                                                    "name": "owner",
+                                                    "nodeType": "Identifier",
+                                                    "overloadedDeclarations": [],
+                                                    "referencedDeclaration": 3,
+                                                    "src": "1028:5:0",
+                                                    "typeDescriptions": {
+                                                        "typeIdentifier": "t_address",
+                                                        "typeString": "address"
+                                                    }
+                                                },
+                                                "nodeType": "Assignment",
+                                                "operator": "=",
+                                                "rightHandSide": {
+                                                    "argumentTypes": null,
+                                                    "id": 50,
+                                                    "name": "newOwner",
+                                                    "nodeType": "Identifier",
+                                                    "overloadedDeclarations": [],
+                                                    "referencedDeclaration": 31,
+                                                    "src": "1036:8:0",
+                                                    "typeDescriptions": {
+                                                        "typeIdentifier": "t_address",
+                                                        "typeString": "address"
+                                                    }
+                                                },
+                                                "src": "1028:16:0",
+                                                "typeDescriptions": {
+                                                    "typeIdentifier": "t_address",
+                                                    "typeString": "address"
+                                                }
+                                            },
+                                            "id": 52,
+                                            "nodeType": "ExpressionStatement",
+                                            "src": "1028:16:0"
+                                        }
+                                    ]
+                                },
+                                "documentation": "@dev Allows the current owner to transfer control of the contract to a newOwner.\n@param newOwner The address to transfer ownership to.",
+                                "id": 54,
+                                "implemented": true,
+                                "kind": "function",
+                                "modifiers": [
+                                    {
+                                        "arguments": null,
+                                        "id": 34,
+                                        "modifierName": {
+                                            "argumentTypes": null,
+                                            "id": 33,
+                                            "name": "onlyOwner",
+                                            "nodeType": "Identifier",
+                                            "overloadedDeclarations": [],
+                                            "referencedDeclaration": 29,
+                                            "src": "915:9:0",
+                                            "typeDescriptions": {
+                                                "typeIdentifier": "t_modifier$__$",
+                                                "typeString": "modifier ()"
+                                            }
+                                        },
+                                        "nodeType": "ModifierInvocation",
+                                        "src": "915:9:0"
+                                    }
+                                ],
+                                "name": "transferOwnership",
+                                "nodeType": "FunctionDefinition",
+                                "parameters": {
+                                    "id": 32,
+                                    "nodeType": "ParameterList",
+                                    "parameters": [
+                                        {
+                                            "constant": false,
+                                            "id": 31,
+                                            "name": "newOwner",
+                                            "nodeType": "VariableDeclaration",
+                                            "scope": 54,
+                                            "src": "890:16:0",
+                                            "stateVariable": false,
+                                            "storageLocation": "default",
+                                            "typeDescriptions": {
+                                                "typeIdentifier": "t_address",
+                                                "typeString": "address"
+                                            },
+                                            "typeName": {
+                                                "id": 30,
+                                                "name": "address",
+                                                "nodeType": "ElementaryTypeName",
+                                                "src": "890:7:0",
+                                                "stateMutability": "nonpayable",
+                                                "typeDescriptions": {
+                                                    "typeIdentifier": "t_address",
+                                                    "typeString": "address"
+                                                }
+                                            },
+                                            "value": null,
+                                            "visibility": "internal"
+                                        }
+                                    ],
+                                    "src": "889:18:0"
+                                },
+                                "returnParameters": {
+                                    "id": 35,
+                                    "nodeType": "ParameterList",
+                                    "parameters": [],
+                                    "src": "925:0:0"
+                                },
+                                "scope": 55,
+                                "src": "863:188:0",
+                                "stateMutability": "nonpayable",
+                                "superFunction": null,
+                                "visibility": "public"
+                            }
+                        ],
+                        "scope": 56,
+                        "src": "213:840:0"
+                    }
+                ],
+                "src": "0:1053:0"
+            },
+            "legacyAST": {
+                "attributes": {
+                    "absolutePath": "/Users/Nils/Documents/Repos/Blockchain/Contracts/ProjectHubContract/contracts/Ownable.sol",
+                    "exportedSymbols": {
+                        "Ownable": [
+                            55
+                        ]
+                    }
+                },
+                "children": [
+                    {
+                        "attributes": {
+                            "literals": [
+                                "solidity",
+                                "^",
+                                "0.5"
+                            ]
+                        },
+                        "id": 1,
+                        "name": "PragmaDirective",
+                        "src": "0:21:0"
+                    },
+                    {
+                        "attributes": {
+                            "baseContracts": [
+                                null
+                            ],
+                            "contractDependencies": [
+                                null
+                            ],
+                            "contractKind": "contract",
+                            "documentation": "@title Ownable\n@dev The Ownable contract has an owner address, and provides basic authorization control\nfunctions, this simplifies the implementation of \"user permissions\".",
+                            "fullyImplemented": true,
+                            "linearizedBaseContracts": [
+                                55
+                            ],
+                            "name": "Ownable",
+                            "scope": 56
+                        },
+                        "children": [
+                            {
+                                "attributes": {
+                                    "constant": false,
+                                    "name": "owner",
+                                    "scope": 55,
+                                    "stateVariable": true,
+                                    "storageLocation": "default",
+                                    "type": "address",
+                                    "value": null,
+                                    "visibility": "public"
+                                },
+                                "children": [
+                                    {
+                                        "attributes": {
+                                            "name": "address",
+                                            "stateMutability": "nonpayable",
+                                            "type": "address"
+                                        },
+                                        "id": 2,
+                                        "name": "ElementaryTypeName",
+                                        "src": "236:7:0"
+                                    }
+                                ],
+                                "id": 3,
+                                "name": "VariableDeclaration",
+                                "src": "236:20:0"
+                            },
+                            {
+                                "attributes": {
+                                    "anonymous": false,
+                                    "documentation": null,
+                                    "name": "OwnershipTransferred"
+                                },
+                                "children": [
+                                    {
+                                        "children": [
+                                            {
+                                                "attributes": {
+                                                    "constant": false,
+                                                    "indexed": true,
+                                                    "name": "previousOwner",
+                                                    "scope": 9,
+                                                    "stateVariable": false,
+                                                    "storageLocation": "default",
+                                                    "type": "address",
+                                                    "value": null,
+                                                    "visibility": "internal"
+                                                },
+                                                "children": [
+                                                    {
+                                                        "attributes": {
+                                                            "name": "address",
+                                                            "stateMutability": "nonpayable",
+                                                            "type": "address"
+                                                        },
+                                                        "id": 4,
+                                                        "name": "ElementaryTypeName",
+                                                        "src": "290:7:0"
+                                                    }
+                                                ],
+                                                "id": 5,
+                                                "name": "VariableDeclaration",
+                                                "src": "290:29:0"
+                                            },
+                                            {
+                                                "attributes": {
+                                                    "constant": false,
+                                                    "indexed": true,
+                                                    "name": "newOwner",
+                                                    "scope": 9,
+                                                    "stateVariable": false,
+                                                    "storageLocation": "default",
+                                                    "type": "address",
+                                                    "value": null,
+                                                    "visibility": "internal"
+                                                },
+                                                "children": [
+                                                    {
+                                                        "attributes": {
+                                                            "name": "address",
+                                                            "stateMutability": "nonpayable",
+                                                            "type": "address"
+                                                        },
+                                                        "id": 6,
+                                                        "name": "ElementaryTypeName",
+                                                        "src": "321:7:0"
+                                                    }
+                                                ],
+                                                "id": 7,
+                                                "name": "VariableDeclaration",
+                                                "src": "321:24:0"
+                                            }
+                                        ],
+                                        "id": 8,
+                                        "name": "ParameterList",
+                                        "src": "289:57:0"
+                                    }
+                                ],
+                                "id": 9,
+                                "name": "EventDefinition",
+                                "src": "263:84:0"
+                            },
+                            {
+                                "attributes": {
+                                    "documentation": "@dev The Ownable constructor sets the original `owner` of the contract to the sender\naccount.",
+                                    "implemented": true,
+                                    "isConstructor": true,
+                                    "kind": "constructor",
+                                    "modifiers": [
+                                        null
+                                    ],
+                                    "name": "",
+                                    "scope": 55,
+                                    "stateMutability": "nonpayable",
+                                    "superFunction": null,
+                                    "visibility": "public"
+                                },
+                                "children": [
+                                    {
+                                        "attributes": {
+                                            "parameters": [
+                                                null
+                                            ]
+                                        },
+                                        "children": [],
+                                        "id": 10,
+                                        "name": "ParameterList",
+                                        "src": "485:2:0"
+                                    },
+                                    {
+                                        "attributes": {
+                                            "parameters": [
+                                                null
+                                            ]
+                                        },
+                                        "children": [],
+                                        "id": 11,
+                                        "name": "ParameterList",
+                                        "src": "495:0:0"
+                                    },
+                                    {
+                                        "children": [
+                                            {
+                                                "children": [
+                                                    {
+                                                        "attributes": {
+                                                            "argumentTypes": null,
+                                                            "isConstant": false,
+                                                            "isLValue": false,
+                                                            "isPure": false,
+                                                            "lValueRequested": false,
+                                                            "operator": "=",
+                                                            "type": "address"
+                                                        },
+                                                        "children": [
+                                                            {
+                                                                "attributes": {
+                                                                    "argumentTypes": null,
+                                                                    "overloadedDeclarations": [
+                                                                        null
+                                                                    ],
+                                                                    "referencedDeclaration": 3,
+                                                                    "type": "address",
+                                                                    "value": "owner"
+                                                                },
+                                                                "id": 12,
+                                                                "name": "Identifier",
+                                                                "src": "505:5:0"
+                                                            },
+                                                            {
+                                                                "attributes": {
+                                                                    "argumentTypes": null,
+                                                                    "isConstant": false,
+                                                                    "isLValue": false,
+                                                                    "isPure": false,
+                                                                    "lValueRequested": false,
+                                                                    "member_name": "sender",
+                                                                    "referencedDeclaration": null,
+                                                                    "type": "address payable"
+                                                                },
+                                                                "children": [
+                                                                    {
+                                                                        "attributes": {
+                                                                            "argumentTypes": null,
+                                                                            "overloadedDeclarations": [
+                                                                                null
+                                                                            ],
+                                                                            "referencedDeclaration": 70,
+                                                                            "type": "msg",
+                                                                            "value": "msg"
+                                                                        },
+                                                                        "id": 13,
+                                                                        "name": "Identifier",
+                                                                        "src": "513:3:0"
+                                                                    }
+                                                                ],
+                                                                "id": 14,
+                                                                "name": "MemberAccess",
+                                                                "src": "513:10:0"
+                                                            }
+                                                        ],
+                                                        "id": 15,
+                                                        "name": "Assignment",
+                                                        "src": "505:18:0"
+                                                    }
+                                                ],
+                                                "id": 16,
+                                                "name": "ExpressionStatement",
+                                                "src": "505:18:0"
+                                            }
+                                        ],
+                                        "id": 17,
+                                        "name": "Block",
+                                        "src": "495:35:0"
+                                    }
+                                ],
+                                "id": 18,
+                                "name": "FunctionDefinition",
+                                "src": "474:56:0"
+                            },
+                            {
+                                "attributes": {
+                                    "documentation": "@dev Throws if called by any account other than the owner.",
+                                    "name": "onlyOwner",
+                                    "visibility": "internal"
+                                },
+                                "children": [
+                                    {
+                                        "attributes": {
+                                            "parameters": [
+                                                null
+                                            ]
+                                        },
+                                        "children": [],
+                                        "id": 19,
+                                        "name": "ParameterList",
+                                        "src": "635:2:0"
+                                    },
+                                    {
+                                        "children": [
+                                            {
+                                                "children": [
+                                                    {
+                                                        "attributes": {
+                                                            "argumentTypes": null,
+                                                            "isConstant": false,
+                                                            "isLValue": false,
+                                                            "isPure": false,
+                                                            "isStructConstructorCall": false,
+                                                            "lValueRequested": false,
+                                                            "names": [
+                                                                null
+                                                            ],
+                                                            "type": "tuple()",
+                                                            "type_conversion": false
+                                                        },
+                                                        "children": [
+                                                            {
+                                                                "attributes": {
+                                                                    "argumentTypes": [
+                                                                        {
+                                                                            "typeIdentifier": "t_bool",
+                                                                            "typeString": "bool"
+                                                                        }
+                                                                    ],
+                                                                    "overloadedDeclarations": [
+                                                                        73,
+                                                                        74
+                                                                    ],
+                                                                    "referencedDeclaration": 73,
+                                                                    "type": "function (bool) pure",
+                                                                    "value": "require"
+                                                                },
+                                                                "id": 20,
+                                                                "name": "Identifier",
+                                                                "src": "648:7:0"
+                                                            },
+                                                            {
+                                                                "attributes": {
+                                                                    "argumentTypes": null,
+                                                                    "commonType": {
+                                                                        "typeIdentifier": "t_address",
+                                                                        "typeString": "address"
+                                                                    },
+                                                                    "isConstant": false,
+                                                                    "isLValue": false,
+                                                                    "isPure": false,
+                                                                    "lValueRequested": false,
+                                                                    "operator": "==",
+                                                                    "type": "bool"
+                                                                },
+                                                                "children": [
+                                                                    {
+                                                                        "attributes": {
+                                                                            "argumentTypes": null,
+                                                                            "isConstant": false,
+                                                                            "isLValue": false,
+                                                                            "isPure": false,
+                                                                            "lValueRequested": false,
+                                                                            "member_name": "sender",
+                                                                            "referencedDeclaration": null,
+                                                                            "type": "address payable"
+                                                                        },
+                                                                        "children": [
+                                                                            {
+                                                                                "attributes": {
+                                                                                    "argumentTypes": null,
+                                                                                    "overloadedDeclarations": [
+                                                                                        null
+                                                                                    ],
+                                                                                    "referencedDeclaration": 70,
+                                                                                    "type": "msg",
+                                                                                    "value": "msg"
+                                                                                },
+                                                                                "id": 21,
+                                                                                "name": "Identifier",
+                                                                                "src": "656:3:0"
+                                                                            }
+                                                                        ],
+                                                                        "id": 22,
+                                                                        "name": "MemberAccess",
+                                                                        "src": "656:10:0"
+                                                                    },
+                                                                    {
+                                                                        "attributes": {
+                                                                            "argumentTypes": null,
+                                                                            "overloadedDeclarations": [
+                                                                                null
+                                                                            ],
+                                                                            "referencedDeclaration": 3,
+                                                                            "type": "address",
+                                                                            "value": "owner"
+                                                                        },
+                                                                        "id": 23,
+                                                                        "name": "Identifier",
+                                                                        "src": "670:5:0"
+                                                                    }
+                                                                ],
+                                                                "id": 24,
+                                                                "name": "BinaryOperation",
+                                                                "src": "656:19:0"
+                                                            }
+                                                        ],
+                                                        "id": 25,
+                                                        "name": "FunctionCall",
+                                                        "src": "648:28:0"
+                                                    }
+                                                ],
+                                                "id": 26,
+                                                "name": "ExpressionStatement",
+                                                "src": "648:28:0"
+                                            },
+                                            {
+                                                "id": 27,
+                                                "name": "PlaceholderStatement",
+                                                "src": "686:1:0"
+                                            }
+                                        ],
+                                        "id": 28,
+                                        "name": "Block",
+                                        "src": "638:56:0"
+                                    }
+                                ],
+                                "id": 29,
+                                "name": "ModifierDefinition",
+                                "src": "617:77:0"
+                            },
+                            {
+                                "attributes": {
+                                    "documentation": "@dev Allows the current owner to transfer control of the contract to a newOwner.\n@param newOwner The address to transfer ownership to.",
+                                    "implemented": true,
+                                    "isConstructor": false,
+                                    "kind": "function",
+                                    "name": "transferOwnership",
+                                    "scope": 55,
+                                    "stateMutability": "nonpayable",
+                                    "superFunction": null,
+                                    "visibility": "public"
+                                },
+                                "children": [
+                                    {
+                                        "children": [
+                                            {
+                                                "attributes": {
+                                                    "constant": false,
+                                                    "name": "newOwner",
+                                                    "scope": 54,
+                                                    "stateVariable": false,
+                                                    "storageLocation": "default",
+                                                    "type": "address",
+                                                    "value": null,
+                                                    "visibility": "internal"
+                                                },
+                                                "children": [
+                                                    {
+                                                        "attributes": {
+                                                            "name": "address",
+                                                            "stateMutability": "nonpayable",
+                                                            "type": "address"
+                                                        },
+                                                        "id": 30,
+                                                        "name": "ElementaryTypeName",
+                                                        "src": "890:7:0"
+                                                    }
+                                                ],
+                                                "id": 31,
+                                                "name": "VariableDeclaration",
+                                                "src": "890:16:0"
+                                            }
+                                        ],
+                                        "id": 32,
+                                        "name": "ParameterList",
+                                        "src": "889:18:0"
+                                    },
+                                    {
+                                        "attributes": {
+                                            "parameters": [
+                                                null
+                                            ]
+                                        },
+                                        "children": [],
+                                        "id": 35,
+                                        "name": "ParameterList",
+                                        "src": "925:0:0"
+                                    },
+                                    {
+                                        "attributes": {
+                                            "arguments": null
+                                        },
+                                        "children": [
+                                            {
+                                                "attributes": {
+                                                    "argumentTypes": null,
+                                                    "overloadedDeclarations": [
+                                                        null
+                                                    ],
+                                                    "referencedDeclaration": 29,
+                                                    "type": "modifier ()",
+                                                    "value": "onlyOwner"
+                                                },
+                                                "id": 33,
+                                                "name": "Identifier",
+                                                "src": "915:9:0"
+                                            }
+                                        ],
+                                        "id": 34,
+                                        "name": "ModifierInvocation",
+                                        "src": "915:9:0"
+                                    },
+                                    {
+                                        "children": [
+                                            {
+                                                "children": [
+                                                    {
+                                                        "attributes": {
+                                                            "argumentTypes": null,
+                                                            "isConstant": false,
+                                                            "isLValue": false,
+                                                            "isPure": false,
+                                                            "isStructConstructorCall": false,
+                                                            "lValueRequested": false,
+                                                            "names": [
+                                                                null
+                                                            ],
+                                                            "type": "tuple()",
+                                                            "type_conversion": false
+                                                        },
+                                                        "children": [
+                                                            {
+                                                                "attributes": {
+                                                                    "argumentTypes": [
+                                                                        {
+                                                                            "typeIdentifier": "t_bool",
+                                                                            "typeString": "bool"
+                                                                        }
+                                                                    ],
+                                                                    "overloadedDeclarations": [
+                                                                        73,
+                                                                        74
+                                                                    ],
+                                                                    "referencedDeclaration": 73,
+                                                                    "type": "function (bool) pure",
+                                                                    "value": "require"
+                                                                },
+                                                                "id": 36,
+                                                                "name": "Identifier",
+                                                                "src": "935:7:0"
+                                                            },
+                                                            {
+                                                                "attributes": {
+                                                                    "argumentTypes": null,
+                                                                    "commonType": {
+                                                                        "typeIdentifier": "t_address",
+                                                                        "typeString": "address"
+                                                                    },
+                                                                    "isConstant": false,
+                                                                    "isLValue": false,
+                                                                    "isPure": false,
+                                                                    "lValueRequested": false,
+                                                                    "operator": "!=",
+                                                                    "type": "bool"
+                                                                },
+                                                                "children": [
+                                                                    {
+                                                                        "attributes": {
+                                                                            "argumentTypes": null,
+                                                                            "overloadedDeclarations": [
+                                                                                null
+                                                                            ],
+                                                                            "referencedDeclaration": 31,
+                                                                            "type": "address",
+                                                                            "value": "newOwner"
+                                                                        },
+                                                                        "id": 37,
+                                                                        "name": "Identifier",
+                                                                        "src": "943:8:0"
+                                                                    },
+                                                                    {
+                                                                        "attributes": {
+                                                                            "argumentTypes": null,
+                                                                            "isConstant": false,
+                                                                            "isLValue": false,
+                                                                            "isPure": true,
+                                                                            "isStructConstructorCall": false,
+                                                                            "lValueRequested": false,
+                                                                            "names": [
+                                                                                null
+                                                                            ],
+                                                                            "type": "address payable",
+                                                                            "type_conversion": true
+                                                                        },
+                                                                        "children": [
+                                                                            {
+                                                                                "attributes": {
+                                                                                    "argumentTypes": [
+                                                                                        {
+                                                                                            "typeIdentifier": "t_rational_0_by_1",
+                                                                                            "typeString": "int_const 0"
+                                                                                        }
+                                                                                    ],
+                                                                                    "isConstant": false,
+                                                                                    "isLValue": false,
+                                                                                    "isPure": true,
+                                                                                    "lValueRequested": false,
+                                                                                    "type": "type(address)",
+                                                                                    "value": "address"
+                                                                                },
+                                                                                "id": 38,
+                                                                                "name": "ElementaryTypeNameExpression",
+                                                                                "src": "955:7:0"
+                                                                            },
+                                                                            {
+                                                                                "attributes": {
+                                                                                    "argumentTypes": null,
+                                                                                    "hexvalue": "30",
+                                                                                    "isConstant": false,
+                                                                                    "isLValue": false,
+                                                                                    "isPure": true,
+                                                                                    "lValueRequested": false,
+                                                                                    "subdenomination": null,
+                                                                                    "token": "number",
+                                                                                    "type": "int_const 0",
+                                                                                    "value": "0"
+                                                                                },
+                                                                                "id": 39,
+                                                                                "name": "Literal",
+                                                                                "src": "963:1:0"
+                                                                            }
+                                                                        ],
+                                                                        "id": 40,
+                                                                        "name": "FunctionCall",
+                                                                        "src": "955:10:0"
+                                                                    }
+                                                                ],
+                                                                "id": 41,
+                                                                "name": "BinaryOperation",
+                                                                "src": "943:22:0"
+                                                            }
+                                                        ],
+                                                        "id": 42,
+                                                        "name": "FunctionCall",
+                                                        "src": "935:31:0"
+                                                    }
+                                                ],
+                                                "id": 43,
+                                                "name": "ExpressionStatement",
+                                                "src": "935:31:0"
+                                            },
+                                            {
+                                                "children": [
+                                                    {
+                                                        "attributes": {
+                                                            "argumentTypes": null,
+                                                            "isConstant": false,
+                                                            "isLValue": false,
+                                                            "isPure": false,
+                                                            "isStructConstructorCall": false,
+                                                            "lValueRequested": false,
+                                                            "names": [
+                                                                null
+                                                            ],
+                                                            "type": "tuple()",
+                                                            "type_conversion": false
+                                                        },
+                                                        "children": [
+                                                            {
+                                                                "attributes": {
+                                                                    "argumentTypes": [
+                                                                        {
+                                                                            "typeIdentifier": "t_address",
+                                                                            "typeString": "address"
+                                                                        },
+                                                                        {
+                                                                            "typeIdentifier": "t_address",
+                                                                            "typeString": "address"
+                                                                        }
+                                                                    ],
+                                                                    "overloadedDeclarations": [
+                                                                        null
+                                                                    ],
+                                                                    "referencedDeclaration": 9,
+                                                                    "type": "function (address,address)",
+                                                                    "value": "OwnershipTransferred"
+                                                                },
+                                                                "id": 44,
+                                                                "name": "Identifier",
+                                                                "src": "981:20:0"
+                                                            },
+                                                            {
+                                                                "attributes": {
+                                                                    "argumentTypes": null,
+                                                                    "overloadedDeclarations": [
+                                                                        null
+                                                                    ],
+                                                                    "referencedDeclaration": 3,
+                                                                    "type": "address",
+                                                                    "value": "owner"
+                                                                },
+                                                                "id": 45,
+                                                                "name": "Identifier",
+                                                                "src": "1002:5:0"
+                                                            },
+                                                            {
+                                                                "attributes": {
+                                                                    "argumentTypes": null,
+                                                                    "overloadedDeclarations": [
+                                                                        null
+                                                                    ],
+                                                                    "referencedDeclaration": 31,
+                                                                    "type": "address",
+                                                                    "value": "newOwner"
+                                                                },
+                                                                "id": 46,
+                                                                "name": "Identifier",
+                                                                "src": "1009:8:0"
+                                                            }
+                                                        ],
+                                                        "id": 47,
+                                                        "name": "FunctionCall",
+                                                        "src": "981:37:0"
+                                                    }
+                                                ],
+                                                "id": 48,
+                                                "name": "EmitStatement",
+                                                "src": "976:42:0"
+                                            },
+                                            {
+                                                "children": [
+                                                    {
+                                                        "attributes": {
+                                                            "argumentTypes": null,
+                                                            "isConstant": false,
+                                                            "isLValue": false,
+                                                            "isPure": false,
+                                                            "lValueRequested": false,
+                                                            "operator": "=",
+                                                            "type": "address"
+                                                        },
+                                                        "children": [
+                                                            {
+                                                                "attributes": {
+                                                                    "argumentTypes": null,
+                                                                    "overloadedDeclarations": [
+                                                                        null
+                                                                    ],
+                                                                    "referencedDeclaration": 3,
+                                                                    "type": "address",
+                                                                    "value": "owner"
+                                                                },
+                                                                "id": 49,
+                                                                "name": "Identifier",
+                                                                "src": "1028:5:0"
+                                                            },
+                                                            {
+                                                                "attributes": {
+                                                                    "argumentTypes": null,
+                                                                    "overloadedDeclarations": [
+                                                                        null
+                                                                    ],
+                                                                    "referencedDeclaration": 31,
+                                                                    "type": "address",
+                                                                    "value": "newOwner"
+                                                                },
+                                                                "id": 50,
+                                                                "name": "Identifier",
+                                                                "src": "1036:8:0"
+                                                            }
+                                                        ],
+                                                        "id": 51,
+                                                        "name": "Assignment",
+                                                        "src": "1028:16:0"
+                                                    }
+                                                ],
+                                                "id": 52,
+                                                "name": "ExpressionStatement",
+                                                "src": "1028:16:0"
+                                            }
+                                        ],
+                                        "id": 53,
+                                        "name": "Block",
+                                        "src": "925:126:0"
+                                    }
+                                ],
+                                "id": 54,
+                                "name": "FunctionDefinition",
+                                "src": "863:188:0"
+                            }
+                        ],
+                        "id": 55,
+                        "name": "ContractDefinition",
+                        "src": "213:840:0"
+                    }
+                ],
+                "id": 56,
+                "name": "SourceUnit",
+                "src": "0:1053:0"
+            },
+            "id": 0,
+            "source": "pragma solidity ^0.5;\n\n/**\n * @title Ownable\n * @dev The Ownable contract has an owner address, and provides basic authorization control\n * functions, this simplifies the implementation of \"user permissions\".\n */\ncontract Ownable {\n    address public owner;\n\n    event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);\n\n    /**\n    * @dev The Ownable constructor sets the original `owner` of the contract to the sender\n    * account.\n    */\n    constructor() public {\n        owner = msg.sender;\n    }\n\n\n    /**\n    * @dev Throws if called by any account other than the owner.\n    */\n    modifier onlyOwner() {\n        require(msg.sender == owner);\n        _;\n    }\n\n\n    /**\n    * @dev Allows the current owner to transfer control of the contract to a newOwner.\n    * @param newOwner The address to transfer ownership to.\n    */\n    function transferOwnership(address newOwner) public onlyOwner {\n        require(newOwner != address(0));\n        emit OwnershipTransferred(owner, newOwner);\n        owner = newOwner;\n    }\n}"
+        }
+    }
+}
